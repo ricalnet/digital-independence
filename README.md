@@ -39,8 +39,8 @@ Synapse juga dilengkapi sub-layanan:
 
 1. Kloning repositori:
    ```bash
-   git clone https://github.com/ricalnet/tech-sovereignty.git
-   cd tech-sovereignty
+   git clone https://github.com/ricalnet/digital-independence.git
+   cd digital-independence
    ```
 
 2. Instalasi Docker Engine (jika belum terpasang):
@@ -148,7 +148,7 @@ Masukan, perbaikan, dan tambahan selalu diterima. Beberapa hal yang bisa dikontr
 - Memperbaiki bug atau meningkatkan fitur di `sovereign.sh`.
 - Melengkapi atau merapikan dokumentasi.
 
-Silakan buka [Issue](https://github.com/ricalnet/tech-sovereignty/issues) atau kirim [Pull Request](https://github.com/ricalnet/tech-sovereignty/pulls).
+Silakan buka [Issue](https://github.com/ricalnet/digital-independence/issues) atau kirim [Pull Request](https://github.com/ricalnet/digital-independence/pulls).
 
 ## 📜 Lisensi
 
