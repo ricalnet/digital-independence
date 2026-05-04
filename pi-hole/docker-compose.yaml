@@ -1,0 +1,85 @@
+services:
+  cloudflared:
+    container_name: cloudflared
+    image: cloudflare/cloudflared:2025.2.1
+    command: proxy-dns
+    restart: unless-stopped
+    environment:
+      - TUNNEL_DNS_UPSTREAM=${TUNNEL_DNS_UPSTREAM}
+      - TUNNEL_DNS_PORT=${TUNNEL_DNS_PORT}
+      - TUNNEL_DNS_ADDRESS=${TUNNEL_DNS_ADDRESS}
+    networks:
+      - pihole_network
+    # healthcheck:
+    #  test: ["CMD", "nslookup", "google.com", "127.0.0.1"]
+    #  interval: 30s
+    #  timeout: 10s
+    #  retries: 3
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "8080:80/tcp"
+    depends_on:
+      - cloudflared
+    environment:
+      TZ: ${TZ}
+      FTLCONF_webserver_api_password: ${FTLCONF_webserver_api_password}
+      WEBPASSWORD: ${WEBPASSWORD}
+      
+      # [dns]
+      FTLCONF_dns_upstreams: ${FTLCONF_dns_upstreams}
+      FTLCONF_dns_blockESNI: ${FTLCONF_dns_blockESNI:-true}
+      FTLCONF_dns_EDNS0ECS: ${FTLCONF_dns_EDNS0ECS:-true}
+      FTLCONF_dns_ignoreLocalhost: ${FTLCONF_dns_ignoreLocalhost:-false}
+      FTLCONF_dns_showDNSSEC: ${FTLCONF_dns_showDNSSEC:-true}
+      FTLCONF_dns_analyzeOnlyAandAAAA: ${FTLCONF_dns_analyzeOnlyAandAAAA:-false}
+      FTLCONF_dns_piholePTR: ${FTLCONF_dns_piholePTR:-PI.HOLE}
+      FTLCONF_dns_replyWhenBusy: ${FTLCONF_dns_replyWhenBusy:-ALLOW}
+      FTLCONF_dns_blockTTL: ${FTLCONF_dns_blockTTL:-2}
+      FTLCONF_dns_domainNeeded: ${FTLCONF_dns_domainNeeded:-false}
+      FTLCONF_dns_expandHosts: ${FTLCONF_dns_expandHosts:-false}
+      FTLCONF_dns_bogusPriv: ${FTLCONF_dns_bogusPriv:-true}
+      FTLCONF_dns_dnssec: ${FTLCONF_dns_dnssec}
+      FTLCONF_dns_interface: ${FTLCONF_dns_interface:-}
+      FTLCONF_dns_listeningMode: ${FTLCONF_dns_listeningMode}
+      FTLCONF_dns_queryLogging: ${FTLCONF_dns_queryLogging}
+      FTLCONF_dns_port: ${FTLCONF_dns_port:-53}
+      FTLCONF_dns_localise: ${FTLCONF_dns_localise:-true}
+      
+      # [dns.cache]
+      FTLCONF_dns_cache_size: ${FTLCONF_dns_cache_size}
+      FTLCONF_dns_cache_optimizer: ${FTLCONF_dns_cache_optimizer}
+      FTLCONF_dns_cache_upstreamBlockedTTL: ${FTLCONF_dns_cache_upstreamBlockedTTL}
+
+      # [dns.blocking]
+      FTLCONF_dns_blocking_active: ${FTLCONF_dns_blocking_active}
+
+      # [dns.rateLimit]
+      FTLCONF_dns_rateLimit_count: ${FTLCONF_dns_rateLimit_count}
+      FTLCONF_dns_rateLimit_interval: ${FTLCONF_dns_rateLimit_interval}
+
+      # [database]
+      FTLCONF_database_maxDBdays: ${FTLCONF_database_maxDBdays}
+      FTLCONF_database_network_expire: ${FTLCONF_database_network_expire}
+
+      # [misc]
+      FTLCONF_misc_privacylevel: ${FTLCONF_misc_privacylevel}
+
+    volumes:
+      - './etc-pihole:/etc/pihole'
+      - './etc-dnsmasq.d:/etc/dnsmasq.d'
+    cap_add:
+      - NET_ADMIN
+      - SYS_TIME
+      - SYS_NICE
+    restart: unless-stopped
+    networks:
+      - pihole_network
+
+networks:
+  pihole_network:
+    driver: bridge

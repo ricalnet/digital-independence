@@ -1,0 +1,38 @@
+services:
+  db:
+    image: mariadb:lts
+    container_name: nextcrow_db
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+
+  app:
+    image: nextcloud:latest
+    container_name: nextcrow_app
+    restart: always
+    ports:
+      - "5000:80"
+    volumes:
+      - nextcrow_data:/var/www/html
+      - ./skeleton:/var/www/html/core/skeleton
+    environment:
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_HOST: ${MYSQL_HOST}
+      PHP_UPLOAD_LIMIT: ${PHP_UPLOAD_LIMIT}
+      PHP_MEMORY_LIMIT: ${PHP_MEMORY_LIMIT}
+      PHP_MAX_EXECUTION_TIME: ${PHP_MAX_EXECUTION_TIME}
+      PHP_POST_MAX_SIZE: ${PHP_POST_MAX_SIZE}
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+  nextcrow_data:

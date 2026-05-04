@@ -1,0 +1,12 @@
+# cloudflared/config.yml
+proxy-dns: true
+proxy-dns-port: 53
+proxy-dns-address: 0.0.0.0
+proxy-dns-upstream:
+  - https://doh.libredns.gr/dns-query
+  - https://dns.quad9.net/dns-query
+  # https://security.cloudflare-dns.com/dns-query
+proxy-dns-bootstrap:
+  - https://doh.libredns.gr/dns-query
+  - https://dns.quad9.net/dns-query
+  # https://security.cloudflare-dns.com/dns-query

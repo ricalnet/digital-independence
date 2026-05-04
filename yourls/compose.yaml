@@ -1,0 +1,63 @@
+name: yourls
+
+services:
+  yourls:
+    image: yourls:latest
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8001:8080"
+    environment:
+      YOURLS_DB_HOST: mysql
+      YOURLS_DB_USER: yourls
+      YOURLS_DB_PASS: ${YOURLS_DB_PASSWORD}
+      YOURLS_DB_NAME: yourls
+      YOURLS_SITE: ${YOURLS_SITE}
+      YOURLS_USER: ${YOURLS_ADMIN_USER}
+      YOURLS_PASS: ${YOURLS_ADMIN_PASSWORD}
+      YOURLS_HOURS_OFFSET: 0
+      YOURLS_LANG: id_ID
+      YOURLS_UNIQUE_URLS: true
+      YOURLS_PRIVATE: true
+      YOURLS_COOKIEKEY: ${YOURLS_COOKIEKEY}
+    volumes:
+      - yourls-config:/var/www/html/user
+    networks:
+      - yourls-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: yourls
+      MYSQL_USER: yourls
+      MYSQL_PASSWORD: ${YOURLS_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - yourls-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+networks:
+  yourls-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
+  yourls-config:
+    driver: local

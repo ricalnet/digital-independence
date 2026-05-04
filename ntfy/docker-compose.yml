@@ -1,0 +1,11 @@
+services:
+  ntfy:
+    image: binwiederhier/ntfy
+    command: serve
+    env_file:
+      - .env
+    volumes:
+      - ./ntfy/data:/var/lib/ntfy
+    ports:
+      - "8010:80"
+    restart: unless-stopped

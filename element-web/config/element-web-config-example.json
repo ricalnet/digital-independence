@@ -1,0 +1,147 @@
+{
+    "default_server_config": {
+        "m.homeserver": {
+            "base_url": "https://your-homeserver.com"
+        },
+        "m.identity_server": {
+            "base_url": null
+        }
+    },
+    "disable_custom_urls": true,
+    "disable_guests": true,
+    "disable_3pid_login": true,
+    "disable_login_language_selector": false,
+    "force_verification": true,
+
+    "brand": "Your Brand Name",
+    "branding": {
+        "welcome_background_url": "https://your-domain.com/path/to/welcome-background.jpg",
+        "auth_header_logo_url": "https://your-domain.com/path/to/logo.png",
+        "auth_footer_links": [
+            { "text": "About Your Brand", "url": "https://your-domain.com/about" },
+            { "text": "Terms of Service", "url": "https://your-domain.com/terms" },
+            { "text": "Privacy Policy", "url": "https://your-domain.com/privacy" }
+        ]
+    },
+
+    "terms_and_conditions_links": [
+        {
+            "url": "https://your-domain.com/terms",
+            "text": "Terms of Service"
+        },
+        {
+            "url": "https://your-domain.com/privacy",
+            "text": "Privacy Policy"
+        },
+        {
+            "url": "https://your-domain.com/code-of-conduct",
+            "text": "Code of Conduct"
+        }
+    ],
+
+    "integrations_ui_url": null,
+    "integrations_rest_url": null,
+    "integrations_widgets_urls": [],
+    "default_widget_container_height": 280,
+
+    "default_country_code": "US",
+    "show_labs_settings": false,
+    "features": {},
+    "default_federate": true,
+    "default_theme": "dark",
+
+    "room_directory": {
+        "servers": ["your-homeserver.com"]
+    },
+
+    "enable_presence_by_hs_url": {
+        "https://your-homeserver.com": false
+    },
+
+    "setting_defaults": {
+        "breadcrumbs": true,
+        "UIFeature.locationSharing": false,
+        "UIFeature.urlPreviews": false,
+        "UIFeature.widgets": false,
+        "UIFeature.identityServer": false,
+        "UIFeature.thirdPartyId": false,
+        "UIFeature.registration": false,
+        "UIFeature.passwordReset": false,
+        "UIFeature.deactivate": true,
+        "UIFeature.advancedEncryption": true,
+        "UIFeature.roomHistorySettings": true,
+        "UIFeature.voip": true,
+        "UIFeature.feedback": false,
+        "UIFeature.shareQrCode": true,
+        "UIFeature.shareSocial": false,
+        "UIFeature.TimelineEnableRelativeDates": true,
+        "RustCrypto.staged_rollout_percent": 100,
+        "crypto.rust.cross_signing": true,
+        "crypto.rust.verification": true
+    },
+
+    "jitsi": {
+        "preferred_domain": "meet.jit.si"
+    },
+
+    "jitsi_widget": {
+        "skip_built_in_welcome_screen": true
+    },
+
+    "voip": {
+        "obey_asserted_identity": false
+    },
+
+    "permalink_prefix": "https://chat.your-domain.com",
+
+    "help_url": "https://your-domain.com/help",
+    "help_encryption_url": "https://your-domain.com/help/encryption",
+    "help_key_storage_url": "https://your-domain.com/help/key-storage",
+
+    "privacy_policy_url": "https://your-domain.com/privacy",
+
+    "report_event": {
+        "admin_message_md": "Please review our [Terms of Service](https://your-domain.com/terms) and [Code of Conduct](https://your-domain.com/code-of-conduct) before reporting a message."
+    },
+
+    "user_notice": {
+        "title": "Welcome to Your Brand Matrix Server",
+        "description": "This is a secure and encrypted Matrix service. For maximum security, please verify new sessions and use a recovery key.",
+        "show_once": true
+    },
+
+    "bug_report_endpoint_url": null,
+    "uisi_autorageshake_app": null,
+
+    "posthog": null,
+    "sentry": null,
+
+    "map_style_url": null,
+
+    "element_call": {
+        "use_exclusively": true,
+        "url": "https://call.your-domain.com"
+    },
+
+    "logout_redirect_url": "https://chat.your-domain.com",
+
+    "sso_redirect_options": {
+        "immediate": false,
+        "on_welcome_page": false,
+        "on_login_page": false
+    },
+
+    "oidc_static_clients": {},
+
+    "desktop_builds": {
+        "available": false
+    },
+
+    "mobile_builds": {
+        "ios": null,
+        "android": null,
+        "fdroid": null
+    },
+
+    "mobile_guide_toast": false
+}
