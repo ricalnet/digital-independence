@@ -1,4 +1,31 @@
 services:
+  # ============================================
+  # OLLAMA
+  # Uncomment bagian ini jika ingin menjalankan Ollama lokal
+  # ============================================
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: ollama
+  #   restart: unless-stopped
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama_data:/root/.ollama
+  #   environment:
+  #     - OLLAMA_HOST=${OLLAMA_HOST:-0.0.0.0}
+  #     - OLLAMA_KEEP_ALIVE=${OLLAMA_KEEP_ALIVE:-5m}
+  #     - OLLAMA_NUM_PARALLEL=${OLLAMA_NUM_PARALLEL:-1}
+  #     - OLLAMA_MAX_LOADED_MODELS=${OLLAMA_MAX_LOADED_MODELS:-1}
+  #     - OLLAMA_NUM_THREADS=${OLLAMA_NUM_THREADS:-4}
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "${MAX_LOG_SIZE:-10m}"
+  #       max-file: "${MAX_LOG_FILES:-3}"
+
+  # ============================================
+  # OPEN WEBUI
+  # ============================================
   openwebui:
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
@@ -11,13 +38,22 @@ services:
       - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
       - WEBUI_URL=${WEBUI_URL}
       - WEBUI_AUTH=true
-      - HF_TOKEN=${HF_TOKEN}  # Optional
+      - HF_TOKEN=${HF_TOKEN}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://ollama:11434}
+    # depends_on:
+    #   - ollama
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "${MAX_LOG_SIZE:-10m}"
+        max-file: "${MAX_LOG_FILES:-3}"
 
 volumes:
+  # ============================================
+  # Uncomment jika ollama diuncomment
+  # ============================================
+  # ollama_data:
+  #   driver: local
+  
   openwebui-data:
     driver: local
