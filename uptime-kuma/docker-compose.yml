@@ -1,0 +1,43 @@
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:9442:3001"
+    volumes:
+      - ./data:/app/data
+      - /etc/localtime:/etc/localtime:ro
+      - ./source/public:/app/public
+      - ./source/dist:/app/dist
+    environment:
+      - TZ=Asia/Jakarta
+      - NODE_ENV=production
+      - UPTIME_KUMA_PORT=3001
+      - UPTIME_KUMA_HOST=0.0.0.0
+    networks:
+      - monitoring_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+networks:
+  monitoring_network:
+    driver: bridge
+    name: uptime_monitoring

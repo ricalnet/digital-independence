@@ -1,0 +1,14 @@
+services:
+  mautrix-telegram:
+    container_name: mautrix-telegram
+    image: dock.mau.dev/mautrix/telegram:latest
+    restart: unless-stopped
+    volumes:
+      - ./mautrix-telegram-data:/data
+    networks:
+      - matrix-network
+
+networks:
+  matrix-network:
+    external: true
+    name: matrix-network

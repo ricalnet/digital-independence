@@ -1,0 +1,23 @@
+services:
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: always
+    ports:
+      - "127.0.0.1:3000:8080"
+    volumes:
+      - openwebui-data:/app/backend/data
+    environment:
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
+      - WEBUI_URL=${WEBUI_URL}
+      - WEBUI_AUTH=true
+      - HF_TOKEN=${HF_TOKEN}  # Optional
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  openwebui-data:
+    driver: local

@@ -1,0 +1,38 @@
+services:
+  mediawiki:
+    image: mediawiki:${MEDIAWIKI_VERSION:-latest}
+    container_name: ${MEDIAWIKI_CONTAINER_NAME:-mediawiki}
+    ports:
+      - "${MEDIAWIKI_HOST:-127.0.0.1}:${MEDIAWIKI_PORT:-8002}:80"
+    environment:
+      MEDIAWIKI_DB_HOST: ${DB_HOST:-db}
+      MEDIAWIKI_DB_USER: ${MYSQL_USER:-mediawiki}
+      MEDIAWIKI_DB_PASSWORD: ${MYSQL_PASSWORD}
+      MEDIAWIKI_DB_NAME: ${MYSQL_DATABASE:-mediawiki}
+    depends_on:
+      - db
+    volumes:
+      - ${MEDIAWIKI_IMAGES_PATH:-./mediawiki_data}:/var/www/html/images
+      # Uncomment setelah installer selesai dan LocalSettings.php sudah dibuat
+      - ${LOCALSETTINGS_PATH:-./LocalSettings.php}:/var/www/html/LocalSettings.php
+    restart: ${RESTART_POLICY:-unless-stopped}
+
+  db:
+    image: ${DB_IMAGE:-mariadb}:${DB_VERSION:-10.11}
+    container_name: ${DB_CONTAINER_NAME:-mediawiki_db}
+    ports:
+      - "${DB_HOST_BIND:-127.0.0.1}:${DB_PORT_BIND:-3307}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-mediawiki}
+      MYSQL_USER: ${MYSQL_USER:-mediawiki}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ${DB_DATA_PATH:-./db_data}:/var/lib/mysql
+    restart: ${RESTART_POLICY:-unless-stopped}
+
+volumes:
+  mediawiki_data:
+    name: ${MEDIAWIKI_VOLUME_NAME:-mediawiki_data}
+  db_data:
+    name: ${DB_VOLUME_NAME:-db_data}
