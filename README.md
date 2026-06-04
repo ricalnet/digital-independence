@@ -1,5 +1,7 @@
 # 🏰 Digital Independence
 
+![alt text](thumbnail.jpg)
+
 Kumpulan konfigurasi Docker Compose untuk menjalankan berbagai layanan self-hosted di mesin sendiri. Repositori ini dibuat untuk membantu siapa saja yang ingin mencoba mengelola data dan aplikasi pribadinya secara mandiri — bukan karena harus lepas total dari platform komersial, tapi karena ingin punya pilihan.
 
 ## ✨ Layanan yang Tersedia
@@ -39,6 +41,7 @@ Synapse juga dilengkapi sub-layanan:
 
 1. Kloning repositori:
    ```bash
+   cd ~/
    git clone https://github.com/ricalnet/digital-independence.git
    cd digital-independence
    ```
@@ -68,70 +71,72 @@ Synapse juga dilengkapi sub-layanan:
 
 Skrip ini adalah alat bantu untuk mengelola layanan-layanan yang ada. Dirancang agar bisa digunakan dengan satu perintah.
 
-### Lihat daftar layanan
-```bash
-./sovereign.sh -l
-```
+### 📊 Menu Interaktif
 
-### Menjalankan layanan
-```bash
-./sovereign.sh portainer              # Jalankan Portainer saja
-./sovereign.sh portainer vaultwarden  # Jalankan Portainer dan Vaultwarden
-./sovereign.sh -a up                  # Jalankan semua layanan
-```
-
-### Menu interaktif (pilih layanan dengan centang)
 ```bash
 ./sovereign.sh -i
 ```
-Atau langsung jalankan `./sovereign.sh` tanpa argumen, jika `whiptail` atau `dialog` sudah terpasang.
-
-### Perbarui image dan bangun ulang
-```bash
-./sovereign.sh --pull --all up       # Tarik image terbaru lalu jalankan
-./sovereign.sh --build nextcloud     # Bangun ulang image untuk Nextcloud
-```
-
-### Cek log dan status
-```bash
-./sovereign.sh logs vaultwarden
-./sovereign.sh ps pihole
-```
+Atau langsung jalankan `./sovereign.sh` tanpa argumen.
 
 <details>
 <summary>📘 Panduan lengkap: <code>./sovereign.sh -h</code></summary>
 
 ```bash
-Usage: ./sovereign.sh [OPTIONS] [SERVICE...]
+./sovereign.sh -h
+Digital Independence by Ricalnet
+SOVEREIGN.SH v2.0.0
 
-Options:
-  -h, --help              Tampilkan bantuan ini
-  -l, --list              Tampilkan daftar service yang tersedia
-  -a, --all               Jalankan semua service
-  -d, --down              Stop dan hapus containers
-  -r, --restart           Restart service
-  -p, --pull              Pull latest images sebelum menjalankan
-  -b, --build             Build images sebelum menjalankan
-  -v, --verbose           Tampilkan output detail
-  -i, --interactive       Tampilkan menu checkbox untuk memilih layanan
+USAGE:
+    ./sovereign.sh [OPTIONS] [ACTION] [SERVICE...]
 
-Actions:
-  up                      Start services (default)
-  down                    Stop services
-  restart                 Restart services
-  logs                    Tampilkan logs
-  ps                      Tampilkan status containers
+OPTIONS:
+    -h, --help              Show this help message
+    -l, --list              List all available services
+    -a, --all               Run action on all services
+    -d, --down              Stop and remove containers (ACTION)
+    -r, --restart           Restart services (ACTION)
+    -p, --pull              Pull latest images before action
+    -b, --build             Build images before action
+    -v, --verbose           Show detailed output
+    -i, --interactive       Interactive checkbox menu
+    -n, --dry-run           Show what would be executed (no changes)
+    -s, --sudo              Use sudo for docker commands
+    --no-color              Disable colored output
 
-Examples:
-  ./sovereign.sh portainer                    # Jalankan portainer
-  ./sovereign.sh -a up                        # Jalankan semua service
-  ./sovereign.sh -d portainer                 # Stop portainer
-  ./sovereign.sh -r portainer vaultwarden     # Restart portainer dan vaultwarden
-  ./sovereign.sh --pull --all up              # Pull dan jalankan semua service
-  ./sovereign.sh                              # Menu interaktif (jika whiptail/dialog tersedia)
-  ./sovereign.sh -i                           # Paksa menu interaktif
+ACTIONS:
+    up                      Start services (default)
+    down                    Stop and remove services
+    restart                 Restart services
+    logs                    Show logs (last 50 lines)
+    ps                      Show container status
+    prune                   Clean up unused resources
+
+COMBINED ACTIONS:
+    recycle                 PULL → DOWN → UP (full refresh with new images)
+    update                  PULL → UP (update without downtime)
+    fresh                   DOWN → UP (recreate without pull)
+
+EXAMPLES:
+    ./sovereign.sh portainer                                    # Start portainer
+    ./sovereign.sh -a up                                        # Start all services
+    ./sovereign.sh -d portainer                                 # Stop portainer
+    ./sovereign.sh -r portainer vaultwarden                     # Restart services
+    ./sovereign.sh --pull --all up                              # Update all services
+    ./sovereign.sh recycle synapse                              # Full refresh synapse
+    ./sovereign.sh recycle synapse synapse:mautrix-telegram     # Refresh synapse + bridges
+    ./sovereign.sh fresh immich                                 # Recreate immich only
+    ./sovereign.sh -n up portainer                              # Dry run
+    ./sovereign.sh -i                                           # Interactive mode
+
+SERVICE NAMING:
+    • Main services: use service name directly
+    • Synapse sub-services: synapse:mautrix-telegram, synapse:mautrix-whatsapp
+
+RECYCLE SEQUENCE:
+    1. PULL  → Download latest images (container still running)
+    2. DOWN  → Stop and remove old container
+    3. UP    → Start new container with fresh image and config
 ```
-
 </details>
 
 ## ⚠️ Hal yang Perlu Diperhatikan

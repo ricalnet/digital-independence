@@ -10,6 +10,8 @@ immich-app/library/
 immich-app/postgres/
 immich-app/.env
 
+logs/*
+
 nextcrow-docker/.env
 nextcrow-docker/skeleton
 
@@ -36,7 +38,6 @@ synapse/mautrix-whatsapp/postgres-data/
 synapse/mautrix-whatsapp/.env
 
 uptime-kuma/data/
-uptime-kuma/source/
 
 vaultwarden/vw-data/
 vaultwarden/.env
@@ -51,3 +52,6 @@ yourls/Sleeky/
 yourls/.env
 
 git-init-push.sh
+cron-recycle.sh
+cron-update.sh
+update-system.sh

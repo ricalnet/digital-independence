@@ -24,11 +24,11 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Menyalin index.php..."
-docker cp Sleeky/sleeky-frontend/index.php yourls-yourls-1:/var/www/html/
+docker cp /home/rpi/digital-independence/yourls/Sleeky/sleeky-frontend/index.php yourls-yourls-1:/var/www/html/
 check_error "Menyalin index.php"
 
 echo "Menyalin folder frontend..."
-docker cp Sleeky/sleeky-frontend/frontend/ yourls-yourls-1:/var/www/html/
+docker cp /home/rpi/digital-independence/yourls/Sleeky/sleeky-frontend/frontend/ yourls-yourls-1:/var/www/html/
 check_error "Menyalin folder frontend"
 
 echo "==================================="
