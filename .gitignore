@@ -10,7 +10,20 @@ immich-app/library/
 immich-app/postgres/
 immich-app/.env
 
+jellyfin/cache/*
+jellyfin/config/*
+jellyfin/media/*
+jellyfin/media2/*
+
 logs/*
+
+mastodon/.env.production
+mastodon/postgres14/
+mastodon/public/
+mastodon/redis
+
+navidrome/data/*
+navidrome/music/*
 
 nextcrow-docker/.env
 nextcrow-docker/skeleton
