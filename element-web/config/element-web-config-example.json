@@ -1,147 +1,180 @@
 {
     "default_server_config": {
         "m.homeserver": {
-            "base_url": "https://your-homeserver.com"
+            "base_url": "https://YOUR_DOMAIN_HERE"
         },
         "m.identity_server": {
             "base_url": null
         }
     },
+    "default_server_name": "YOUR_DOMAIN_HERE",
+    "brand": "Element",
+    "permalink_prefix": "https://YOUR_DOMAIN_HERE",
+    
+    "default_theme": "dark",
+    "default_country_code": "ID",
+    "default_device_display_name": "Element",
+    
     "disable_custom_urls": true,
     "disable_guests": true,
     "disable_3pid_login": true,
-    "disable_login_language_selector": false,
-    "force_verification": true,
-
-    "brand": "Your Brand Name",
-    "branding": {
-        "welcome_background_url": "https://your-domain.com/path/to/welcome-background.jpg",
-        "auth_header_logo_url": "https://your-domain.com/path/to/logo.png",
-        "auth_footer_links": [
-            { "text": "About Your Brand", "url": "https://your-domain.com/about" },
-            { "text": "Terms of Service", "url": "https://your-domain.com/terms" },
-            { "text": "Privacy Policy", "url": "https://your-domain.com/privacy" }
-        ]
-    },
-
-    "terms_and_conditions_links": [
-        {
-            "url": "https://your-domain.com/terms",
-            "text": "Terms of Service"
-        },
-        {
-            "url": "https://your-domain.com/privacy",
-            "text": "Privacy Policy"
-        },
-        {
-            "url": "https://your-domain.com/code-of-conduct",
-            "text": "Code of Conduct"
-        }
-    ],
-
+    "disable_login_language_selector": true,
+    "disable_registration": true,
+    
     "integrations_ui_url": null,
     "integrations_rest_url": null,
-    "integrations_widgets_urls": [],
-    "default_widget_container_height": 280,
-
-    "default_country_code": "US",
+    "integrations_widgets_urls": null,
+    
+    "bug_report_endpoint_url": null,
+    
     "show_labs_settings": false,
-    "features": {},
-    "default_federate": true,
-    "default_theme": "dark",
-
-    "room_directory": {
-        "servers": ["your-homeserver.com"]
+    
+    "features": {
+        "feature_group_calls": false,
+        "feature_video_rooms": false,
+        "feature_element_call_video_rooms": false,
+        "feature_latex_maths": false,
+        "feature_pinning": true,
+        "feature_spotlight": false,
+        "feature_dnd": true,
+        "feature_screenshot": true,
+        "feature_voice_broadcast": false
     },
-
-    "enable_presence_by_hs_url": {
-        "https://your-homeserver.com": false
-    },
-
+    
     "setting_defaults": {
-        "breadcrumbs": true,
-        "UIFeature.locationSharing": false,
         "UIFeature.urlPreviews": false,
+        "UIFeature.feedback": false,
+        "UIFeature.voip": false,
         "UIFeature.widgets": false,
+        "UIFeature.advancedSettings": false,
+        "UIFeature.shareQrCode": false,
+        "UIFeature.shareSocial": false,
         "UIFeature.identityServer": false,
         "UIFeature.thirdPartyId": false,
         "UIFeature.registration": false,
         "UIFeature.passwordReset": false,
-        "UIFeature.deactivate": true,
-        "UIFeature.advancedEncryption": true,
-        "UIFeature.roomHistorySettings": true,
-        "UIFeature.voip": true,
-        "UIFeature.feedback": false,
-        "UIFeature.shareQrCode": true,
-        "UIFeature.shareSocial": false,
+        "UIFeature.deactivate": false,
+        "UIFeature.advancedEncryption": false,
+        "UIFeature.roomHistorySettings": false,
         "UIFeature.TimelineEnableRelativeDates": true,
+        "UIFeature.locationSharing": false,
+        "UIFeature.allowCreatingPublicRooms": false,
+        "UIFeature.allowCreatingPublicSpaces": false,
         "RustCrypto.staged_rollout_percent": 100,
-        "crypto.rust.cross_signing": true,
-        "crypto.rust.verification": true
+        "MessageComposerInput.showStickersButton": false,
+        "MessageComposerInput.showPollsButton": false,
+        "ShowRedactions": false,
+        "showTypingNotifications": false,
+        "showReadReceipts": false,
+        "alwaysShowReadReceipts": false
     },
-
-    "jitsi": {
-        "preferred_domain": "meet.jit.si"
+    
+    "branding": {
+        "welcome_background_url": "",
+        "auth_header_logo_url": "",
+        "auth_footer_links": [
+            {
+                "text": "Privacy Policy",
+                "url": ""
+            },
+            {
+                "text": "Contact the admin to create an account",
+                "url": ""
+            }
+        ]
     },
-
-    "jitsi_widget": {
-        "skip_built_in_welcome_screen": true
+    
+    "embedded_pages": {
+        "welcome_url": null,
+        "home_url": null,
+        "login_for_welcome": false
     },
-
-    "voip": {
-        "obey_asserted_identity": false
-    },
-
-    "permalink_prefix": "https://chat.your-domain.com",
-
-    "help_url": "https://your-domain.com/help",
-    "help_encryption_url": "https://your-domain.com/help/encryption",
-    "help_key_storage_url": "https://your-domain.com/help/key-storage",
-
-    "privacy_policy_url": "https://your-domain.com/privacy",
-
-    "report_event": {
-        "admin_message_md": "Please review our [Terms of Service](https://your-domain.com/terms) and [Code of Conduct](https://your-domain.com/code-of-conduct) before reporting a message."
-    },
-
-    "user_notice": {
-        "title": "Welcome to Your Brand Matrix Server",
-        "description": "This is a secure and encrypted Matrix service. For maximum security, please verify new sessions and use a recovery key.",
-        "show_once": true
-    },
-
-    "bug_report_endpoint_url": null,
-    "uisi_autorageshake_app": null,
-
-    "posthog": null,
-    "sentry": null,
-
-    "map_style_url": null,
-
-    "element_call": {
-        "use_exclusively": true,
-        "url": "https://call.your-domain.com"
-    },
-
-    "logout_redirect_url": "https://chat.your-domain.com",
-
-    "sso_redirect_options": {
-        "immediate": false,
-        "on_welcome_page": false,
-        "on_login_page": false
-    },
-
-    "oidc_static_clients": {},
-
+    
     "desktop_builds": {
         "available": false
     },
-
+    
     "mobile_builds": {
         "ios": null,
         "android": null,
         "fdroid": null
     },
+    
+    "mobile_guide_toast": false,
+    "mobile_guide_app_variant": null,
+    
+    "welcome_user_id": null,
+    
+    "enable_presence_by_hs_url": {
+        "https://YOUR_DOMAIN_HERE": false
+    },
+    
+    "room_directory": {
+        "servers": []
+    },
+    
+    "jitsi": {
+        "preferred_domain": null
+    },
+    
+    "jitsi_widget": {
+        "skip_built_in_welcome_screen": true
+    },
+    
+    "voip": {
+        "obey_asserted_identity": false
+    },
+    
+    "element_call": {
+        "use_exclusively": false,
+        "brand": null,
+        "guest_spa_url": null
+    },
+    
+    "map_style_url": null,
+    
+    "analytics_owner": null,
+    "privacy_policy_url": "",
 
-    "mobile_guide_toast": false
+    "report_event": {
+        "admin_message_md": ""
+    },
+
+    "user_notice": {
+        "title": "Welcome to Element",
+        "description": "",
+        "show_once": true
+    },
+    
+    "posthog": null,
+    
+    "sentry": null,
+    
+    "terms_and_conditions_links": [
+        {
+            "url": "",
+            "text": "Terms of Service"
+        },
+        {
+            "url": "",
+            "text": "Privacy Policy"
+        }
+    ],
+    
+    "force_verification": true,
+    
+    "logout_redirect_url": null,
+    
+    "sso_redirect_options": {
+        "immediate": false,
+        "on_welcome_page": false,
+        "on_login_page": false
+    },
+    
+    "oidc_static_clients": {},
+    "oidc_metadata": null,
+    
+    "sync_timeline_limit": 100,
+    
+    "modules": []
 }
