@@ -36,6 +36,7 @@ open-webui/.env
 pi-hole/etc-pihole/
 pi-hole/etc-dnsmasq.d/
 pi-hole/.env
+pi-hole/dnscrypt-proxy/dnscrypt-proxy.toml
 
 searxng-docker/searxng/
 searxng-docker/sources/

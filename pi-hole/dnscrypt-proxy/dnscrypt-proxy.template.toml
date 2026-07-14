@@ -1,0 +1,151 @@
+# ============================================
+# DNSCRYPT-PROXY CONFIGURATION TEMPLATE
+# ============================================
+# 
+# INSTRUKSI PENGGUNAAN:
+# 1. Copy file ini ke dnscrypt-proxy.toml
+# 2. Ganti semua nilai yang bertanda <YOUR_...> dengan pilihan Anda
+# 3. Cari stamp server dari daftar publik di:
+#    https://github.com/DNSCrypt/dnscrypt-resolvers/blob/master/v3/public-resolvers.md
+#
+# PERHATIAN:
+# - JANGAN gunakan stamp asli dari template ini!
+# - Sesuaikan relay dengan lokasi geografis terdekat Anda
+# ============================================
+
+# ============================================
+# LISTEN & NETWORK
+# ============================================
+listen_addresses = ['0.0.0.0:5053']  # Default, sesuaikan jika perlu
+max_clients = 250
+ipv4_servers = true
+ipv6_servers = false  # Set true jika Anda punya IPv6
+force_tcp = false
+timeout = 5000
+keepalive = 30
+
+# ============================================
+# SERVER SELECTION
+# ============================================
+dnscrypt_servers = true
+doh_servers = true
+lb_estimator = true
+lb_strategy = 'p2'  # p2 = latency-based, p = random, ph = prefer last
+
+# === FALLBACK RESOLVER ===
+# Pilih salah satu fallback resolver:
+fallback_resolver = '9.9.9.9:8443'  # Quad9
+# fallback_resolver = '1.1.1.1:8443'  # Cloudflare
+
+ignore_system_dns = true
+
+# === SERVER NAMES ===
+# Ganti dengan server pilihan Anda dari daftar publik
+server_names = [
+    '<YOUR_PREFERRED_SERVER_1>',
+    '<YOUR_PREFERRED_SERVER_2>',
+    '<YOUR_PREFERRED_SERVER_3>',
+    # Tambahkan lebih banyak server jika diperlukan
+]
+
+# ============================================
+# SECURITY & PRIVACY
+# ============================================
+require_dnssec = true
+require_nolog = true
+require_nofilter = true
+
+dnscrypt_ephemeral_keys = true
+tls_disable_session_tickets = true
+tls_cipher_suite = [4865, 4866, 4867]
+cert_refresh_delay = 240
+edns_payload_size = 1452
+
+# ============================================
+# LOGGING
+# ============================================
+log_level = 0  # 0 = Error, 1 = Warning, 2 = Info, 3 = Debug
+use_syslog = true
+log_file = '/var/log/dnscrypt-proxy.log'
+
+# ============================================
+# STATIC SERVERS
+# ============================================
+# Ganti dengan stamp server Anda sendiri dari:
+# https://github.com/DNSCrypt/dnscrypt-resolvers/blob/master/v3/public-resolvers.md
+#
+# Contoh format yang benar:
+# [static.'nama-server-anda']
+# stamp = 'sdns://...'  # Copy stamp dari daftar publik
+
+[static]
+  # === CONTOH SERVER 1 ===
+  # [static.'server-anda-1']
+  # stamp = 'sdns://<YOUR_STAMP_HERE>'
+
+  # === CONTOH SERVER 2 ===
+  # [static.'server-anda-2']
+  # stamp = 'sdns://<YOUR_STAMP_HERE>'
+
+# ============================================
+# SOURCES - Public Resolvers (Auto-update)
+# ============================================
+[sources.'public-resolvers']
+urls = [
+    'https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md',
+    'https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md',
+    'https://cdn.jsdelivr.net/gh/DNSCrypt/dnscrypt-resolvers@master/v3/public-resolvers.md'
+]
+minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
+cache_file = 'public-resolvers.md'
+refresh_delay = 72  # Jam
+
+# ============================================
+# CACHE
+# ============================================
+[cache]
+size = 20000  # Jumlah maksimum entri cache
+min_ttl = 600  # 10 menit
+max_ttl = 86400  # 24 jam
+negative_min_ttl = 60  # 1 menit
+negative_max_ttl = 1800  # 30 menit
+prefetch = true
+prefetch_ttl = 7200  # 2 jam
+
+# ============================================
+# QUERY LOGGING
+# ============================================
+[query_log]
+file = '/dev/null'  # Nonaktifkan logging untuk privasi
+format = 'tsv'
+
+# ============================================
+# BLOCKING
+# ============================================
+[blocking]
+block_ipv6 = false  # Set true untuk blokir IPv6
+
+# ============================================
+# ANONYMIZED DNS (OPSIONAL)
+# ============================================
+# Fitur ini memungkinkan anonimisasi melalui relay server.
+# CARA MENGGUNAKAN:
+# 1. Pilih relay server dari daftar publik
+# 2. Pastikan relay server telah ditambahkan di [static]
+# 3. Uncomment dan sesuaikan konfigurasi di bawah
+# 4. Ganti 'your-resolver' dan 'your-relay' dengan server Anda
+
+# [anonymized_dns]
+# routes = [
+#     { server_name='your-resolver-1', via=['your-relay-1', 'your-relay-2'] },
+#     { server_name='your-resolver-2', via=['your-relay-1', 'your-relay-2'] },
+# ]
+
+# ============================================
+# FORWARDING RULES (OPSIONAL)
+# ============================================
+[forwarding]
+# Gunakan untuk routing spesifik ke server tertentu
+# Contoh:
+# '*' = '9.9.9.9'  # Forward semua ke Quad9
+# '*.local' = '192.168.1.1'  # Forward domain lokal ke DNS internal

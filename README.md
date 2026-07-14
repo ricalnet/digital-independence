@@ -15,7 +15,9 @@ Digital Independence adalah kumpulan konfigurasi Docker Compose siap pakai untuk
 | 🖼️ | **Immich** | `immich-app/` | 2283 | Solusi self-hosted untuk manajemen foto dan video (alternatif Google Photos). |
 | 🎥 | **Jellyfin** | `jellyfin/` | 8096, 8920 | Server media open-source untuk streaming film, musik, dan TV. |
 | 🌐 | **LibreTranslate** | `LibreTranslate/` | 5001 | Mesin penerjemah offline yang menghormati privasi. |
-| ☁️ | **Nextcloud** | `nextcrow-docker/` | 5000 | Platform kolaborasi dan penyimpanan awan lengkap. |
+| 🐘 | **Mastodon** | `mastodon/` | 4000, 4001 | Server jejaring sosial federasi (alternatif Twitter/X). |
+| 🎵 | **Navidrome** | `navidrome/` | 4533 | Server streaming musik modern dengan dukungan Subsonic. |
+| ☁️ | **Nextcloud** | `nextcloud-docker/` | 5000 | Platform kolaborasi dan penyimpanan awan lengkap. |
 | 🔔 | **ntfy** | `ntfy/` | 8010 | Notifikasi push sederhana melalui HTTP, ideal untuk integrasi dengan skrip. |
 | 🤖 | **Open WebUI** | `open-webui/` | 3000, 11434 | Antarmuka LLM yang intuitif, mendukung Ollama dan API OpenAI. |
 | 🛡️ | **Pi-hole** | `pi-hole/` | 53, 8080 | Pemfilter iklan dan tracker di tingkat DNS untuk seluruh jaringan. |
