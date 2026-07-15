@@ -1,0 +1,52 @@
+services:
+  linkstack:
+    hostname: 'linkstack'
+    image: 'linkstackorg/linkstack:latest'
+    container_name: linkstack
+    environment:
+      TZ: ${TZ}
+      SERVER_ADMIN: ${SERVER_ADMIN}
+      HTTP_SERVER_NAME: ${HTTP_SERVER_NAME}
+      HTTPS_SERVER_NAME: ${HTTPS_SERVER_NAME}
+      LOG_LEVEL: ${LOG_LEVEL}
+      PHP_MEMORY_LIMIT: ${PHP_MEMORY_LIMIT}
+      UPLOAD_MAX_FILESIZE: ${UPLOAD_MAX_FILESIZE}
+    volumes:
+      - linkstack_data:/htdocs
+      - linkstack_php:/usr/local/etc/php/conf.d
+    ports:
+      - '${HTTP_PORT:-8003}:80'
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    networks:
+      - linkstack-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: linkstack-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    command: 
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    networks:
+      - linkstack-network
+
+networks:
+  linkstack-network:
+    driver: bridge
+
+volumes:
+  linkstack_data:
+    name: linkstack_web_data
+  linkstack_php:
+    name: linkstack_php_config
+  mysql_data:
+    name: linkstack_mysql_data

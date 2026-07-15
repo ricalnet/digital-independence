@@ -15,6 +15,10 @@ jellyfin/config/*
 jellyfin/media/*
 jellyfin/media2/*
 
+linkstack-docker/configs
+linkstack-docker/linkstack
+linkstack-docker/.env
+
 logs/*
 
 mastodon/.env.production
