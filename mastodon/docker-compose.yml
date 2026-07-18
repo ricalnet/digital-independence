@@ -1,6 +1,3 @@
-# This file is designed for production server deployment, not local development work
-# For a containerized local dev environment, see: https://github.com/mastodon/mastodon/blob/main/docs/DEVELOPMENT.md#docker
-
 services:
   db:
     restart: always
@@ -58,8 +55,6 @@ services:
   #     - '127.0.0.1:9200:9200'
 
   web:
-    # You can uncomment the following line if you want to not use the prebuilt image, for example if you have local code changes
-    # build: .
     image: ghcr.io/mastodon/mastodon:v4.6.2
     restart: always
     env_file: .env.production
@@ -68,7 +63,6 @@ services:
       - external_network
       - internal_network
     healthcheck:
-      # prettier-ignore
       test: ['CMD-SHELL',"curl -s --noproxy localhost localhost:3000/health | grep -q 'OK' || exit 1"]
     ports:
       - '127.0.0.1:4001:3000'
@@ -80,10 +74,6 @@ services:
       - ./public/system:/mastodon/public/system
 
   streaming:
-    # You can uncomment the following lines if you want to not use the prebuilt image, for example if you have local code changes
-    # build:
-    #   dockerfile: ./streaming/Dockerfile
-    #   context: .
     image: ghcr.io/mastodon/mastodon-streaming:v4.6.2
     restart: always
     env_file: .env.production
@@ -92,7 +82,6 @@ services:
       - external_network
       - internal_network
     healthcheck:
-      # prettier-ignore
       test: ['CMD-SHELL', "curl -s --noproxy localhost localhost:4000/api/v1/streaming/health | grep -q 'OK' || exit 1"]
     ports:
       - '127.0.0.1:4000:4000'
@@ -101,8 +90,6 @@ services:
       - redis
 
   sidekiq:
-    # You can uncomment the following line if you want to not use the prebuilt image, for example if you have local code changes
-    # build: .
     image: ghcr.io/mastodon/mastodon:v4.6.2
     restart: always
     env_file: .env.production

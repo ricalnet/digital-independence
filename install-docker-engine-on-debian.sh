@@ -1,34 +1,34 @@
 #!/bin/bash
 # =============================================================================
-# Skrip Instalasi Docker Engine di Debian
-# Berdasarkan panduan resmi Docker (https://docs.docker.com/engine/install/debian/)
+# Docker Engine Installation Script for Debian
+# Based on official Docker guide (https://docs.docker.com/engine/install/debian/)
 # =============================================================================
 
 set -e
 
 if [[ $EUID -ne 0 ]]; then
-   echo "Harap jalankan skrip ini dengan sudo atau sebagai pengguna root."
+   echo "Please run this script with sudo or as the root user."
    exit 1
 fi
 
 echo "========================================"
-echo " Mulai instalasi Docker Engine (Debian)"
+echo " Starting Docker Engine installation (Debian)"
 echo "========================================"
 
-# 1. Perbarui indeks paket dan pasang dependensi
-echo "[1/5] Memperbarui indeks paket dan menginstal ca-certificates, curl..."
+# 1. Update package index and install dependencies
+echo "[1/5] Updating package index and installing ca-certificates, curl..."
 apt update -y
 apt install -y ca-certificates curl
 
-# 2. Siapkan direktori keyring dan unduh GPG key resmi Docker untuk Debian
-echo "[2/5] Menambahkan GPG key resmi Docker..."
+# 2. Prepare keyring directory and download official Docker GPG key for Debian
+echo "[2/5] Adding official Docker GPG key..."
 install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
 chmod a+r /etc/apt/keyrings/docker.asc
 
-# 3. Tambahkan repositori Docker ke sumber APT
-echo "[3/5] Menambahkan repositori Docker..."
-# Mendeteksi nama kode rilis (Debian codename) dan arsitektur sistem
+# 3. Add Docker repository to APT sources
+echo "[3/5] Adding Docker repository..."
+# Detect release codename (Debian codename) and system architecture
 codename=$(. /etc/os-release && echo "$VERSION_CODENAME")
 arch=$(dpkg --print-architecture)
 
@@ -41,15 +41,15 @@ Architectures: $arch
 Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
-# 4. Perbarui indeks paket lagi setelah menambah repositori
-echo "[4/5] Memperbarui indeks paket dengan repositori Docker..."
+# 4. Update package index again after adding the repository
+echo "[4/5] Updating package index with Docker repository..."
 apt update -y
 
-# 5. Instal Docker Engine dan komponen pendukung
-echo "[5/5] Menginstal Docker Engine, CLI, containerd, dan plugin..."
+# 5. Install Docker Engine and supporting components
+echo "[5/5] Installing Docker Engine, CLI, containerd, and plugins..."
 apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 echo "========================================"
-echo " Instalasi Docker Engine selesai!"
+echo " Docker Engine installation complete!"
 echo "========================================"
-echo "Anda dapat memverifikasi dengan menjalankan: docker --version"
+echo "You can verify by running: docker --version"

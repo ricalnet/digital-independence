@@ -1,108 +1,120 @@
-![alt text](thumbnail.png)
+<div align="center">
 
-## Ringkasan
-Digital Independence adalah kumpulan konfigurasi Docker Compose siap pakai untuk menjalankan berbagai layanan self-hosted di infrastruktur Anda sendiri. Proyek ini dirancang untuk memberdayakan individu maupun organisasi kecil agar dapat mengelola data, komunikasi, dan aplikasi sehari-hari secara mandiri — bukan untuk sepenuhnya meninggalkan layanan komersial, tetapi untuk memastikan Anda memiliki kendali, privasi, dan pilihan.
+![Digital Independence Banner](thumbnail.png)
+
+# Digital Independence
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Docker](https://img.shields.io/badge/Docker-29.4+-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![GitHub Issues](https://img.shields.io/github/issues/ricalnet/digital-independence)](https://github.com/ricalnet/digital-independence/issues)
+[![Shell Script](https://img.shields.io/badge/Shell-Bash-4EAA25?logo=gnu-bash&logoColor=white)](https://www.gnu.org/software/bash/)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/ricalnet/digital-independence/graphs/commit-activity)
+
+</div>
+
+## Summary
+Digital Independence is a collection of ready-to-use Docker Compose configurations for running various self-hosted services on your own infrastructure. This project is designed to empower individuals and small organizations to manage their data, communication, and daily applications independently — not to completely abandon commercial services, but to ensure you have control, privacy, and choice.
 
 > *"Take back control of your digital life, one container at a time."*
 
-## ✨ Layanan yang Tersedia
+## ✨ Available Services
 
-| Ikon | Nama Layanan | Path Direktori | Port | Deskripsi Singkat |
+| Icon | Service Name | Directory Path | Port | Brief Description |
 |------|---------------|----------------|------|-------------------|
-| 📊 | **Dashdot** | `dashdot/` | 3001 | Dashboard sistem yang ringan dan informatif. |
-| 💬 | **Element Web** | `element-web/` | 8009 | Klien web modern untuk protokol komunikasi Matrix. |
-| 🗂️ | **Homarr** | `homarr/` | 7575 | Dashboard modular untuk mengelola semua layanan Anda. |
-| 🖼️ | **Immich** | `immich-app/` | 2283 | Solusi self-hosted untuk manajemen foto dan video (alternatif Google Photos). |
-| 🎥 | **Jellyfin** | `jellyfin/` | 8096, 8920 | Server media open-source untuk streaming film, musik, dan TV. |
-| 🌐 | **LibreTranslate** | `LibreTranslate/` | 5001 | Mesin penerjemah offline yang menghormati privasi. |
-| 🐘 | **Mastodon** | `mastodon/` | 4000, 4001 | Server jejaring sosial federasi (alternatif Twitter/X). |
-| 🎵 | **Navidrome** | `navidrome/` | 4533 | Server streaming musik modern dengan dukungan Subsonic. |
-| ☁️ | **Nextcloud** | `nextcloud-docker/` | 5000 | Platform kolaborasi dan penyimpanan awan lengkap. |
-| 🔔 | **ntfy** | `ntfy/` | 8010 | Notifikasi push sederhana melalui HTTP, ideal untuk integrasi dengan skrip. |
-| 🤖 | **Open WebUI** | `open-webui/` | 3000, 11434 | Antarmuka LLM yang intuitif, mendukung Ollama dan API OpenAI. |
-| 🛡️ | **Pi-hole** | `pi-hole/` | 53, 8080 | Pemfilter iklan dan tracker di tingkat DNS untuk seluruh jaringan. |
-| 🐳 | **Portainer** | `portainer/` | 9443 | Manajemen kontainer Docker melalui antarmuka web. |
-| 🔍 | **SearXNG** | `searxng-docker/` | 8888 | Mesin pencari metasearch yang tidak melacak pengguna. |
-| 📨 | **Synapse** | `synapse/` | 8008, 8448 | Server referensi untuk jaringan komunikasi Matrix. |
-| ⏱️ | **Uptime Kuma** | `uptime-kuma/` | 9442 | Monitoring status layanan dengan notifikasi real-time. |
-| 🔐 | **Vaultwarden** | `vaultwarden/` | 8000 | Server manajemen kata sandi kompatibel Bitwarden, versi ringan. |
-| 📚 | **MediaWiki** | `wiki/` | 8002 | Platform wiki yang digunakan oleh Wikipedia. |
-| 🔗 | **YOURLS** | `yourls/` | 8001 | Layanan pemendek tautan yang dapat dihosting sendiri. |
+| 📊 | **Dashdot** | `dashdot/` | 3001 | Lightweight and informative system dashboard. |
+| 💬 | **Element Web** | `element-web/` | 8009 | Modern web client for the Matrix communication protocol. |
+| 🗂️ | **Homarr** | `homarr/` | 7575 | Modular dashboard to manage all your services. |
+| 🖼️ | **Immich** | `immich-app/` | 2283 | Self-hosted photo and video management solution (Google Photos alternative). |
+| 🎥 | **Jellyfin** | `jellyfin/` | 8096, 8920 | Open-source media server for streaming movies, music, and TV. |
+| 🌐 | **LibreTranslate** | `LibreTranslate/` | 5001 | Offline translation engine that respects privacy. |
+| 🐘 | **Mastodon** | `mastodon/` | 4000, 4001 | Federated social networking server (Twitter/X alternative). |
+| 🎵 | **Navidrome** | `navidrome/` | 4533 | Modern music streaming server with Subsonic support. |
+| ☁️ | **Nextcloud** | `nextcloud-docker/` | 5000 | Complete cloud storage and collaboration platform. |
+| 🔔 | **ntfy** | `ntfy/` | 8010 | Simple push notifications via HTTP, ideal for script integration. |
+| 🤖 | **Open WebUI** | `open-webui/` | 3000, 11434 | Intuitive LLM interface, supports Ollama and OpenAI API. |
+| 🛡️ | **Pi-hole** | `pi-hole/` | 53, 8080 | DNS-level ad and tracker filtering for your entire network. |
+| 🐳 | **Portainer** | `portainer/` | 9443 | Docker container management via web interface. |
+| 🔍 | **SearXNG** | `searxng-docker/` | 8888 | Privacy-respecting metasearch engine. |
+| 📨 | **Synapse** | `synapse/` | 8008, 8448 | Reference server for the Matrix communication network. |
+| ⏱️ | **Uptime Kuma** | `uptime-kuma/` | 9442 | Service status monitoring with real-time notifications. |
+| 🔐 | **Vaultwarden** | `vaultwarden/` | 8000 | Bitwarden-compatible password management server, lightweight version. |
+| 📚 | **MediaWiki** | `wiki/` | 8002 | Wiki platform used by Wikipedia. |
+| 🔗 | **YOURLS** | `yourls/` | 8001 | Self-hosted URL shortening service. |
 
-> Port yang tercantum adalah port default pada host. Beberapa layanan hanya terikat ke `127.0.0.1` (localhost) demi alasan keamanan. Ubah konfigurasi di `docker-compose.yml` masing-masing layanan untuk mengikat ke `0.0.0.0` atau mengubah port.
+> Ports listed are the default ports on the host. Some services are only bound to `127.0.0.1` (localhost) for security reasons. Modify the configuration in each service's `docker-compose.yml` to bind to `0.0.0.0` or change the port.
 
-Layanan tambahan pada Synapse (bridge):
-- `synapse:mautrix-telegram` – Penghubung ke Telegram
-- `synapse:mautrix-whatsapp` – Penghubung ke WhatsApp
+Additional Synapse services (bridges):
+- `synapse:mautrix-telegram` – Telegram bridge
+- `synapse:mautrix-whatsapp` – WhatsApp bridge
 
-## 📋 Prasyarat
+## 📋 Prerequisites
 
-Sebelum memulai, pastikan sistem telah memenuhi persyaratan berikut:
+Before starting, ensure your system meets the following requirements:
 
-- Docker Engine versi 29.4+ (direkomendasikan)
-- Git untuk meng-clone repositori
-- (Opsional) `whiptail` atau `dialog` untuk menu interaktif
-- Sistem operasi Linux / macOS (Windows dengan WSL2 juga didukung)
+- Docker Engine version 29.4+ (recommended)
+- Git to clone the repository
+- (Optional) `whiptail` or `dialog` for interactive menu
+- Linux / macOS operating system (Windows with WSL2 is also supported)
 
-## 🚀 Memulai
+## 🚀 Getting Started
 
-1. Clone repositori
+1. Clone the repository
    ```bash
    cd ~/
    git clone https://github.com/ricalnet/digital-independence.git
    cd digital-independence
    ```
 
-2. Instal Docker Engine (jika belum tersedia)
-   - Untuk Debian:
+2. Install Docker Engine (if not already available)
+   - For Debian:
      ```bash
      ./install-docker-engine-on-debian.sh
      ```
-   - Untuk Ubuntu:
+   - For Ubuntu:
      ```bash
      ./install-docker-engine-on-ubuntu.sh
      ```
 
-3. Siapkan file lingkungan (`.env`) untuk layanan yang membutuhkannya
+3. Prepare environment files (`.env`) for services that require them
    ```bash
-   # Contoh untuk Immich
+   # Example for Immich
    cp immich-app/.env.example immich-app/.env
-   nano immich-app/.env   # sesuaikan dengan kebutuhan
+   nano immich-app/.env   # adjust as needed
    ```
 
-4. Kelola layanan menggunakan skrip `sovereign.sh`
+4. Manage services using the `sovereign.sh` script
 
-## ⚙️ Menggunakan `sovereign.sh`
+## ⚙️ Using `sovereign.sh`
 
-`sovereign.sh` adalah alat command-line yang dirancang untuk menyederhanakan manajemen semua layanan dalam satu perintah.
+`sovereign.sh` is a command-line tool designed to simplify management of all services in one command.
 
-### Menu Interaktif (termudah)
+### Interactive Menu (easiest)
 ```bash
 ./sovereign.sh -i
 ```
-Atau jalankan tanpa argumen: `./sovereign.sh`
+Or run without arguments: `./sovereign.sh`
 
-### Contoh Perintah Cepat
+### Quick Command Examples
 
-| Tujuan | Perintah |
-|--------|----------|
-| Jalankan satu layanan | `./sovereign.sh portainer` |
-| Jalankan semua layanan | `./sovereign.sh -a up` |
-| Hentikan layanan | `./sovereign.sh -d portainer` |
-| Mulai ulang layanan | `./sovereign.sh -r portainer vaultwarden` |
-| Perbarui image dan restart | `./sovereign.sh recycle synapse` |
-| Perbarui tanpa hentikan layanan | `./sovereign.sh update immich` |
-| Simulasi perintah (dry-run) | `./sovereign.sh -n up portainer` |
+| Purpose | Command |
+|---------|---------|
+| Start a single service | `./sovereign.sh portainer` |
+| Start all services | `./sovereign.sh -a up` |
+| Stop a service | `./sovereign.sh -d portainer` |
+| Restart services | `./sovereign.sh -r portainer vaultwarden` |
+| Update images and restart | `./sovereign.sh recycle synapse` |
+| Update without service downtime | `./sovereign.sh update immich` |
+| Simulate commands (dry-run) | `./sovereign.sh -n up portainer` |
 
-> Penamaan layanan khusus untuk layanan turunan Synapse, gunakan `synapse:mautrix-telegram` atau `synapse:mautrix-whatsapp`.
+> For Synapse sub-services, use `synapse:mautrix-telegram` or `synapse:mautrix-whatsapp`.
 
-### Panduan Lengkap
+### Full Help Guide
 ```bash
 ./sovereign.sh -h
 ```
 
 <details>
-<summary>📘 Panduan lengkap: <code>./sovereign.sh -h</code></summary>
+<summary>📘 Full help guide: <code>./sovereign.sh -h</code></summary>
 
 ```bash
 ./sovereign.sh -h
@@ -162,37 +174,37 @@ RECYCLE SEQUENCE:
 ```
 </details>
 
-## 🌐 Mengekspos Layanan ke Internet
+## 🌐 Exposing Services to the Internet
 
-Secara default, layanan hanya dapat diakses dari localhost. Untuk mengaksesnya dari internet dengan aman (tanpa membuka port mentah ke publik), repositori ini mendukung dua pendekatan:
+By default, services are only accessible from localhost. To access them securely from the internet (without opening raw ports to the public), this repository supports two approaches:
 
 ### 🧅 Tor Hidden Service (.onion)
-Akses anonim melalui jaringan Tor.  
-🔗 [Panduan Implementasi Hidden Service Tor](https://docs.ricalnet.my.id/posts/panduan-implementasi-hidden-service-tor/)
+Anonymous access through the Tor network.  
+🔗 [Tor Hidden Service Implementation Guide](https://docs.ricalnet.my.id/posts/panduan-implementasi-hidden-service-tor/)
 
 ### ☁️ Cloudflare Tunnel
-Akses melalui Cloudflare tanpa membuka port firewall.  
-🔗 [Panduan Mengonfigurasi Cloudflare Tunnel](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
+Access through Cloudflare without opening firewall ports.  
+🔗 [Cloudflare Tunnel Configuration Guide](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
 
-## ⚠️ Panduan Keamanan & Pemeliharaan
+## ⚠️ Security & Maintenance Guidelines
 
-Agar sistem tetap aman dan stabil, ikuti rekomendasi berikut:
+To keep your system secure and stable, follow these recommendations:
 
-- Segera ubah kata sandi dan kunci rahasia di file `.env`.
-- Data kontainer disimpan di direktori lokal atau Docker volume.
-- Gunakan opsi `--pull` dan baca changelog proyek upstream sebelum pembaruan besar.
-- Jika ingin akses internet standar, pasang Nginx Proxy Manager atau Traefik (konfigurasi tidak disertakan dalam repositori ini).
+- Immediately change passwords and secrets in `.env` files.
+- Container data is stored in local directories or Docker volumes.
+- Use the `--pull` option and read upstream project changelogs before major updates.
+- For standard internet access, set up Nginx Proxy Manager or Traefik (configuration is not included in this repository).
 
-## 🤝 Kontribusi
+## 🤝 Contributing
 
-Berikut beberapa area yang dapat dibantu:
+Here are some areas where you can help:
 
-- Menambahkan konfigurasi untuk layanan baru
-- Memperbaiki bug atau meningkatkan fitur di `sovereign.sh`
-- Melengkapi atau merapikan dokumentasi
+- Adding configurations for new services
+- Fixing bugs or improving features in `sovereign.sh`
+- Completing or improving documentation
 
-Silakan buka [Issue](https://github.com/ricalnet/digital-independence/issues) atau kirim [Pull Request](https://github.com/ricalnet/digital-independence/pulls).
+Please open an [Issue](https://github.com/ricalnet/digital-independence/issues) or submit a [Pull Request](https://github.com/ricalnet/digital-independence/pulls).
 
-## 📜 Lisensi
+## 📜 License
 
-Repositori ini menggunakan [Lisensi MIT](LICENSE). Namun, setiap layanan yang disertakan memiliki lisensi masing-masing. Harap patuhi ketentuan lisensi dari setiap proyek upstream.
+This repository uses the [MIT License](LICENSE). However, each included service has its own license. Please comply with the license terms of each upstream project.

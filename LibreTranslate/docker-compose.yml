@@ -11,23 +11,11 @@ services:
       timeout: 4s
       retries: 4
       start_period: 5s
-    ## Hapus tanda komentar untuk melihat log di docker compose logs
     tty: true
-    ## Hapus tanda komentar pada perintah di atas dan tentukan argumen jika diperlukan
-    ## Lihat dokumentasi untuk informasi lebih lanjut: https://docs.libretranslate.com/guides/installation/#arguments
-    # command: --ssl --req-limit 100 --char-limit 500
-    ## Hapus tanda komentar pada bagian ini dan volume libretranslate_api_keys jika ingin membackup kunci API
     environment:
-    #   - LT_API_KEYS=true
-    #   - LT_API_KEYS_DB_PATH=/app/db/api_keys.db # Hasilnya sama dengan `db/api_keys.db` atau `./db/api_keys.db`
-    ## Hapus tanda komentar pada variabel dan volume libretranslate_models ini untuk mengoptimalkan waktu pemuatan
-    #   - LT_UPDATE_MODELS=true
       - LT_LOAD_ONLY=en,id
     volumes:
-    #   - libretranslate_api_keys:/app/db
-    # Simpan model dalam volume docker, untuk menghindari unduh ulang saat startup
       - libretranslate_models:/home/libretranslate/.local:rw
 
 volumes:
-#   libretranslate_api_keys:
   libretranslate_models:

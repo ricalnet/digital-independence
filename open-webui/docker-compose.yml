@@ -1,7 +1,7 @@
 services:
   # ============================================
-  # OLLAMA
-  # Uncomment bagian ini jika ingin menjalankan Ollama lokal
+  # OLLAMA SERVICE (LOCAL LLM SERVER)
+  # Uncomment this section to enable local Ollama instance
   # ============================================
   # ollama:
   #   image: ollama/ollama:latest
@@ -24,7 +24,7 @@ services:
   #       max-file: "${MAX_LOG_FILES:-3}"
 
   # ============================================
-  # OPEN WEBUI
+  # OPEN WEBUI SERVICE (CHAT INTERFACE)
   # ============================================
   openwebui:
     image: ghcr.io/open-webui/open-webui:main
@@ -50,7 +50,8 @@ services:
 
 volumes:
   # ============================================
-  # Uncomment jika ollama diuncomment
+  # DATA VOLUMES
+  # Uncomment ollama_data if Ollama service is enabled
   # ============================================
   # ollama_data:
   #   driver: local

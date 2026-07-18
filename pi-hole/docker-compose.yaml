@@ -53,8 +53,6 @@ services:
       TZ: ${TZ}
       FTLCONF_webserver_api_password: ${FTLCONF_webserver_api_password}
       WEBPASSWORD: ${WEBPASSWORD}
-      
-      # DNS Configuration
       FTLCONF_dns_upstreams: ${FTLCONF_dns_upstreams}
       FTLCONF_dns_blockESNI: ${FTLCONF_dns_blockESNI}
       FTLCONF_dns_EDNS0ECS: ${FTLCONF_dns_EDNS0ECS}
@@ -73,24 +71,14 @@ services:
       FTLCONF_dns_queryLogging: ${FTLCONF_dns_queryLogging}
       FTLCONF_dns_port: ${FTLCONF_dns_port}
       FTLCONF_dns_localise: ${FTLCONF_dns_localise}
-      
-      # Cache
       FTLCONF_dns_cache_size: ${FTLCONF_dns_cache_size}
       FTLCONF_dns_cache_optimizer: ${FTLCONF_dns_cache_optimizer}
       FTLCONF_dns_cache_upstreamBlockedTTL: ${FTLCONF_dns_cache_upstreamBlockedTTL}
-
-      # Blocking
       FTLCONF_dns_blocking_active: ${FTLCONF_dns_blocking_active}
-
-      # Rate Limit
       FTLCONF_dns_rateLimit_count: ${FTLCONF_dns_rateLimit_count}
       FTLCONF_dns_rateLimit_interval: ${FTLCONF_dns_rateLimit_interval}
-
-      # Database
       FTLCONF_database_maxDBdays: ${FTLCONF_database_maxDBdays}
       FTLCONF_database_network_expire: ${FTLCONF_database_network_expire}
-
-      # Privacy
       FTLCONF_misc_privacylevel: ${FTLCONF_misc_privacylevel}
 
     volumes:
