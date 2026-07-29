@@ -1,0 +1,347 @@
+# =============================================================================
+# FEDERATION & PRIVACY
+# =============================================================================
+trusted_key_servers: []
+suppress_key_server_warning: true
+
+federation_verify_certificates: true
+federation_domain_whitelist: []
+allow_profile_lookup_over_federation: false
+allow_device_name_lookup_over_federation: false
+
+federation:
+  client_timeout: 60s
+  max_short_retry_delay: 2s
+  max_short_retries: 3
+  max_long_retry_delay: 60s
+  max_long_retries: 10
+  destination_min_retry_interval: 10m
+  destination_retry_multiplier: 2
+  destination_max_retry_interval: 1w
+
+# =============================================================================
+# IP RANGE BLACKLIST
+# =============================================================================
+# Uncomment and adjust as needed:
+# ip_range_blacklist:
+#   - 127.0.0.0/8
+#   - ::1/128
+#   - fe80::/10
+#   - 2001:db8::/32
+
+# If you have internal bridges, add specific whitelist:
+# ip_range_whitelist:
+#   - 192.168.1.100/32
+
+# =============================================================================
+# PRESENCE
+# =============================================================================
+presence:
+  enabled: true
+  include_offline_users_on_sync: false
+
+# =============================================================================
+# PROFILE PRIVACY
+# =============================================================================
+require_auth_for_profile_requests: true
+limit_profile_requests_to_users_who_share_rooms: true
+include_profile_data_on_invite: false
+
+# =============================================================================
+# STATISTICS & METRICS
+# =============================================================================
+report_stats: false
+enable_metrics: false
+metrics_flags:
+  known_servers: false
+
+# =============================================================================
+# MEDIA STORE
+# =============================================================================
+enable_authenticated_media: true
+enable_media_repo: true
+media_store_path: /data/media_store  # CHANGE: Path to media storage
+max_upload_size: 100M
+max_pending_media_uploads: 20
+unused_expiration_time: 24h
+
+max_avatar_size: 5M
+allowed_avatar_mimetypes:
+  - image/png
+  - image/jpeg
+  - image/gif
+  - image/webp
+
+dynamic_thumbnails: true
+thumbnail_sizes:
+  - width: 32
+    height: 32
+    method: crop
+  - width: 96
+    height: 96
+    method: crop
+  - width: 320
+    height: 240
+    method: scale
+  - width: 640
+    height: 480
+    method: scale
+  - width: 800
+    height: 600
+    method: scale
+  - width: 1280
+    height: 720
+    method: scale
+
+max_image_pixels: 32M
+
+remote_media_download_burst_count: 500M
+remote_media_download_per_second: 87K
+
+url_preview_enabled: false
+
+media_retention:
+  local_media_lifetime: 30d  # CHANGE: Adjust retention period as needed
+  remote_media_lifetime: 30d  # CHANGE: Adjust retention period as needed
+
+oembed:
+  disable_default_providers: false
+  additional_providers: []  # CHANGE: Add custom oEmbed providers if needed
+
+prevent_media_downloads_from: []  # CHANGE: Add domains to block media downloads from
+
+# =============================================================================
+# REGISTRATION
+# =============================================================================
+enable_registration: false  # CHANGE: Set to true to allow registration
+enable_registration_without_verification: false
+registrations_require_3pid: []  # CHANGE: Add 3PID requirements (e.g., email, msisdn)
+registration_requires_token: false  # CHANGE: Set to true to require registration tokens
+allow_guest_access: false
+
+# =============================================================================
+# BRIDGES
+# =============================================================================
+# CHANGE: Update with your bridge registration files
+app_service_config_files:
+  - /data/mautrix-telegram-registration.yaml
+  - /data/mautrix-whatsapp-registration.yaml
+
+# =============================================================================
+# RETENTION POLICY
+# =============================================================================
+retention:
+  enabled: true
+  default_policy:
+    min_lifetime: 1d
+    max_lifetime: 30d
+  allowed_lifetime_min: 1d
+  allowed_lifetime_max: 30d
+  purge_jobs:
+    - longest_max_lifetime: 7d
+      interval: 12h
+    - shortest_max_lifetime: 7d
+      longest_max_lifetime: 30d
+      interval: 24h
+    - shortest_max_lifetime: 30d
+      interval: 48h
+
+redaction_retention_period: 30d
+user_ips_max_age: 30d
+forgotten_room_retention_period: 30d
+
+# =============================================================================
+# PUBLIC DIRECTORY
+# =============================================================================
+allow_public_rooms_without_auth: false
+allow_public_rooms_over_federation: false
+enable_room_list_search: false
+
+# =============================================================================
+# RATE LIMITING
+# =============================================================================
+# CHANGE: Adjust rate limiting based on your server capacity
+rc_message:
+  per_second: 5.0
+  burst_count: 20.0
+
+rc_registration:
+  per_second: 0.17
+  burst_count: 3.0
+
+rc_registration_token_validity:
+  per_second: 0.1
+  burst_count: 5.0
+
+rc_login:
+  address:
+    per_second: 0.003
+    burst_count: 5.0
+  account:
+    per_second: 0.003
+    burst_count: 5.0
+  failed_attempts:
+    per_second: 0.17
+    burst_count: 3.0
+
+rc_admin_redaction:
+  per_second: 2.0
+  burst_count: 100.0
+
+rc_joins:
+  local:
+    per_second: 0.1
+    burst_count: 10.0
+  remote:
+    per_second: 0.01
+    burst_count: 10.0
+
+rc_joins_per_room:
+  per_second: 1.0
+  burst_count: 10.0
+
+rc_3pid_validation:
+  per_second: 0.003
+  burst_count: 5.0
+
+rc_invites:
+  per_room:
+    per_second: 0.3
+    burst_count: 10.0
+  per_user:
+    per_second: 0.003
+    burst_count: 5.0
+  per_issuer:
+    per_second: 0.3
+    burst_count: 10.0
+
+rc_third_party_invite:
+  per_second: 0.2
+  burst_count: 10.0
+
+rc_media_create:
+  per_second: 10.0
+  burst_count: 50.0
+
+rc_federation:
+  window_size: 1000
+  sleep_limit: 10
+  sleep_delay: 500
+  reject_limit: 50
+  concurrent: 3
+
+rc_presence:
+  per_user:
+    per_second: 0.1
+    burst_count: 1.0
+
+rc_delayed_event_mgmt:
+  per_second: 1.0
+  burst_count: 5.0
+
+rc_reports:
+  per_second: 1.0
+  burst_count: 5.0
+
+rc_room_creation:
+  per_second: 0.016
+  burst_count: 10.0
+
+rc_user_directory:
+  per_second: 0.016
+  burst_count: 200.0
+
+federation_rr_transactions_per_room_per_second: 50
+
+# =============================================================================
+# CACHING
+# =============================================================================
+# CHANGE: Adjust cache sizes based on available memory
+event_cache_size: 50K
+caches:
+  global_factor: 2.5
+  per_cache_factors:
+    get_users_who_share_room_with_user: 3.0
+    "*stateGroupCache*": 3.0
+    get_rooms_for_user: 2.5
+    auth_events: 2.5
+    "*getEvent*": 2.0
+  expire_caches: true
+  cache_entry_ttl: 30m
+  sync_response_cache_duration: 2m
+
+# =============================================================================
+# SEARCH & DIRECTORY
+# =============================================================================
+enable_search: false
+user_directory:
+  enabled: false
+  search_all_users: false
+  prefer_local_users: true
+  exclude_remote_users: true
+  show_locked_users: false
+
+# =============================================================================
+# ROOM SETTINGS
+# =============================================================================
+default_room_version: "12"
+encryption_enabled_by_default_for_room_type: all
+forget_rooms_on_leave: true
+exclude_rooms_from_sync: []  # CHANGE: Add room IDs to exclude from sync
+
+# =============================================================================
+# ALIAS & PUBLICATION RULES
+# =============================================================================
+# CHANGE: Replace with your admin user
+alias_creation_rules:
+  - user_id: '@admin:YOUR_DOMAIN_HERE'
+    action: allow
+  - action: deny
+
+# CHANGE: Replace with your admin user
+room_list_publication_rules:
+  - user_id: '@admin:YOUR_DOMAIN_HERE'
+    action: allow
+  - action: deny
+
+default_power_level_content_override: {}  # CHANGE: Add custom power level defaults
+
+# =============================================================================
+# SESSION MANAGEMENT
+# =============================================================================
+# CHANGE: Adjust session lifetimes based on security requirements
+session_lifetime: 30d
+refreshable_access_token_lifetime: 6h
+refresh_token_lifetime: 14d
+nonrefreshable_access_token_lifetime: 12h
+
+ui_auth:
+  session_timeout: 60s
+
+login_via_existing_session:
+  enabled: false
+  require_ui_auth: true
+  token_timeout: 5m
+
+# =============================================================================
+# DEVICE MANAGEMENT
+# =============================================================================
+delete_stale_devices_after: 30d
+dummy_events_threshold: 5
+
+# =============================================================================
+# USER TYPES
+# =============================================================================
+user_types:
+  default_user_type: null
+  extra_user_types: []  # CHANGE: Add custom user types
+
+# =============================================================================
+# BACKGROUND UPDATES
+# =============================================================================
+background_updates:
+  background_update_duration_ms: 100
+  sleep_enabled: true
+  sleep_duration_ms: 1000
+  min_batch_size: 1
+  default_batch_size: 100

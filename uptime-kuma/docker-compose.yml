@@ -8,8 +8,6 @@ services:
     volumes:
       - ./data:/app/data
       - /etc/localtime:/etc/localtime:ro
-      - ./source/public:/app/public
-      - ./source/dist:/app/dist
     environment:
       - TZ=Asia/Jakarta
       - NODE_ENV=production

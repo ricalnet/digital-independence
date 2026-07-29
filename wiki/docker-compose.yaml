@@ -13,7 +13,7 @@ services:
       - db
     volumes:
       - ${MEDIAWIKI_IMAGES_PATH:-./mediawiki_data}:/var/www/html/images
-      # Uncomment setelah installer selesai dan LocalSettings.php sudah dibuat
+      # Uncomment after installation is complete and LocalSettings.php has been created
       - ${LOCALSETTINGS_PATH:-./LocalSettings.php}:/var/www/html/LocalSettings.php
     restart: ${RESTART_POLICY:-unless-stopped}
 

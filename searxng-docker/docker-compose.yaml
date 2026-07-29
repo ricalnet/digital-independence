@@ -43,12 +43,6 @@ services:
     volumes:
       - ./searxng:/etc/searxng:rw
       - searxng-data:/var/cache/searxng:rw
-      - type: bind
-        source: ./sources/img/
-        target: /usr/local/searxng/searx/static/themes/simple/img/
-      - type: bind
-        source: ./sources/searx/templates/simple/
-        target: /usr/local/searxng/searx/templates/simple/
     environment:
       - SEARXNG_BASE_URL=https://${SEARXNG_HOSTNAME:-localhost}/
     logging:

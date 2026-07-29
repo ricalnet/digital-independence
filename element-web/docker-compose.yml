@@ -6,13 +6,10 @@ services:
     
     ports:
       - "127.0.0.1:8009:80"
-      # Untuk akses luar:
-      # - "8009:80"
     
     volumes:
       - ./config/element-web-config.json:/app/config.json:ro
       - ./modules:/modules:ro
-      # - ./i18n:/app/i18n
     
     environment:
       - ELEMENT_WEB_PORT=80
