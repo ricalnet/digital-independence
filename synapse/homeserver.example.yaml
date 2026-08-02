@@ -60,7 +60,7 @@ metrics_flags:
 # =============================================================================
 enable_authenticated_media: true
 enable_media_repo: true
-media_store_path: /data/media_store  # CHANGE: Path to media storage
+media_store_path: /data/media_store # CHANGE: Path to media storage
 max_upload_size: 100M
 max_pending_media_uploads: 20
 unused_expiration_time: 24h
@@ -101,22 +101,22 @@ remote_media_download_per_second: 87K
 url_preview_enabled: false
 
 media_retention:
-  local_media_lifetime: 30d  # CHANGE: Adjust retention period as needed
-  remote_media_lifetime: 30d  # CHANGE: Adjust retention period as needed
+  local_media_lifetime: 30d # CHANGE: Adjust retention period as needed
+  remote_media_lifetime: 30d # CHANGE: Adjust retention period as needed
 
 oembed:
   disable_default_providers: false
-  additional_providers: []  # CHANGE: Add custom oEmbed providers if needed
+  additional_providers: [] # CHANGE: Add custom oEmbed providers if needed
 
-prevent_media_downloads_from: []  # CHANGE: Add domains to block media downloads from
+prevent_media_downloads_from: [] # CHANGE: Add domains to block media downloads from
 
 # =============================================================================
 # REGISTRATION
 # =============================================================================
-enable_registration: false  # CHANGE: Set to true to allow registration
+enable_registration: false # CHANGE: Set to true to allow registration
 enable_registration_without_verification: false
-registrations_require_3pid: []  # CHANGE: Add 3PID requirements (e.g., email, msisdn)
-registration_requires_token: false  # CHANGE: Set to true to require registration tokens
+registrations_require_3pid: [] # CHANGE: Add 3PID requirements (e.g., email, msisdn)
+registration_requires_token: false # CHANGE: Set to true to require registration tokens
 allow_guest_access: false
 
 # =============================================================================
@@ -287,24 +287,24 @@ user_directory:
 default_room_version: "12"
 encryption_enabled_by_default_for_room_type: all
 forget_rooms_on_leave: true
-exclude_rooms_from_sync: []  # CHANGE: Add room IDs to exclude from sync
+exclude_rooms_from_sync: [] # CHANGE: Add room IDs to exclude from sync
 
 # =============================================================================
 # ALIAS & PUBLICATION RULES
 # =============================================================================
 # CHANGE: Replace with your admin user
 alias_creation_rules:
-  - user_id: '@admin:YOUR_DOMAIN_HERE'
+  - user_id: "@admin:YOUR_DOMAIN_HERE"
     action: allow
   - action: deny
 
 # CHANGE: Replace with your admin user
 room_list_publication_rules:
-  - user_id: '@admin:YOUR_DOMAIN_HERE'
+  - user_id: "@admin:YOUR_DOMAIN_HERE"
     action: allow
   - action: deny
 
-default_power_level_content_override: {}  # CHANGE: Add custom power level defaults
+default_power_level_content_override: {} # CHANGE: Add custom power level defaults
 
 # =============================================================================
 # SESSION MANAGEMENT
@@ -334,7 +334,7 @@ dummy_events_threshold: 5
 # =============================================================================
 user_types:
   default_user_type: null
-  extra_user_types: []  # CHANGE: Add custom user types
+  extra_user_types: [] # CHANGE: Add custom user types
 
 # =============================================================================
 # BACKGROUND UPDATES
@@ -345,3 +345,28 @@ background_updates:
   sleep_duration_ms: 1000
   min_batch_size: 1
   default_batch_size: 100
+
+# =============================================================================
+# OAuth/OpenID
+# =============================================================================
+oidc_providers:
+  - idp_id: authentik
+    idp_name: SSO
+    discover: true
+    backchannel_logout_enabled: true
+    issuer: "https://auth.domain.com/application/o/<application_slug>/"
+    client_id: "<Client ID from authentik>"
+    client_secret: "<Client Secret from authentik>"
+    scopes:
+      - "openid"
+      - "profile"
+      - "email"
+    user_mapping_provider:
+      config:
+        localpart_template: "{{ user.preferred_username }}"
+        display_name_template: "{{ user.preferred_username|capitalize }}"
+
+jwt_config:
+  enabled: true
+  secret: "<Client Secret from authentik>"
+  algorithm: "RS256"

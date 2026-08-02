@@ -1,3 +1,10 @@
+authentik/certs/
+authentik/media/
+authentik/postgres-data/
+authentik/redis-data/
+authentik/templates/
+authentik/.env
+
 element-web/config/element-web-config.json
 element-web/config/element-web-config.json.bak
 element-web/modules/

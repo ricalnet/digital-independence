@@ -31,12 +31,14 @@ DRY_RUN=false
 # =============================================================================
 declare -A SERVICES
 SERVICES=(
+    ["authentik"]="authentik"
     ["dashdot"]="dashdot"
     ["element-web"]="element-web"
     ["homarr"]="homarr"
     ["immich"]="immich-app"
     ["jellyfin"]="jellyfin"
     ["libretranslate"]="libretranslate"
+    ["linkstack-docker"]="linkstack-docker"
     ["mastodon"]="mastodon"
     ["navidrome"]="navidrome"
     ["nextcloud"]="nextcrow-docker"

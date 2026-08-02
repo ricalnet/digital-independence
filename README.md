@@ -21,6 +21,7 @@ Digital Independence is a collection of ready-to-use Docker Compose configuratio
 
 | Icon | Service Name | Directory Path | Port | License | Brief Description |
 |------|---------------|----------------|------|---------|-------------------|
+| 🔑 | **Authentik** | `authentik/` | 9000, 9443 | [LICENSE](https://github.com/goauthentik/authentik/blob/main/LICENSE) | Flexible open-source Identity Provider (SSO, LDAP, OAuth2, SAML). |
 | 📊 | **Dashdot** | `dashdot/` | 3001 | [LICENSE](https://github.com/MauriceNino/dashdot/blob/main/LICENSE.md) | Lightweight and informative system dashboard. |
 | 💬 | **Element Web** | `element-web/` | 8009 | [LICENSE](https://github.com/element-hq/element-web/blob/develop/LICENSE-AGPL-3.0) | Modern web client for the Matrix communication protocol. |
 | 🗂️ | **Homarr** | `homarr/` | 7575 | [LICENSE](https://github.com/homarr-labs/homarr/blob/dev/LICENSE) | Modular dashboard to manage all your services. |
