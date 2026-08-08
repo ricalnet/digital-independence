@@ -197,6 +197,58 @@ To keep your system secure and stable, follow these recommendations:
 - Use the `--pull` option and read upstream project changelogs before major updates.
 - For standard internet access, set up Nginx Proxy Manager or Traefik (configuration is not included in this repository).
 
+## 🤖 Automation Scripts
+
+This repository includes automation scripts for scheduled maintenance of your services. The scripts are located in the `automation-scripts/` directory and can be configured to run via cron jobs.
+
+### Weekly Updates
+Automatically pulls the latest images and restarts services with new updates without downtime.
+
+```bash
+# Copy and configure the example config file
+cp automation-scripts/weekly-updates/weekly_updates.conf.example automation-scripts/weekly-updates/weekly_updates.conf
+nano automation-scripts/weekly-updates/weekly_updates.conf
+```
+
+### Monthly Recycle
+Performs a full refresh (pull → down → up) on selected services to clean up and ensure fresh containers.
+
+```bash
+# Copy and configure the example config file
+cp automation-scripts/monthly-recycle/monthly_recycle.conf.example automation-scripts/monthly-recycle/monthly_recycle.conf
+
+nano automation-scripts/monthly-recycle/monthly_recycle.conf
+```
+
+### Setting Up Cron Jobs
+
+To automate these maintenance tasks, add the following entries to your crontab:
+
+```bash
+sudo crontab -e
+```
+
+Add these lines (adjust paths to match your installation):
+
+```bash
+# Weekly updates - every Sunday at 3 AM
+0 3 * * 0 /path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.sh
+
+# Monthly recycle - every 1st day of the month at 6 AM
+0 6 1 * * /path/to/digital-independence/automation-scripts/monthly-recycle/monthly_recycle.sh
+```
+
+> Replace `/path/to/digital-independence/` with the actual path where you cloned the repository.
+
+### Script Configuration
+
+Each script requires a configuration file that specifies which services to manage:
+
+- `weekly_updates.conf`: List of services to update weekly (e.g., `portainer`, `vaultwarden`, `nextcloud-docker`)
+- `monthly_recycle.conf`: List of services to fully recycle monthly (e.g., `synapse`, `immich`, `jellyfin`)
+
+The scripts automatically log their output to `logs/` directory for monitoring and troubleshooting.
+
 ## 🤝 Contributing
 
 Here are some areas where you can help:

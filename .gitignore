@@ -76,8 +76,5 @@ yourls/admin-yourls-recaptcha-v3/
 yourls/Sleeky/
 yourls/.env
 
-git-init-push.sh
-cleanup-system.sh
-cron-recycle.sh
-cron-update.sh
-update-system.sh
+automation-scripts/weekly-updates/weekly_updates.conf
+automation-scripts/monthly-recycle/monthly_recycle.conf
