@@ -1,0 +1,23 @@
+# ============================================================
+# MONTHLY RECYCLE CONFIGURATION - TEMPLATE
+# ============================================================
+# Copy this file to monthly_recycle.conf and customize
+# ============================================================
+
+WORK_DIR="/path/to/digital-independence"
+
+# Choose one:
+SERVICES="service1 service2 service3"
+# SERVICES="-a"  # For all services
+
+ENABLE_NTFY=true
+NTFY_TOPIC="your_topic"
+NTFY_URL="https://ntfy.sh"
+NTFY_TOKEN="your_token_here"
+
+LOG_DIR="/path/to/digital-independence/logs"
+LOCK_FILE="/tmp/monthly_recycle.lock"
+CLEANUP_LOGS_DAYS=90
+
+RUN_APT_UPDATE=false
+AUTO_REBOOT=false
