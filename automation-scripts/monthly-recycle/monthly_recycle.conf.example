@@ -21,3 +21,10 @@ CLEANUP_LOGS_DAYS=90
 
 RUN_APT_UPDATE=false
 AUTO_REBOOT=false
+
+# ============================================================
+# YOURLS INTEGRATION SETTINGS
+# ============================================================
+
+# Run YOURLS frontend script after the recycle (if recycle successful)
+RUN_YOURLS_FRONTEND_AFTER=true

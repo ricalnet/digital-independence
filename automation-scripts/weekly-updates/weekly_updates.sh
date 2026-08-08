@@ -330,13 +330,45 @@ EOF
     send_ntfy "❌ Weekly Update Failed" "$message" "5" "warning,skull,rotating_light"
 }
 
+run_yourls_frontend() {
+    log "🔗 Running YOURLS frontend script..."
+    
+    local YOURS_SCRIPT="${WORK_DIR}/yourls/frontend.sh"
+    
+    if [ ! -f "$YOURS_SCRIPT" ]; then
+        log "⚠️ YOURLS frontend script not found: $YOURS_SCRIPT"
+        return 1
+    fi
+    
+    if [ ! -x "$YOURS_SCRIPT" ]; then
+        log "⚠️ YOURLS frontend script is not executable. Attempting to fix..."
+        chmod +x "$YOURS_SCRIPT" || {
+            log "❌ Failed to make YOURLS script executable"
+            return 1
+        }
+    fi
+    
+    log "▶️ Executing: $YOURS_SCRIPT"
+    set +e
+    bash "$YOURS_SCRIPT" >> "$LOG_FILE" 2>&1
+    local YOURS_EXIT=$?
+    set -e
+    
+    if [ $YOURS_EXIT -eq 0 ]; then
+        log "✅ YOURLS frontend script completed successfully"
+        return 0
+    else
+        log "❌ YOURLS frontend script failed with exit code $YOURS_EXIT"
+        return 1
+    fi
+}
+
 cleanup_old_logs() {
     log "🧹 Cleaning old logs (> ${CLEANUP_LOGS_DAYS} days)..."
     local deleted=$(find "$LOG_DIR" -name "weekly_update_*.log" -mtime +${CLEANUP_LOGS_DAYS} -delete -print 2>/dev/null | wc -l)
     log "✅ Removed $deleted old log files"
 }
 
-# Lock file check
 if [ -f "$LOCK_FILE" ]; then
     PID=$(cat "$LOCK_FILE" 2>/dev/null)
     if kill -0 "$PID" 2>/dev/null; then
@@ -359,20 +391,23 @@ cd "$WORK_DIR" || {
     exit 1
 }
 
-# Run sovereign.sh update with services
 log "▶️ Executing: ./sovereign.sh update $SERVICES"
 set +e
 ./sovereign.sh update $SERVICES >> "$LOG_FILE" 2>&1
 EXIT_CODE=$?
 set -e
 
-# Cleanup old logs
+if [ "${RUN_YOURLS_FRONTEND_AFTER:-false}" = "true" ] && [ $EXIT_CODE -eq 0 ]; then
+    log "🔄 Running YOURLS frontend script after update..."
+    run_yourls_frontend
+    YOURLS_FRONTEND_AFTER_EXIT=$?
+fi
+
 cleanup_old_logs
 
 END_TIME=$(date +%s)
 DURATION=$((END_TIME - START_TIME))
 
-# Send notification based on result
 if [ $EXIT_CODE -eq 0 ]; then
     log "✅ Weekly update completed successfully"
     notify_success $DURATION

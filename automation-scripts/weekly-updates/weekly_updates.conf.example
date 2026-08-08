@@ -18,3 +18,10 @@ NTFY_TOKEN="your_token_here"
 LOG_DIR="/path/to/digital-independence/logs"
 LOCK_FILE="/tmp/weekly_updates.lock"
 CLEANUP_LOGS_DAYS=30
+
+# ============================================================
+# YOURLS SETTINGS
+# ============================================================
+
+# Run YOURLS frontend script after the update (if update successful)
+RUN_YOURLS_FRONTEND_AFTER=false

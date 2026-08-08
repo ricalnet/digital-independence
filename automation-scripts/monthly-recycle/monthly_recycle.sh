@@ -335,6 +335,39 @@ EOF
     send_ntfy "❌ Monthly Recycle Failed" "$message" "5" "warning,skull,rotating_light"
 }
 
+run_yourls_frontend() {
+    log "🔗 Running YOURLS frontend script..."
+    
+    local YOURS_SCRIPT="${WORK_DIR}/yourls/frontend.sh"
+    
+    if [ ! -f "$YOURS_SCRIPT" ]; then
+        log "⚠️ YOURLS frontend script not found: $YOURS_SCRIPT"
+        return 1
+    fi
+    
+    if [ ! -x "$YOURS_SCRIPT" ]; then
+        log "⚠️ YOURLS frontend script is not executable. Attempting to fix..."
+        chmod +x "$YOURS_SCRIPT" || {
+            log "❌ Failed to make YOURLS script executable"
+            return 1
+        }
+    fi
+    
+    log "▶️ Executing: $YOURS_SCRIPT"
+    set +e
+    bash "$YOURS_SCRIPT" >> "$LOG_FILE" 2>&1
+    local YOURS_EXIT=$?
+    set -e
+    
+    if [ $YOURS_EXIT -eq 0 ]; then
+        log "✅ YOURLS frontend script completed successfully"
+        return 0
+    else
+        log "❌ YOURLS frontend script failed with exit code $YOURS_EXIT"
+        return 1
+    fi
+}
+
 cleanup_old_logs() {
     log "🧹 Cleaning old logs (> ${CLEANUP_LOGS_DAYS} days)..."
     local deleted=$(find "$LOG_DIR" -name "monthly_recycle_*.log" -mtime +${CLEANUP_LOGS_DAYS} -delete -print 2>/dev/null | wc -l)
@@ -364,24 +397,26 @@ cd "$WORK_DIR" || {
     exit 1
 }
 
-# Optional system update
 if [ "$RUN_APT_UPDATE" = true ]; then
     log "📦 Running apt update (optional)..."
     sudo apt update >> "$LOG_FILE" 2>&1 || log "⚠️ apt update failed (non-fatal)"
     sudo apt full-upgrade -y >> "$LOG_FILE" 2>&1 || log "⚠️ apt upgrade failed (non-fatal)"
 fi
 
-# Run sovereign.sh recycle WITH services
 log "▶️ Executing: ./sovereign.sh recycle $SERVICES"
 set +e
 ./sovereign.sh recycle $SERVICES >> "$LOG_FILE" 2>&1
 EXIT_CODE=$?
 set -e
 
-# Cleanup old logs
+if [ "${RUN_YOURLS_FRONTEND_AFTER:-true}" = "true" ] && [ $EXIT_CODE -eq 0 ]; then
+    log "🔄 Running YOURLS frontend after recycle..."
+    run_yourls_frontend
+    YOURLS_FRONTEND_AFTER_EXIT=$?
+fi
+
 cleanup_old_logs
 
-# Auto reboot if required and enabled
 if [ -f /var/run/reboot-required ] && [ "$AUTO_REBOOT" = true ]; then
     log "🔁 Reboot required, auto reboot enabled. Rebooting in 30 seconds..."
     send_ntfy "🔁 Reboot Scheduled" "System will reboot in 30 seconds" "4" "warning,repeat"
@@ -392,7 +427,6 @@ fi
 END_TIME=$(date +%s)
 DURATION=$((END_TIME - START_TIME))
 
-# Send notification based on result
 if [ $EXIT_CODE -eq 0 ]; then
     log "✅ Monthly recycle completed successfully"
     notify_success $DURATION
