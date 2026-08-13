@@ -6,6 +6,45 @@ services:
     env_file:
       - .env
     volumes:
-      - ./vw-data/:/data/
+      - vaultwarden_data:/data/
     ports:
-      - 127.0.0.1:8000:80
+      - "127.0.0.1:8000:80"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/alive"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 512M
+        reservations:
+          cpus: "0.5"
+          memory: 256M
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - vaultwarden_network
+
+volumes:
+  vaultwarden_data:
+    name: vaultwarden_data
+
+networks:
+  vaultwarden_network:
+    name: vaultwarden_network
+    driver: bridge
