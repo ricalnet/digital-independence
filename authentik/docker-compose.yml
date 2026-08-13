@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: authentik
       POSTGRES_DB: authentik
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - authentik-postgres-data:/var/lib/postgresql/data
     networks:
       - authentic-network
     healthcheck:
@@ -23,7 +23,7 @@ services:
     restart: unless-stopped
     command: --requirepass ${AUTHENTIK_REDIS_PASSWORD}
     volumes:
-      - ./redis-data:/data
+      - authentik-redis-data:/data
     networks:
       - authentic-network
     healthcheck:
@@ -48,9 +48,9 @@ services:
       - "9000:9000"
       - "9443:9443"
     volumes:
-      - ./media:/media
-      - ./templates:/templates
-      - ./certs:/certs
+      - authentik-media:/media
+      - authentik-templates:/templates
+      - authentik-certs:/certs
     depends_on:
       authentik-postgres:
         condition: service_healthy
@@ -73,8 +73,8 @@ services:
       AUTHENTIK_REDIS__HOST: authentik-redis
       AUTHENTIK_REDIS__PASSWORD: ${AUTHENTIK_REDIS_PASSWORD}
     volumes:
-      - ./media:/media
-      - ./certs:/certs
+      - authentik-media:/media
+      - authentik-certs:/certs
     depends_on:
       authentik-postgres:
         condition: service_healthy
@@ -86,3 +86,15 @@ services:
 networks:
   authentic-network:
     driver: bridge
+
+volumes:
+  authentik-postgres-data:
+    name: authentik-postgres-data
+  authentik-redis-data:
+    name: authentik-redis-data
+  authentik-media:
+    name: authentik-media
+  authentik-templates:
+    name: authentik-templates
+  authentik-certs:
+    name: authentik-certs
