@@ -5,8 +5,12 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./homarr/appdata:/appdata
+      - homarr_data:/appdata
     env_file:
       - .env
     ports:
-      - '127.0.0.1:7575:7575'
+      - "127.0.0.1:7575:7575"
+
+volumes:
+  homarr_data:
+    name: homarr_data
