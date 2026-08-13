@@ -28,17 +28,12 @@ services:
       - "5053:5053/udp"
       - "5053:5053/tcp"
     volumes:
-      - './dnscrypt-proxy:/etc/dnscrypt-proxy'
+      - dnscrypt_config:/etc/dnscrypt-proxy
     networks:
       - pihole_network
     cap_add:
       - NET_ADMIN
       - NET_RAW
-    # healthcheck:
-    #  test: ["CMD", "nslookup", "google.com", "127.0.0.1"]
-    #  interval: 30s
-    #  timeout: 10s
-    #  retries: 3
 
   pihole:
     container_name: pihole
@@ -51,6 +46,8 @@ services:
       - dnscrypt-proxy
     environment:
       TZ: ${TZ}
+      PIHOLE_UID: 999
+      PIHOLE_GID: 999
       FTLCONF_webserver_api_password: ${FTLCONF_webserver_api_password}
       WEBPASSWORD: ${WEBPASSWORD}
       FTLCONF_dns_upstreams: ${FTLCONF_dns_upstreams}
@@ -80,17 +77,27 @@ services:
       FTLCONF_database_maxDBdays: ${FTLCONF_database_maxDBdays}
       FTLCONF_database_network_expire: ${FTLCONF_database_network_expire}
       FTLCONF_misc_privacylevel: ${FTLCONF_misc_privacylevel}
-
     volumes:
-      - './etc-pihole:/etc/pihole'
-      - './etc-dnsmasq.d:/etc/dnsmasq.d'
+      - pihole_data:/etc/pihole
+      - dnsmasq_data:/etc/dnsmasq.d
     cap_add:
       - NET_ADMIN
+      - NET_RAW
       - SYS_TIME
       - SYS_NICE
+      - CAP_SYS_RESOURCE
+      - CAP_SETUID
+      - CAP_SETGID
+      - CAP_CHOWN
+      - CAP_FOWNER
     restart: unless-stopped
     networks:
       - pihole_network
+
+volumes:
+  dnscrypt_config:
+  pihole_data:
+  dnsmasq_data:
 
 networks:
   pihole_network:
