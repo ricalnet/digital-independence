@@ -4,20 +4,21 @@ services:
     container_name: synapse
     restart: unless-stopped
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - "127.0.0.1:8008:8008"
       - "8448:8448"
     volumes:
-      - ./synapse-data:/data
+      - synapse_data:/data
     environment:
-      - SYNAPSE_SERVER_NAME=${SYNAPSE_SERVER_NAME}
-      - SYNAPSE_REPORT_STATS=${SYNAPSE_REPORT_STATS}
-      - SYNAPSE_CONFIG_PATH=${SYNAPSE_CONFIG_PATH}
-      - SYNAPSE_POSTGRES_HOST=${SYNAPSE_POSTGRES_HOST}
-      - SYNAPSE_POSTGRES_USER=${SYNAPSE_POSTGRES_USER}
+      - SYNAPSE_SERVER_NAME=${SYNAPSE_SERVER_NAME:-matrix.local}
+      - SYNAPSE_REPORT_STATS=${SYNAPSE_REPORT_STATS:-yes}
+      - SYNAPSE_CONFIG_PATH=${SYNAPSE_CONFIG_PATH:-/data/homeserver.yaml}
+      - SYNAPSE_POSTGRES_HOST=${SYNAPSE_POSTGRES_HOST:-postgres}
+      - SYNAPSE_POSTGRES_USER=${SYNAPSE_POSTGRES_USER:-synapse}
       - SYNAPSE_POSTGRES_PASSWORD=${SYNAPSE_POSTGRES_PASSWORD}
-      - SYNAPSE_POSTGRES_DB=${SYNAPSE_POSTGRES_DB}
+      - SYNAPSE_POSTGRES_DB=${SYNAPSE_POSTGRES_DB:-synapse}
     networks:
       - matrix-network
     healthcheck:
@@ -25,26 +26,30 @@ services:
       interval: 15s
       timeout: 5s
       retries: 3
-      start_period: 5s
+      start_period: 30s
 
   postgres:
     image: postgres:15-alpine
     container_name: synapse-postgres
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_USER=${POSTGRES_USER:-synapse}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_INITDB_ARGS=${POSTGRES_INITDB_ARGS}
+      - POSTGRES_DB=${POSTGRES_DB:-synapse}
+      - POSTGRES_INITDB_ARGS=${POSTGRES_INITDB_ARGS:---encoding=UTF8 --lc-collate=C --lc-ctype=C}
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - matrix-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-synapse}"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+volumes:
+  synapse_data:
+  postgres_data:
 
 networks:
   matrix-network:
