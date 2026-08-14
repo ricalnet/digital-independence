@@ -1,97 +1,103 @@
 services:
   db:
     restart: always
-    image: postgres:14-alpine
+    image: postgres:15-alpine
+    container_name: mastodon_db
     shm_size: 256mb
     networks:
       - internal_network
     healthcheck:
-      test: ['CMD', 'pg_isready', '-U', 'postgres']
+      test: ["CMD", "pg_isready", "-U", "${DB_USER:-postgres}"]
     volumes:
-      - ./postgres14:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     environment:
-      - 'POSTGRES_HOST_AUTH_METHOD=trust'
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   redis:
     restart: always
-    image: redis:7-alpine
+    image: redis:alpine
+    container_name: mastodon_redis
     networks:
       - internal_network
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: ["CMD", "redis-cli", "ping"]
     volumes:
-      - ./redis:/data
-
-  # es:
-  #   restart: always
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:8.19.15
-  #   environment:
-  #     - "ELASTIC_PASSWORD=password"  #Username is elastic. Do not change the username.
-  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m -Des.enforce.bootstrap.checks=true"
-  #     - "xpack.license.self_generated.type=basic"
-  #     - "xpack.security.enabled=false"
-  #     - "xpack.watcher.enabled=false"
-  #     - "xpack.graph.enabled=false"
-  #     - "xpack.ml.enabled=false"
-  #     - "bootstrap.memory_lock=true"
-  #     - "cluster.name=es-mastodon"
-  #     - "discovery.type=single-node"
-  #     - "thread_pool.write.queue_size=1000"
-  #   networks:
-  #      - external_network
-  #      - internal_network
-  #   healthcheck:
-  #      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
-  #   volumes:
-  #      - ./elasticsearch:/usr/share/elasticsearch/data
-  #   ulimits:
-  #     memlock:
-  #       soft: -1
-  #       hard: -1
-  #     nofile:
-  #       soft: 65536
-  #       hard: 65536
-  #   ports:
-  #     - '127.0.0.1:9200:9200'
+      - redis_data:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   web:
     image: ghcr.io/mastodon/mastodon:v4.6.2
     restart: always
+    container_name: mastodon_web
     env_file: .env.production
     command: bundle exec puma -C config/puma.rb
     networks:
       - external_network
       - internal_network
     healthcheck:
-      test: ['CMD-SHELL',"curl -s --noproxy localhost localhost:3000/health | grep -q 'OK' || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s --noproxy localhost localhost:3000/health | grep -q 'OK' || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     ports:
-      - '127.0.0.1:4001:3000'
+      - "127.0.0.1:${WEB_PORT:-4001}:3000"
     depends_on:
       - db
       - redis
-      # - es
     volumes:
-      - ./public/system:/mastodon/public/system
+      - mastodon_system:/mastodon/public/system
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   streaming:
     image: ghcr.io/mastodon/mastodon-streaming:v4.6.2
     restart: always
+    container_name: mastodon_streaming
     env_file: .env.production
     command: node ./streaming/index.js
     networks:
       - external_network
       - internal_network
     healthcheck:
-      test: ['CMD-SHELL', "curl -s --noproxy localhost localhost:4000/api/v1/streaming/health | grep -q 'OK' || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s --noproxy localhost localhost:4000/api/v1/streaming/health | grep -q 'OK' || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     ports:
-      - '127.0.0.1:4000:4000'
+      - "127.0.0.1:${STREAMING_PORT:-4000}:4000"
     depends_on:
       - db
       - redis
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   sidekiq:
     image: ghcr.io/mastodon/mastodon:v4.6.2
     restart: always
+    container_name: mastodon_sidekiq
     env_file: .env.production
     command: bundle exec sidekiq
     depends_on:
@@ -101,9 +107,17 @@ services:
       - external_network
       - internal_network
     volumes:
-      - ./public/system:/mastodon/public/system
+      - mastodon_system:/mastodon/public/system
     healthcheck:
-      test: ['CMD-SHELL', "ps aux | grep '[s]idekiq\ 8' || false"]
+      test: ["CMD-SHELL", "ps aux | grep '[s]idekiq' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   ## Uncomment to enable federation with tor instances along with adding the following ENV variables
   ## http_hidden_proxy=http://privoxy:8118
@@ -124,5 +138,15 @@ services:
 
 networks:
   external_network:
+    name: mastodon_external
   internal_network:
+    name: mastodon_internal
     internal: true
+
+volumes:
+  postgres_data:
+    name: mastodon_postgres_data
+  redis_data:
+    name: mastodon_redis_data
+  mastodon_system:
+    name: mastodon_system_data
