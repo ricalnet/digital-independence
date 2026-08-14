@@ -2,6 +2,7 @@ services:
   vaultwarden:
     image: vaultwarden/server:latest
     container_name: vaultwarden
+    user: "${UID:-1000}:${GID:-1000}"
     restart: unless-stopped
     env_file:
       - .env
