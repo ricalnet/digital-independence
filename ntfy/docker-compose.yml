@@ -1,11 +1,28 @@
 services:
   ntfy:
-    image: binwiederhier/ntfy
+    image: binwiederhier/ntfy:latest
+    container_name: ntfy-server
     command: serve
     env_file:
       - .env
     volumes:
-      - ./ntfy/data:/var/lib/ntfy
+      - ntfy_data:/var/lib/ntfy
     ports:
       - "8010:80"
     restart: unless-stopped
+    networks:
+      - ntfy-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  ntfy_data:
+    external: true
+    name: ntfy_data_volume
+
+networks:
+  ntfy-network:
+    driver: bridge
