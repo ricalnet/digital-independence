@@ -1,26 +1,31 @@
 <div align="center">
 
-![Digital Independence Banner](banner.png)
-
 # Digital Independence
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker](https://img.shields.io/badge/Docker-29.4+-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
-[![GitHub Issues](https://img.shields.io/github/issues/ricalnet/digital-independence)](https://github.com/ricalnet/digital-independence/issues)
+[![GitHub Issues](https://img.shields.io/badge/GitHub_Issues-Open-orange?logo=github)](https://github.com/ricalnet/digital-independence/issues)
 [![Shell Script](https://img.shields.io/badge/Shell-Bash-4EAA25?logo=gnu-bash&logoColor=white)](https://www.gnu.org/software/bash/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/ricalnet/digital-independence/graphs/commit-activity)
 
+**Take back control of your digital life, one container at a time.**
+
 </div>
 
-## Summary
-Digital Independence is a collection of ready-to-use Docker Compose configurations for running various self-hosted services on your own infrastructure. This project is designed to empower individuals and small organizations to manage their data, communication, and daily applications independently — not to completely abandon commercial services, but to ensure you have control, privacy, and choice.
+## 📌 Overview
 
-> *"Take back control of your digital life, one container at a time."*
+Digital Independence is a collection of ready-to-use Docker Compose configurations for running various self-hosted services on your own infrastructure. This project empowers individuals and small organizations to:
+
+- 📊 Eliminate third-party access and data mining
+- 🔒 Keep everything within your infrastructure
+- 🔄 Enjoy freedom to switch, modify, or replace services
+- 💰 Eliminate recurring subscription fees
+- 🎯 Build valuable DevOps and system administration skills
 
 ## ✨ Available Services
 
 | Icon | Service Name | Directory Path | Port | License | Brief Description |
-|------|---------------|----------------|------|---------|-------------------|
+|------|--------------|----------------|------|---------|-------------------|
 | 🔑 | **Authentik** | `authentik/` | 9000, 9443 | [LICENSE](https://github.com/goauthentik/authentik/blob/main/LICENSE) | Flexible open-source Identity Provider (SSO, LDAP, OAuth2, SAML). |
 | 📊 | **Dashdot** | `dashdot/` | 3001 | [LICENSE](https://github.com/MauriceNino/dashdot/blob/main/LICENSE.md) | Lightweight and informative system dashboard. |
 | 💬 | **Element Web** | `element-web/` | 8009 | [LICENSE](https://github.com/element-hq/element-web/blob/develop/LICENSE-AGPL-3.0) | Modern web client for the Matrix communication protocol. |
@@ -33,7 +38,7 @@ Digital Independence is a collection of ready-to-use Docker Compose configuratio
 | 🎵 | **Navidrome** | `navidrome/` | 4533 | [LICENSE](https://github.com/navidrome/navidrome/blob/master/LICENSE) | Modern music streaming server with Subsonic support. |
 | ☁️ | **Nextcloud** | `nextcloud-docker/` | 5000 | [LICENSE](https://github.com/nextcloud/server/tree/master/LICENSES) | Complete cloud storage and collaboration platform. |
 | 🔔 | **ntfy** | `ntfy/` | 8010 | [LICENSE](https://github.com/binwiederhier/ntfy/blob/main/LICENSE) | Simple push notifications via HTTP, ideal for script integration. |
-| 🤖 | **Open WebUI + Ollama** | `open-webui/` | 3000, 11434 | [Open WebUI](https://github.com/open-webui/open-webui/blob/main/LICENSE), [Ollama](https://github.com/ollama/ollama/blob/main/LICENSE)| Intuitive LLM interface, supports Ollama and OpenAI API. |
+| 🤖 | **Open WebUI + Ollama** | `open-webui/` | 3000, 11434 | [Open WebUI](https://github.com/open-webui/open-webui/blob/main/LICENSE), [Ollama](https://github.com/ollama/ollama/blob/main/LICENSE) | Intuitive LLM interface, supports Ollama and OpenAI API. |
 | 🛡️ | **Pi-hole** | `pi-hole/` | 53, 8080 | [LICENSE](https://github.com/pi-hole/pi-hole/blob/master/LICENSE) | DNS-level ad and tracker filtering for your entire network. |
 | 🐳 | **Portainer** | `portainer/` | 9443 | [LICENSE](https://github.com/portainer/portainer/blob/develop/LICENSE) | Docker container management via web interface. |
 | 🔍 | **SearXNG** | `searxng-docker/` | 8888 | [LICENSE](https://github.com/searxng/searxng/blob/master/LICENSE) | Privacy-respecting metasearch engine. |
@@ -45,7 +50,8 @@ Digital Independence is a collection of ready-to-use Docker Compose configuratio
 
 > Ports listed are the default ports on the host. Some services are only bound to `127.0.0.1` (localhost) for security reasons. Modify the configuration in each service's `docker-compose.yml` to bind to `0.0.0.0` or change the port.
 
-Additional Synapse services (bridges):
+### Additional Synapse Services (Bridges)
+
 - `synapse:mautrix-telegram` – Telegram bridge
 - `synapse:mautrix-whatsapp` – WhatsApp bridge
 
@@ -53,48 +59,71 @@ Additional Synapse services (bridges):
 
 Before starting, ensure your system meets the following requirements:
 
-- Docker Engine version 29.4+ (recommended)
-- Git to clone the repository
-- (Optional) `whiptail` or `dialog` for interactive menu
-- Linux / macOS operating system (Windows with WSL2 is also supported)
+| Requirement | Minimum Version | Notes |
+|-------------|----------------|-------|
+| Docker Engine | 29.4+ | Required for all container operations |
+| Docker Compose | v2.0+ | Included with Docker Engine 29.4+ |
+| Git | Latest | For cloning the repository |
+| Operating System | Linux / macOS / WSL2 | Windows WSL2 recommended |
+
+### Optional Dependencies
+
+- `whiptail` or `dialog` – For interactive menu
+- `curl` / `wget` – For downloading dependencies
 
 ## 🚀 Getting Started
 
-1. Clone the repository
-   ```bash
-   cd ~/
-   git clone https://github.com/ricalnet/digital-independence.git
-   cd digital-independence
-   ```
+### 1. Clone the Repository
 
-2. Install Docker Engine (if not already available)
-   - For Debian:
-     ```bash
-     ./install-docker-engine-on-debian.sh
-     ```
-   - For Ubuntu:
-     ```bash
-     ./install-docker-engine-on-ubuntu.sh
-     ```
+```bash
+cd ~/
+git clone https://github.com/ricalnet/digital-independence.git
+cd digital-independence
+```
 
-3. Prepare environment files (`.env`) for services that require them
-   ```bash
-   # Example for Immich
-   cp immich-app/.env.example immich-app/.env
-   nano immich-app/.env   # adjust as needed
-   ```
+### 2. Install Docker Engine
 
-4. Manage services using the `sovereign.sh` script
+If Docker is not already installed, use the provided installation scripts:
+
+For Debian:
+```bash
+./install-docker-engine-on-debian.sh
+```
+
+For Ubuntu:
+```bash
+./install-docker-engine-on-ubuntu.sh
+```
+
+### 3. Prepare Environment Files
+
+Some services require `.env` configuration files:
+
+```bash
+# Example for Immich
+cp immich-app/.env.example immich-app/.env
+nano immich-app/.env   # adjust as needed
+```
+
+### 4. Manage Services
+
+Use the `sovereign.sh` script to start, stop, and manage all services (see next section).
 
 ## ⚙️ Using `sovereign.sh`
 
-`sovereign.sh` is a command-line tool designed to simplify management of all services in one command.
+`sovereign.sh` is a powerful command-line tool designed to simplify management of all services in one command.
 
-### Interactive Menu (easiest)
+### Interactive Menu (Easiest for Beginners)
+
 ```bash
 ./sovereign.sh -i
 ```
-Or run without arguments: `./sovereign.sh`
+
+Or simply run without arguments:
+
+```bash
+./sovereign.sh
+```
 
 ### Quick Command Examples
 
@@ -105,21 +134,23 @@ Or run without arguments: `./sovereign.sh`
 | Stop a service | `./sovereign.sh -d portainer` |
 | Restart services | `./sovereign.sh -r portainer vaultwarden` |
 | Update images and restart | `./sovereign.sh recycle synapse` |
-| Update without service downtime | `./sovereign.sh update immich` |
+| Update without downtime | `./sovereign.sh update immich` |
 | Simulate commands (dry-run) | `./sovereign.sh -n up portainer` |
+| View service logs | `./sovereign.sh logs portainer` |
+| Check service status | `./sovereign.sh ps` |
 
 > For Synapse sub-services, use `synapse:mautrix-telegram` or `synapse:mautrix-whatsapp`.
 
 ### Full Help Guide
+
 ```bash
 ./sovereign.sh -h
 ```
 
 <details>
-<summary>📘 Full help guide: <code>./sovereign.sh -h</code></summary>
+<summary>📘 Click to expand full help guide</summary>
 
 ```bash
-./sovereign.sh -h
 Digital Independence by Ricalnet
 SOVEREIGN.SH v2.0.0
 
@@ -178,57 +209,76 @@ RECYCLE SEQUENCE:
 
 ## 🌐 Exposing Services to the Internet
 
-By default, services are only accessible from localhost. To access them securely from the internet (without opening raw ports to the public), this repository supports two approaches:
+By default, services are only accessible from localhost. To access them securely from the internet, this repository supports two approaches:
 
 ### 🧅 Tor Hidden Service (.onion)
-Anonymous access through the Tor network.  
-🔗 [Tor Hidden Service Implementation Guide](https://docs.ricalnet.my.id/posts/panduan-implementasi-hidden-service-tor/)
+
+Anonymous access through the Tor network, ideal for maximum privacy.
+
+- 📖 [Tor Hidden Service Implementation Guide](https://docs.ricalnet.my.id/posts/panduan-implementasi-hidden-service-tor/)
+- Benefits: No need for domain names, true anonymity, resistant to censorship
 
 ### ☁️ Cloudflare Tunnel
-Access through Cloudflare without opening firewall ports.  
-🔗 [Cloudflare Tunnel Configuration Guide](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
 
-## ⚠️ Security & Maintenance Guidelines
+Access through Cloudflare without opening firewall ports.
+
+- 📖 [Cloudflare Tunnel Configuration Guide](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
+- Benefits: DDoS protection, built-in SSL, no public IP required
+
+## 🔐 Security & Maintenance Guidelines
 
 To keep your system secure and stable, follow these recommendations:
 
-- Immediately change passwords and secrets in `.env` files.
-- Container data is stored in local directories or Docker volumes.
-- Use the `--pull` option and read upstream project changelogs before major updates.
-- For standard internet access, set up Nginx Proxy Manager or Traefik (configuration is not included in this repository).
+### Initial Setup
+
+- 🔑 Change all default passwords immediately in `.env` files
+- 🔒 Use strong, unique secrets for each service
+- 🌐 Bind to localhost (127.0.0.1) unless you need external access
+- 📁 Set proper file permissions: `chmod 600 .env` for sensitive files
+
+### Ongoing Maintenance
+
+- 📦 Container data is stored in local directories or Docker volumes
+- ⬆️ Use `--pull` option to get security patches and updates
+- 📰 Read upstream changelogs before major version upgrades
+- 🔍 Monitor logs for suspicious activity: `./sovereign.sh logs [service]`
+- 📊 Enable health checks and monitoring with Uptime Kuma
+
+## 💾 Backup & Recovery
+
+Protect your data with a robust backup solution using [Chantik](https://github.com/ricalnet/chantik) – a ChaCha20-Authenticated Backup Protection tool designed specifically for Docker environments.
 
 ## 🤖 Automation Scripts
 
-This repository includes automation scripts for scheduled maintenance of your services. The scripts are located in the `automation-scripts/` directory and can be configured to run via cron jobs.
+This repository includes automation scripts for scheduled maintenance. The scripts are located in `automation-scripts/` and can be configured via cron jobs.
 
-### Weekly Updates
-Automatically pulls the latest images and restarts services with new updates without downtime.
+### 📅 Weekly Updates
+
+Automatically pulls latest images and updates services without downtime.
 
 ```bash
-# Copy and configure the example config file
+# Copy and configure the config file
 cp automation-scripts/weekly-updates/weekly_updates.conf.example automation-scripts/weekly-updates/weekly_updates.conf
 nano automation-scripts/weekly-updates/weekly_updates.conf
 ```
 
-### Monthly Recycle
-Performs a full refresh (pull → down → up) on selected services to clean up and ensure fresh containers.
+### 🔄 Monthly Recycle
+
+Performs a full refresh (pull → down → up) on selected services to ensure fresh containers.
 
 ```bash
-# Copy and configure the example config file
+# Copy and configure the config file
 cp automation-scripts/monthly-recycle/monthly_recycle.conf.example automation-scripts/monthly-recycle/monthly_recycle.conf
-
 nano automation-scripts/monthly-recycle/monthly_recycle.conf
 ```
 
-### Setting Up Cron Jobs
+### ⏰ Setting Up Cron Jobs
 
-To automate these maintenance tasks, add the following entries to your crontab:
+Add these entries to your crontab for automated maintenance:
 
 ```bash
 sudo crontab -e
 ```
-
-Add these lines (adjust paths to match your installation):
 
 ```bash
 # Weekly updates - every Sunday at 3 AM
@@ -242,10 +292,10 @@ Add these lines (adjust paths to match your installation):
 
 ### Script Configuration
 
-Each script requires a configuration file that specifies which services to manage:
-
-- `weekly_updates.conf`: List of services to update weekly (e.g., `portainer`, `vaultwarden`, `nextcloud-docker`)
-- `monthly_recycle.conf`: List of services to fully recycle monthly (e.g., `synapse`, `immich`, `jellyfin`)
+| Script | Config File | Purpose |
+|--------|-------------|---------|
+| `weekly_updates.sh` | `weekly_updates.conf` | List of services to update weekly |
+| `monthly_recycle.sh` | `monthly_recycle.conf` | List of services to recycle monthly |
 
 The scripts automatically log their output to `logs/` directory for monitoring and troubleshooting.
 

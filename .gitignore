@@ -78,3 +78,5 @@ yourls/.env
 
 automation-scripts/weekly-updates/weekly_updates.conf
 automation-scripts/monthly-recycle/monthly_recycle.conf
+
+cleanup_system.sh
