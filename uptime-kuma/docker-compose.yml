@@ -6,7 +6,7 @@ services:
     ports:
       - "127.0.0.1:9442:3001"
     volumes:
-      - ./data:/app/data
+      - uptime_kuma_data:/app/data
       - /etc/localtime:/etc/localtime:ro
     environment:
       - TZ=Asia/Jakarta
@@ -34,6 +34,11 @@ services:
           memory: 512M
         reservations:
           memory: 128M
+
+volumes:
+  uptime_kuma_data:
+    name: uptime_kuma_data
+    driver: local
 
 networks:
   monitoring_network:
