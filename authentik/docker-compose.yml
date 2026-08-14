@@ -45,8 +45,8 @@ services:
       AUTHENTIK_REDIS__HOST: authentik-redis
       AUTHENTIK_REDIS__PASSWORD: ${AUTHENTIK_REDIS_PASSWORD}
     ports:
-      - "9000:9000"
-      - "9443:9443"
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9443:9443"
     volumes:
       - authentik-media:/media
       - authentik-templates:/templates
