@@ -22,9 +22,9 @@ jellyfin/config/*
 jellyfin/media/*
 jellyfin/media2/*
 
-linkstack-docker/configs
-linkstack-docker/linkstack
-linkstack-docker/.env
+linkstack/configs
+linkstack/linkstack
+linkstack/.env
 
 logs/*
 
@@ -36,8 +36,8 @@ mastodon/redis
 navidrome/data/*
 navidrome/music/*
 
-nextcrow-docker/.env
-nextcrow-docker/skeleton
+nextcloud/.env
+nextcloud/skeleton
 
 ntfy/ntfy/
 ntfy/.env
@@ -49,9 +49,9 @@ pi-hole/etc-dnsmasq.d/
 pi-hole/.env
 pi-hole/dnscrypt-proxy/dnscrypt-proxy.toml
 
-searxng-docker/searxng/
-searxng-docker/sources/
-searxng-docker/.env
+searxng/searxng/
+searxng/sources/
+searxng/.env
 
 synapse/synapse-data/
 synapse/postgres-data/

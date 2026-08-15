@@ -33,15 +33,15 @@ Digital Independence is a collection of ready-to-use Docker Compose configuratio
 | 🖼️ | **Immich** | `immich-app/` | 2283 | [LICENSE](https://github.com/immich-app/immich/blob/main/LICENSE) | Self-hosted photo and video management solution (Google Photos alternative). |
 | 🎥 | **Jellyfin** | `jellyfin/` | 8096, 8920 | [LICENSE](https://github.com/jellyfin/jellyfin/blob/master/LICENSE) | Open-source media server for streaming movies, music, and TV. |
 | 🌐 | **LibreTranslate** | `libretranslate/` | 5001 | [LICENSE](https://github.com/LibreTranslate/LibreTranslate/blob/main/LICENSE) | Offline translation engine that respects privacy. |
-| 🔗 | **LinkStack** | `linkstack-docker/` | 8003 | [LICENSE](https://github.com/LinkStackOrg/LinkStack/blob/main/LICENSE) | Self-hosted open-source link sharing platform (Linktree alternative). |
+| 🔗 | **LinkStack** | `linkstack/` | 8003 | [LICENSE](https://github.com/LinkStackOrg/LinkStack/blob/main/LICENSE) | Self-hosted open-source link sharing platform (Linktree alternative). |
 | 🐘 | **Mastodon** | `mastodon/` | 4000, 4001 | [LICENSE](https://github.com/mastodon/mastodon/blob/main/LICENSE) | Federated social networking server (Twitter/X alternative). |
 | 🎵 | **Navidrome** | `navidrome/` | 4533 | [LICENSE](https://github.com/navidrome/navidrome/blob/master/LICENSE) | Modern music streaming server with Subsonic support. |
-| ☁️ | **Nextcloud** | `nextcloud-docker/` | 5000 | [LICENSE](https://github.com/nextcloud/server/tree/master/LICENSES) | Complete cloud storage and collaboration platform. |
+| ☁️ | **Nextcloud** | `nextcloud/` | 5000 | [LICENSE](https://github.com/nextcloud/server/tree/master/LICENSES) | Complete cloud storage and collaboration platform. |
 | 🔔 | **ntfy** | `ntfy/` | 8010 | [LICENSE](https://github.com/binwiederhier/ntfy/blob/main/LICENSE) | Simple push notifications via HTTP, ideal for script integration. |
 | 🤖 | **Open WebUI + Ollama** | `open-webui/` | 3000, 11434 | [Open WebUI](https://github.com/open-webui/open-webui/blob/main/LICENSE), [Ollama](https://github.com/ollama/ollama/blob/main/LICENSE) | Intuitive LLM interface, supports Ollama and OpenAI API. |
 | 🛡️ | **Pi-hole** | `pi-hole/` | 53, 8080 | [LICENSE](https://github.com/pi-hole/pi-hole/blob/master/LICENSE) | DNS-level ad and tracker filtering for your entire network. |
 | 🐳 | **Portainer** | `portainer/` | 9443 | [LICENSE](https://github.com/portainer/portainer/blob/develop/LICENSE) | Docker container management via web interface. |
-| 🔍 | **SearXNG** | `searxng-docker/` | 8888 | [LICENSE](https://github.com/searxng/searxng/blob/master/LICENSE) | Privacy-respecting metasearch engine. |
+| 🔍 | **SearXNG** | `searxng/` | 8888 | [LICENSE](https://github.com/searxng/searxng/blob/master/LICENSE) | Privacy-respecting metasearch engine. |
 | 📨 | **Synapse** | `synapse/` | 8008, 8448 | [LICENSE](https://github.com/element-hq/synapse/blob/develop/LICENSE-AGPL-3.0) | Reference server for the Matrix communication network. |
 | ⏱️ | **Uptime Kuma** | `uptime-kuma/` | 9442 | [LICENSE](https://github.com/louislam/uptime-kuma/blob/master/LICENSE) | Service status monitoring with real-time notifications. |
 | 🔐 | **Vaultwarden** | `vaultwarden/` | 8000 | [LICENSE](https://github.com/dani-garcia/vaultwarden/blob/main/LICENSE.txt) | Bitwarden-compatible password management server, lightweight version. |
