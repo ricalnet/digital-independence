@@ -1,3 +1,8 @@
+# ============================================
+# Docker Volumes & Persistent Data
+# ============================================
+
+# Authentik
 authentik/certs/
 authentik/media/
 authentik/postgres-data/
@@ -5,78 +10,110 @@ authentik/redis-data/
 authentik/templates/
 authentik/.env
 
+# Element Web
 element-web/config/element-web-config.json
 element-web/config/element-web-config.json.bak
 element-web/modules/
 element-web/i18n
 
+# Homarr
 homarr/homarr/
 homarr/.env
 
+# Immich
 immich-app/library/
 immich-app/postgres/
 immich-app/.env
 
+# Jellyfin
 jellyfin/cache/*
 jellyfin/config/*
 jellyfin/media/*
 jellyfin/media2/*
 
+# Linkstack
 linkstack/configs
 linkstack/linkstack
 linkstack/.env
 
-logs/*
-
+# Mastodon
 mastodon/.env.production
 mastodon/postgres14/
 mastodon/public/
 mastodon/redis
 
+# Navidrome
 navidrome/data/*
 navidrome/music/*
 
+# Nextcloud
 nextcloud/.env
 nextcloud/skeleton
 
+# Ntfy
 ntfy/ntfy/
 ntfy/.env
 
+# Open WebUI
 open-webui/.env
 
+# Pi-hole
 pi-hole/etc-pihole/
 pi-hole/etc-dnsmasq.d/
 pi-hole/.env
 pi-hole/dnscrypt-proxy/dnscrypt-proxy.toml
 
+# SearXNG
 searxng/searxng/
 searxng/sources/
 searxng/.env
 
+# Synapse
 synapse/synapse-data/
 synapse/postgres-data/
 synapse/.env
 
+# Synapse - Mautrix Bridges
 synapse/mautrix-telegram/mautrix-telegram-data/
 synapse/mautrix-whatsapp/mautrix-whatsapp-data/
 synapse/mautrix-whatsapp/postgres-data/
 synapse/mautrix-whatsapp/.env
 
+# Uptime Kuma
 uptime-kuma/data/
 
+# Vaultwarden
 vaultwarden/vw-data/
 vaultwarden/.env
 
+# Wiki (MediaWiki)
 wiki/db_data/
 wiki/mediawiki_data/
 wiki/.env
 wiki/LocalSettings.php
 
+# Yourls
 yourls/admin-yourls-recaptcha-v3/
 yourls/Sleeky/
 yourls/.env
 
+
+# ============================================
+# Logs
+# ============================================
+logs/*
+
+
+# ============================================
+# Automation Scripts
+# ============================================
+automation-scripts/cpu-monitor/cpu_monitor.conf
+automation-scripts/memory-monitor/memory_monitor.conf
+automation-scripts/monitorctl.sh
+automation-scripts/setup-services.sh
+automation-scripts/logs/
 automation-scripts/weekly-updates/weekly_updates.conf
 automation-scripts/monthly-recycle/monthly_recycle.conf
 
+# System cleanup script
 cleanup_system.sh
