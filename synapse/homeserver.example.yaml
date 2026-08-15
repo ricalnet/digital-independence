@@ -1,78 +1,184 @@
 # =============================================================================
+# MATRIX SYNAPSE HOMESERVER CONFIGURATION
+# =============================================================================
+#
+# WARNING: This is a template. Review all settings before production use.
+# =============================================================================
+
+# =============================================================================
 # FEDERATION & PRIVACY
 # =============================================================================
+
+# Trusted key servers for server discovery
+# Leave empty to use the standard Matrix key server
 trusted_key_servers: []
+
+# Suppress warning about missing trusted key servers
+# Recommended: true for production if you know what you're doing
 suppress_key_server_warning: true
 
+# Verify TLS certificates for federation
+# Recommended: true (security best practice)
 federation_verify_certificates: true
+
+# Restrict federation to specific domains
+# Empty = allow federation with all servers
+# To restrict: list domain names, e.g., ["matrix.org", "your-partner.com"]
 federation_domain_whitelist: []
+
+# Disable profile lookup over federation
+# Recommended: true for privacy
 allow_profile_lookup_over_federation: false
+
+# Disable device name lookup over federation
+# Recommended: true for privacy
 allow_device_name_lookup_over_federation: false
 
+# Federation timeout and retry settings
 federation:
+  # Timeout for federation requests
   client_timeout: 60s
+
+  # Short retry settings (for quick failures)
   max_short_retry_delay: 2s
   max_short_retries: 3
+
+  # Long retry settings (for persistent failures)
   max_long_retry_delay: 60s
   max_long_retries: 10
+
+  # Minimum time between retries to the same destination
   destination_min_retry_interval: 10m
+
+  # Retry backoff multiplier
   destination_retry_multiplier: 2
-  destination_max_retry_interval: 1w
+
+  # Maximum time to keep retrying a destination
+  # Recommended: 24h (down from default 1w)
+  destination_max_retry_interval: 24h
 
 # =============================================================================
 # IP RANGE BLACKLIST
 # =============================================================================
+# IMPORTANT: Uncomment and adjust these based on your network setup
+# Default blacklist prevents access to private/internal IP ranges
+# =============================================================================
+
 # Uncomment and adjust as needed:
 # ip_range_blacklist:
-#   - 127.0.0.0/8
-#   - ::1/128
-#   - fe80::/10
-#   - 2001:db8::/32
+#   - 127.0.0.0/8          # Localhost
+#   - ::1/128              # Localhost IPv6
+#   - fe80::/10            # Link-local
+#   - 2001:db8::/32        # Documentation
+#   - 10.0.0.0/8           # Private network
+#   - 172.16.0.0/12        # Private network
+#   - 192.168.0.0/16       # Private network
+#   - 100.64.0.0/10        # CGNAT
+#   - 169.254.0.0/16       # Link-local
+#   - 224.0.0.0/4          # Multicast
+#   - 240.0.0.0/4          # Reserved
+#   - ff00::/8             # Multicast IPv6
+#   - fc00::/7             # Unique Local IPv6
+#   - 192.0.2.0/24         # Documentation
+#   - 198.51.100.0/24      # Documentation
+#   - 203.0.113.0/24       # Documentation
+#   - 198.18.0.0/15        # Benchmarking
+#   - 0.0.0.0/8            # Invalid/unroutable
+#   - 192.88.99.0/24       # 6to4 relay
 
-# If you have internal bridges, add specific whitelist:
+# Whitelist specific IPs even if they're in blacklist
+# Example: If you have internal services, add them here
 # ip_range_whitelist:
-#   - 192.168.1.100/32
+#   - 192.168.1.100/32    # Your internal service
+#   - 10.0.0.5/32         # Another internal service
 
 # =============================================================================
 # PRESENCE
 # =============================================================================
+# Presence allows users to see online/offline status of others
+# =============================================================================
+
 presence:
-  enabled: true
+  # Enable/disable presence
+  # Recommended: false for production (reduces federation traffic)
+  enabled: false
+
+  # Include offline users in sync responses
+  # Recommended: false (reduces payload size)
   include_offline_users_on_sync: false
 
 # =============================================================================
 # PROFILE PRIVACY
 # =============================================================================
+
+# Require authentication for profile requests
+# Recommended: true (security best practice)
 require_auth_for_profile_requests: true
+
+# Only allow profile requests from users who share a room
+# Recommended: true (privacy best practice)
 limit_profile_requests_to_users_who_share_rooms: true
+
+# Include profile data on invite
+# Recommended: false (privacy)
 include_profile_data_on_invite: false
 
 # =============================================================================
 # STATISTICS & METRICS
 # =============================================================================
+
+# Send anonymous statistics to Matrix.org
+# Recommended: false for privacy (or true to support the project)
 report_stats: false
+
+# Enable Prometheus metrics endpoint
+# Recommended: false unless you have monitoring
 enable_metrics: false
+
+# Which metrics to expose
 metrics_flags:
   known_servers: false
 
 # =============================================================================
 # MEDIA STORE
 # =============================================================================
-enable_authenticated_media: true
-enable_media_repo: true
-media_store_path: /data/media_store # CHANGE: Path to media storage
-max_upload_size: 100M
-max_pending_media_uploads: 20
-unused_expiration_time: 24h
 
+# Require authentication to access media
+# Recommended: true (security best practice)
+enable_authenticated_media: true
+
+# Enable media repository
+# Recommended: true
+enable_media_repo: true
+
+# Path to store media files
+# Make sure this directory exists and is writable
+media_store_path: /data/media_store
+
+# Maximum upload size per file
+# Recommended: 100M (adjust based on your needs)
+max_upload_size: 100M
+
+# Maximum pending media uploads per user
+max_pending_media_uploads: 20
+
+# Time after which unused media is considered for cleanup
+unused_expiration_time: 48h
+
+# Avatar settings
 max_avatar_size: 5M
 allowed_avatar_mimetypes:
   - image/png
   - image/jpeg
   - image/gif
   - image/webp
+  - image/svg+xml
 
+# Dynamic thumbnail generation
 dynamic_thumbnails: true
+
+# Thumbnail sizes to generate
+# Format: width, height, method (crop/scale)
 thumbnail_sizes:
   - width: 32
     height: 32
@@ -92,268 +198,462 @@ thumbnail_sizes:
   - width: 1280
     height: 720
     method: scale
+  - width: 1920
+    height: 1080
+    method: scale
 
+# Maximum image pixels (width × height)
+# 32M pixels ≈ 8000×4000 pixels
 max_image_pixels: 32M
 
-remote_media_download_burst_count: 500M
-remote_media_download_per_second: 87K
+# Remote media download rate limiting
+remote_media_download_burst_count: 1000
+remote_media_download_per_second: 5M # 5 MB/s
 
+# Disable URL preview
+# Recommended: false for privacy and security
 url_preview_enabled: false
 
+# Media retention settings
 media_retention:
-  local_media_lifetime: 30d # CHANGE: Adjust retention period as needed
-  remote_media_lifetime: 30d # CHANGE: Adjust retention period as needed
+  # How long to keep local media
+  # Recommended: 90d (sync with redaction_retention_period)
+  local_media_lifetime: 90d
 
+  # How long to keep remote media
+  remote_media_lifetime: 90d
+
+# oEmbed settings (for URL previews)
 oembed:
   disable_default_providers: false
-  additional_providers: [] # CHANGE: Add custom oEmbed providers if needed
+  additional_providers: []
 
-prevent_media_downloads_from: [] # CHANGE: Add domains to block media downloads from
+# Prevent media downloads from specific domains
+prevent_media_downloads_from: []
 
 # =============================================================================
 # REGISTRATION
 # =============================================================================
-enable_registration: false # CHANGE: Set to true to allow registration
+
+# Enable new user registration
+# Recommended: false for production (use admin or SSO)
+enable_registration: false
+
+# Allow registration without verification
+# Recommended: false (requires enable_registration: true)
 enable_registration_without_verification: false
-registrations_require_3pid: [] # CHANGE: Add 3PID requirements (e.g., email, msisdn)
-registration_requires_token: false # CHANGE: Set to true to require registration tokens
+
+# Require 3PID (email/phone) for registration
+registrations_require_3pid: []
+
+# Require registration token
+registration_requires_token: false
+
+# Allow guest access
+# Recommended: false (security)
 allow_guest_access: false
 
 # =============================================================================
 # BRIDGES
 # =============================================================================
-# CHANGE: Update with your bridge registration files
+# Application service configuration files for bridges
+# =============================================================================
+
 app_service_config_files:
+  # Telegram bridge
   - /data/mautrix-telegram-registration.yaml
+  # WhatsApp bridge
   - /data/mautrix-whatsapp-registration.yaml
+  # Add more bridges as needed:
+  # - /data/mautrix-signal-registration.yaml
+  # - /data/mautrix-discord-registration.yaml
 
 # =============================================================================
 # RETENTION POLICY
 # =============================================================================
+# Automatically delete old messages
+# =============================================================================
+
 retention:
+  # Enable message retention
   enabled: true
+
+  # Default policy for all rooms
   default_policy:
+    # Minimum lifetime (messages younger than this are never deleted)
     min_lifetime: 1d
-    max_lifetime: 30d
+    # Maximum lifetime (messages older than this are deleted)
+    max_lifetime: 365d
+
+  # Allowed lifetime ranges (users can override within these limits)
   allowed_lifetime_min: 1d
-  allowed_lifetime_max: 30d
+  allowed_lifetime_max: 365d
+
+  # Purge jobs for different lifetime ranges
   purge_jobs:
+    # For messages with max_lifetime <= 7d, check every 12h
     - longest_max_lifetime: 7d
       interval: 12h
+
+    # For messages 7d < max_lifetime <= 30d, check every 24h
     - shortest_max_lifetime: 7d
       longest_max_lifetime: 30d
       interval: 24h
+
+    # For messages 30d < max_lifetime <= 90d, check every 48h
     - shortest_max_lifetime: 30d
+      longest_max_lifetime: 90d
       interval: 48h
 
-redaction_retention_period: 30d
-user_ips_max_age: 30d
-forgotten_room_retention_period: 30d
+    # For messages with max_lifetime > 90d, check every 72h
+    - shortest_max_lifetime: 90d
+      interval: 72h
+
+# How long to keep redactions
+# Recommended: sync with media_retention
+redaction_retention_period: 90d
+
+# How long to keep user IP addresses
+user_ips_max_age: 90d
+
+# How long to keep forgotten rooms
+forgotten_room_retention_period: 90d
 
 # =============================================================================
 # PUBLIC DIRECTORY
 # =============================================================================
+
+# Allow public rooms without authentication
+# Recommended: false (security)
 allow_public_rooms_without_auth: false
+
+# Allow public rooms over federation
+# Recommended: false (privacy)
 allow_public_rooms_over_federation: false
+
+# Enable room list search
+# Recommended: false (reduces server load)
 enable_room_list_search: false
 
 # =============================================================================
 # RATE LIMITING
 # =============================================================================
-# CHANGE: Adjust rate limiting based on your server capacity
-rc_message:
-  per_second: 5.0
-  burst_count: 20.0
+# These settings protect your server from abuse
+# =============================================================================
 
+# Rate limiting for sending messages
+rc_message:
+  per_second: 10.0
+  burst_count: 30.0
+
+# Rate limiting for registration
 rc_registration:
   per_second: 0.17
   burst_count: 3.0
 
+# Rate limiting for registration token validation
 rc_registration_token_validity:
   per_second: 0.1
   burst_count: 5.0
 
+# Rate limiting for login
 rc_login:
+  # Per IP address
   address:
-    per_second: 0.003
-    burst_count: 5.0
+    per_second: 0.05 # 1 attempt per 20 seconds
+    burst_count: 10.0
+  # Per account
   account:
-    per_second: 0.003
-    burst_count: 5.0
+    per_second: 0.05 # 1 attempt per 20 seconds
+    burst_count: 10.0
+  # Failed attempts
   failed_attempts:
     per_second: 0.17
-    burst_count: 3.0
+    burst_count: 5.0
 
+# Rate limiting for admin redactions
 rc_admin_redaction:
-  per_second: 2.0
-  burst_count: 100.0
-
-rc_joins:
-  local:
-    per_second: 0.1
-    burst_count: 10.0
-  remote:
-    per_second: 0.01
-    burst_count: 10.0
-
-rc_joins_per_room:
   per_second: 1.0
+  burst_count: 20.0
+
+# Rate limiting for room joins
+rc_joins:
+  # Local joins
+  local:
+    per_second: 0.2
+    burst_count: 20.0
+  # Remote joins (federation)
+  remote:
+    per_second: 0.02
+    burst_count: 20.0
+
+# Rate limiting for joins per room
+rc_joins_per_room:
+  per_second: 2.0
+  burst_count: 20.0
+
+# Rate limiting for 3PID validation (email/phone)
+rc_3pid_validation:
+  per_second: 0.05 # 1 per 20 seconds
   burst_count: 10.0
 
-rc_3pid_validation:
-  per_second: 0.003
-  burst_count: 5.0
-
+# Rate limiting for invites
 rc_invites:
   per_room:
-    per_second: 0.3
-    burst_count: 10.0
+    per_second: 0.5
+    burst_count: 20.0
   per_user:
-    per_second: 0.003
-    burst_count: 5.0
-  per_issuer:
-    per_second: 0.3
+    per_second: 0.005
     burst_count: 10.0
+  per_issuer:
+    per_second: 0.5
+    burst_count: 20.0
 
+# Rate limiting for third-party invites
 rc_third_party_invite:
   per_second: 0.2
   burst_count: 10.0
 
+# Rate limiting for media creation
 rc_media_create:
-  per_second: 10.0
-  burst_count: 50.0
+  per_second: 20.0
+  burst_count: 100.0
 
+# Rate limiting for federation requests
 rc_federation:
   window_size: 1000
-  sleep_limit: 10
-  sleep_delay: 500
-  reject_limit: 50
-  concurrent: 3
+  sleep_limit: 15 # Start delaying after 15 requests
+  sleep_delay: 500 # Delay 500ms per request
+  reject_limit: 75 # Reject after 75 requests
+  concurrent: 10 # Max concurrent federation requests
 
+# Rate limiting for presence updates
 rc_presence:
   per_user:
-    per_second: 0.1
-    burst_count: 1.0
+    per_second: 0.2
+    burst_count: 2.0
 
+# Rate limiting for delayed event management
 rc_delayed_event_mgmt:
-  per_second: 1.0
-  burst_count: 5.0
-
-rc_reports:
-  per_second: 1.0
-  burst_count: 5.0
-
-rc_room_creation:
-  per_second: 0.016
+  per_second: 2.0
   burst_count: 10.0
 
-rc_user_directory:
-  per_second: 0.016
-  burst_count: 200.0
+# Rate limiting for reports
+rc_reports:
+  per_second: 2.0
+  burst_count: 10.0
 
-federation_rr_transactions_per_room_per_second: 50
+# Rate limiting for room creation
+rc_room_creation:
+  per_second: 0.05
+  burst_count: 20.0
+
+# Rate limiting for user directory queries
+rc_user_directory:
+  per_second: 0.05
+  burst_count: 50.0 # Recommended: 50 (down from default 500)
+
+# Federation request/response transactions per room per second
+federation_rr_transactions_per_room_per_second: 100
 
 # =============================================================================
 # CACHING
 # =============================================================================
-# CHANGE: Adjust cache sizes based on available memory
-event_cache_size: 50K
+# Optimize performance with caching
+# =============================================================================
+
+# Maximum number of events to cache in memory
+# RAM estimation: ~1KB per event (can be more)
+# Adjust based on available RAM:
+#   < 4GB: 10K
+#   4-8GB: 25K-50K
+#   > 8GB: 100K
+event_cache_size: 100K
+
 caches:
-  global_factor: 2.5
+  # Global cache size multiplier
+  # 1.0 = default, 1.5 = 50% more cache, etc.
+  # Recommended: 1.5 (good balance of performance and memory)
+  global_factor: 1.5
+
+  # Per-cache overrides
   per_cache_factors:
-    get_users_who_share_room_with_user: 3.0
-    "*stateGroupCache*": 3.0
-    get_rooms_for_user: 2.5
-    auth_events: 2.5
-    "*getEvent*": 2.0
+    # Cache for users who share rooms with a user
+    get_users_who_share_room_with_user: 2.0
+    # State group cache
+    "*stateGroupCache*": 2.0
+    # Rooms for user
+    get_rooms_for_user: 1.5
+    # Auth events
+    auth_events: 1.5
+    # Generic event cache
+    "*getEvent*": 1.5
+
+  # Enable cache expiration
   expire_caches: true
-  cache_entry_ttl: 30m
-  sync_response_cache_duration: 2m
+
+  # How long to keep cache entries
+  cache_entry_ttl: 2h
+
+  # How long to cache sync responses
+  sync_response_cache_duration: 5m
 
 # =============================================================================
 # SEARCH & DIRECTORY
 # =============================================================================
-enable_search: false
+
+# Enable search
+enable_search: true
+
+# User directory settings
 user_directory:
-  enabled: false
+  # Enable user directory
+  enabled: true
+
+  # Search all users (including those with no public profile)
   search_all_users: false
+
+  # Prefer local users in search results
   prefer_local_users: true
-  exclude_remote_users: true
+
+  # Exclude remote users (from other servers)
+  # Recommended: false (include remote users for better UX)
+  exclude_remote_users: false
+
+  # Show locked users (disabled/deactivated)
   show_locked_users: false
 
 # =============================================================================
 # ROOM SETTINGS
 # =============================================================================
+
+# Default room version
+# Recommended: "12" (latest stable version)
 default_room_version: "12"
+
+# Enable encryption by default for new rooms
+# Options: "all", "off", or "invite"
 encryption_enabled_by_default_for_room_type: all
+
+# Forget rooms when user leaves
+# Recommended: true (privacy)
 forget_rooms_on_leave: true
-exclude_rooms_from_sync: [] # CHANGE: Add room IDs to exclude from sync
+
+# Rooms to exclude from sync (for performance)
+exclude_rooms_from_sync: []
 
 # =============================================================================
 # ALIAS & PUBLICATION RULES
 # =============================================================================
-# CHANGE: Replace with your admin user
+# Control who can create room aliases and publish rooms
+# =============================================================================
+
+# Rules for creating room aliases
 alias_creation_rules:
+  # Only admin can create aliases
   - user_id: "@admin:YOUR_DOMAIN_HERE"
     action: allow
+  # Deny everyone else
   - action: deny
 
-# CHANGE: Replace with your admin user
+# Rules for publishing rooms to the public directory
 room_list_publication_rules:
+  # Only admin can publish rooms
   - user_id: "@admin:YOUR_DOMAIN_HERE"
     action: allow
+  # Deny everyone else
   - action: deny
 
-default_power_level_content_override: {} # CHANGE: Add custom power level defaults
+# Override default power levels for new rooms
+# Leave empty to use default
+default_power_level_content_override: {}
 
 # =============================================================================
 # SESSION MANAGEMENT
 # =============================================================================
-# CHANGE: Adjust session lifetimes based on security requirements
+
+# How long a session can last before re-authentication
+# Recommended: 30d (security vs convenience balance)
 session_lifetime: 30d
-refreshable_access_token_lifetime: 6h
-refresh_token_lifetime: 14d
-nonrefreshable_access_token_lifetime: 12h
 
+# Refresh token lifetime
+# Recommended: 7d (short for security)
+refresh_token_lifetime: 7d
+
+# Non-refreshable access token lifetime
+nonrefreshable_access_token_lifetime: 24h
+
+# Refreshable access token lifetime
+refreshable_access_token_lifetime: 24h
+
+# UI authentication session timeout
 ui_auth:
-  session_timeout: 60s
+  session_timeout: 120s
 
+# Login via existing session
 login_via_existing_session:
+  # Enable/disable
   enabled: false
+  # Require UI auth
   require_ui_auth: true
-  token_timeout: 5m
+  # Token timeout
+  token_timeout: 10m
 
 # =============================================================================
 # DEVICE MANAGEMENT
 # =============================================================================
+
+# Delete stale devices after this period
+# Recommended: 30d (security)
 delete_stale_devices_after: 30d
+
+# Dummy events threshold for device lists
 dummy_events_threshold: 5
 
 # =============================================================================
 # USER TYPES
 # =============================================================================
+
 user_types:
+  # Default user type (null = no default)
   default_user_type: null
-  extra_user_types: [] # CHANGE: Add custom user types
+  # Extra user types
+  extra_user_types: []
 
 # =============================================================================
 # BACKGROUND UPDATES
 # =============================================================================
+# Settings for background processes
+# =============================================================================
+
 background_updates:
-  background_update_duration_ms: 100
+  # Duration per background update in milliseconds
+  background_update_duration_ms: 200
+
+  # Enable sleeping between updates
   sleep_enabled: true
-  sleep_duration_ms: 1000
-  min_batch_size: 1
-  default_batch_size: 100
+
+  # Sleep duration in milliseconds
+  sleep_duration_ms: 500
+
+  # Minimum batch size for updates
+  min_batch_size: 5
+
+  # Default batch size for updates
+  default_batch_size: 200
 
 # =============================================================================
-# OAuth/OpenID
+# OAuth/OpenID Connect (SSO)
 # =============================================================================
+# Configure Single Sign-On providers
+# =============================================================================
+
 oidc_providers:
-  - idp_id: authentik
-    idp_name: SSO
-    discover: true
-    backchannel_logout_enabled: true
+  # Authentik SSO provider
+  - idp_id: authentik # Unique identifier
+    idp_name: SSO # Display name
+    discover: true # Use OIDC discovery endpoint
+    backchannel_logout_enabled: true # Enable logout from SSO
     issuer: "https://auth.domain.com/application/o/<application_slug>/"
     client_id: "<Client ID from authentik>"
     client_secret: "<Client Secret from authentik>"
@@ -363,10 +663,37 @@ oidc_providers:
       - "email"
     user_mapping_provider:
       config:
+        # Template for username (MXID localpart)
         localpart_template: "{{ user.preferred_username }}"
+        # Template for display name
         display_name_template: "{{ user.preferred_username|capitalize }}"
 
+  # Add more providers as needed:
+  # - idp_id: google
+  #   idp_name: Google
+  #   discover: true
+  #   issuer: "https://accounts.google.com"
+  #   client_id: "<your-client-id>"
+  #   client_secret: "<your-client-secret>"
+  #   scopes: ["openid", "profile", "email"]
+
+# =============================================================================
+# JWT Authentication
+# =============================================================================
+# JSON Web Token authentication for APIs
+# =============================================================================
+
 jwt_config:
+  # Enable JWT authentication
   enabled: true
+
+  # Secret or RSA private key
+  # For HS256: use a strong random string (32+ chars)
+  # For RS256: use RSA private key in PEM format
   secret: "<Client Secret from authentik>"
+
+  # Algorithm:
+  #   - HS256: Symmetric (shared secret) - simpler
+  #   - RS256: Asymmetric (RSA) - more secure
+  # WARNING: RS256 requires a PEM-encoded RSA private key, not a client secret!
   algorithm: "RS256"
