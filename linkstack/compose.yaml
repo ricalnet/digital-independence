@@ -1,7 +1,7 @@
 services:
   linkstack:
-    hostname: 'linkstack'
-    image: 'linkstackorg/linkstack:latest'
+    hostname: "linkstack"
+    image: "linkstackorg/linkstack:latest"
     container_name: linkstack
     environment:
       TZ: ${TZ}
@@ -15,12 +15,35 @@ services:
       - linkstack_data:/htdocs
       - linkstack_php:/usr/local/etc/php/conf.d
     ports:
-      - '${HTTP_PORT:-8003}:80'
+      - "${HTTP_PORT:-8003}:80"
     restart: unless-stopped
     depends_on:
       - mysql
     networks:
       - linkstack-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   mysql:
     image: mysql:8.0
@@ -33,11 +56,37 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     restart: unless-stopped
-    command: 
+    command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
     networks:
       - linkstack-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p${MYSQL_ROOT_PASSWORD}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
   linkstack-network:

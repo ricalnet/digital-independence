@@ -283,11 +283,11 @@ retention:
     # Minimum lifetime (messages younger than this are never deleted)
     min_lifetime: 1d
     # Maximum lifetime (messages older than this are deleted)
-    max_lifetime: 365d
+    max_lifetime: 90d
 
   # Allowed lifetime ranges (users can override within these limits)
   allowed_lifetime_min: 1d
-  allowed_lifetime_max: 365d
+  allowed_lifetime_max: 90d
 
   # Purge jobs for different lifetime ranges
   purge_jobs:

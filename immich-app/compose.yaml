@@ -4,6 +4,7 @@ services:
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    user: "${UID:-1000}:${GID:-1000}"
     volumes:
       - immich-upload:/data
       - /etc/localtime:/etc/localtime:ro
@@ -16,25 +17,78 @@ services:
       - database
     restart: always
     healthcheck:
-      disable: false
+      test: ["CMD", "curl", "-f", "http://localhost:2283/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - immich-network
 
   immich-machine-learning:
     container_name: immich_machine_learning
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
+    user: "${UID:-1000}:${GID:-1000}"
     volumes:
       - model-cache:/cache
     env_file:
       - .env
     restart: always
     healthcheck:
-      disable: false
+      disable: true
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - immich-network
 
   redis:
     container_name: immich_redis
     image: docker.io/valkey/valkey:9@sha256:4963247afc4cd33c7d3b2d2816b9f7f8eeebab148d29056c2ca4d7cbc966f2d9
     healthcheck:
-      test: redis-cli ping || exit 1
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - immich-network
 
   database:
     container_name: immich_postgres
@@ -49,9 +103,27 @@ services:
     shm_size: 128mb
     restart: always
     healthcheck:
-      disable: false
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - immich-network
 
 volumes:
   immich-upload:
   immich-postgres:
   model-cache:
+
+networks:
+  immich-network:
+    driver: bridge

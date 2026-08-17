@@ -23,8 +23,22 @@ services:
           "root",
           "-p${MYSQL_ROOT_PASSWORD}",
         ]
-      timeout: 20s
-      retries: 10
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - nextcloud-network
 
   redis:
     image: redis:alpine
@@ -34,9 +48,23 @@ services:
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
-      timeout: 20s
-      retries: 10
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - nextcloud-network
 
   app:
     image: nextcloud:latest
@@ -46,7 +74,6 @@ services:
       - "127.0.0.1:5000:80"
     volumes:
       - nextcloud_data:/var/www/html
-      - ./skeleton:/var/www/html/core/skeleton
     environment:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -63,6 +90,33 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+    security_opt:
+      - no-new-privileges:true
+    cap_add:
+      - NET_BIND_SERVICE
+      - SETGID
+      - SETUID
+    cap_drop:
+      - ALL
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - nextcloud-network
 
 volumes:
   db_data:
@@ -71,3 +125,7 @@ volumes:
     name: nextcloud_redis_data
   nextcloud_data:
     name: nextcloud_nextcloud_data
+
+networks:
+  nextcloud-network:
+    driver: bridge

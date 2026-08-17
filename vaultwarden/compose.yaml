@@ -16,19 +16,14 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
     deploy:
       resources:
         limits:
-          cpus: "1"
           memory: 512M
+          cpus: "1"
         reservations:
-          cpus: "0.5"
           memory: 256M
+          cpus: "0.5"
     security_opt:
       - no-new-privileges:true
     cap_drop:
@@ -38,6 +33,11 @@ services:
     read_only: true
     tmpfs:
       - /tmp
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     networks:
       - vaultwarden_network
 

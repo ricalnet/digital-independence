@@ -4,13 +4,35 @@ services:
     image: ghcr.io/homarr-labs/homarr:latest
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - homarr_data:/appdata
     env_file:
       - .env
     ports:
       - "127.0.0.1:7575:7575"
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "next-server"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - homarr-network
 
 volumes:
   homarr_data:
     name: homarr_data
+
+networks:
+  homarr-network:
+    driver: bridge

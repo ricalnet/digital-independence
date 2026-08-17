@@ -6,6 +6,6 @@ services:
       DASHDOT_ENABLE_CPU_TEMPS: "true"
     privileged: true
     ports:
-      - "127.0.0.1:3001:3001"
+      - "3001:3001"
     volumes:
       - /:/mnt/host:ro

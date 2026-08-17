@@ -1,33 +1,4 @@
 services:
-  # ============================================
-  # OLLAMA SERVICE (LOCAL LLM SERVER)
-  # Uncomment this section to enable local Ollama instance
-  # ============================================
-  # ollama:
-  #   image: ollama/ollama:latest
-  #   container_name: ollama
-  #   restart: unless-stopped
-  #   ports:
-  #     - "11434:11434"
-  #   volumes:
-  #     - ollama_data:/root/.ollama
-  #   environment:
-  #     - OLLAMA_HOST=${OLLAMA_HOST:-0.0.0.0}
-  #     - OLLAMA_KEEP_ALIVE=${OLLAMA_KEEP_ALIVE:-5m}
-  #     - OLLAMA_NUM_PARALLEL=${OLLAMA_NUM_PARALLEL:-1}
-  #     - OLLAMA_MAX_LOADED_MODELS=${OLLAMA_MAX_LOADED_MODELS:-1}
-  #     - OLLAMA_NUM_THREADS=${OLLAMA_NUM_THREADS:-4}
-  #     - OLLAMA_GPU_OVERHEAD=${OLLAMA_GPU_OVERHEAD}
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "${LOG_LEVEL}"
-  #       max-size: "${MAX_LOG_SIZE:-10m}"
-  #       max-file: "${MAX_LOG_FILES:-3}"
-
-  # ============================================
-  # OPEN WEBUI SERVICE (CHAT INTERFACE)
-  # ============================================
   openwebui:
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
@@ -38,9 +9,9 @@ services:
       - openwebui-data:/app/backend/data
     environment:
       - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://ollama:11434}
-      # - HF_TOKEN=${HF_TOKEN}
       - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
       - DOMAIN=${DOMAIN}
+      - WEBUI_NAME=${WEBUI_NAME}
       - WEBUI_URL=${WEBUI_URL}
       - WEBUI_AUTH=${WEBUI_AUTH}
       - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
@@ -53,21 +24,74 @@ services:
       - ENABLE_PASSWORD_AUTH=${ENABLE_PASSWORD_AUTH}
       - OAUTH_MERGE_ACCOUNTS_BY_EMAIL=${OAUTH_MERGE_ACCOUNTS_BY_EMAIL}
       - CORS_ALLOW_ORIGIN=${CORS_ALLOW_ORIGIN}
-    # depends_on:
-    #   - ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
     logging:
       driver: "json-file"
       options:
-        max-size: "${MAX_LOG_SIZE:-10m}"
-        max-file: "${MAX_LOG_FILES:-3}"
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - openwebui-network
+
+  # Ollama
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: ollama
+  #   restart: unless-stopped
+  #   ports:
+  #     - "127.0.0.1:11434:11434"
+  #   volumes:
+  #     - ollama_data:/root/.ollama
+  #   environment:
+  #     - OLLAMA_HOST=0.0.0.0
+  #     - OLLAMA_KEEP_ALIVE=5m
+  #     - OLLAMA_NUM_PARALLEL=1
+  #     - OLLAMA_MAX_LOADED_MODELS=1
+  #     - OLLAMA_NUM_THREADS=4
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 8G
+  #         cpus: '4'
+  #       reservations:
+  #         memory: 4G
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   cap_drop:
+  #     - ALL
+  #   cap_add:
+  #     - NET_BIND_SERVICE
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #   networks:
+  #     - openwebui-network
 
 volumes:
-  # ============================================
-  # DATA VOLUMES
-  # Uncomment ollama_data if Ollama service is enabled
-  # ============================================
+  openwebui-data:
+    driver: local
   # ollama_data:
   #   driver: local
 
-  openwebui-data:
-    driver: local
+networks:
+  openwebui-network:
+    driver: bridge

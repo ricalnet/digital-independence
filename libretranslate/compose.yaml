@@ -6,7 +6,7 @@ services:
       - "127.0.0.1:5001:5000"
     restart: unless-stopped
     healthcheck:
-      test: ['CMD-SHELL', './venv/bin/python scripts/healthcheck.py']
+      test: ["CMD-SHELL", "./venv/bin/python scripts/healthcheck.py"]
       interval: 10s
       timeout: 4s
       retries: 4
@@ -16,6 +16,29 @@ services:
       - LT_LOAD_ONLY=en,id
     volumes:
       - libretranslate_models:/home/libretranslate/.local:rw
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - libretranslate-network
 
 volumes:
   libretranslate_models:
+
+networks:
+  libretranslate-network:
+    driver: bridge

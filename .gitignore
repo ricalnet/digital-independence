@@ -37,6 +37,7 @@ linkstack/linkstack
 linkstack/.env
 
 # Mastodon
+mastodon/.env
 mastodon/.env.production
 mastodon/postgres14/
 mastodon/public/
