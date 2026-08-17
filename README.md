@@ -2,13 +2,75 @@
 
 # Digital Independence
 
+```mermaid
+mindmap
+  root((Digital Independence))
+    Core Infrastructure
+      Docker
+      Docker Compose
+      Git
+      Linux / WSL2
+    Service Management
+      sovereign.sh
+        Interactive Menu
+        Start / Stop / Restart
+        Update / Recycle
+        Logs / Status
+      Automation
+        Weekly Updates
+        Monthly Recycle
+        Monitoring
+    Services
+      Authentication
+        Authentik
+      Communication
+        Element Web
+        Synapse
+        Mautrix Bridges
+      Media & Content
+        Jellyfin
+        Immich
+        Nextcloud
+      Productivity
+        Vaultwarden
+        LinkStack
+        YOURLS
+      Search & Translate
+        SearXNG
+        LibreTranslate
+      Security
+        Pi-hole
+        Ntfy
+      AI
+        Open WebUI
+        Ollama
+      Management
+        Portainer
+        Uptime Kuma
+        Dashdot
+        Homarr
+    Security
+      Hardening
+        no-new-privileges
+        cap_drop
+        read_only
+      Compatibility
+        Database exceptions
+        setpriv exceptions
+    Deployment
+      Localhost Only
+      Tor Hidden Service
+      Cloudflare Tunnel
+      Backup
+```
+
+**Take back control of your digital life, one container at a time.**
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker](https://img.shields.io/badge/Docker-29.4+-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![GitHub Issues](https://img.shields.io/badge/GitHub_Issues-Open-orange?logo=github)](https://github.com/ricalnet/digital-independence/issues)
 [![Shell Script](https://img.shields.io/badge/Shell-Bash-4EAA25?logo=gnu-bash&logoColor=white)](https://www.gnu.org/software/bash/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/ricalnet/digital-independence/graphs/commit-activity)
-
-**Take back control of your digital life, one container at a time.**
 
 </div>
 
@@ -24,36 +86,42 @@ Digital Independence is a collection of ready-to-use Docker Compose configuratio
 
 ## ✨ Available Services
 
-| Icon | Service Name | Directory Path | Port | License | Brief Description |
-|------|--------------|----------------|------|---------|-------------------|
-| 🔑 | **Authentik** | `authentik/` | 9000, 9443 | [LICENSE](https://github.com/goauthentik/authentik/blob/main/LICENSE) | Flexible open-source Identity Provider (SSO, LDAP, OAuth2, SAML). |
-| 📊 | **Dashdot** | `dashdot/` | 3001 | [LICENSE](https://github.com/MauriceNino/dashdot/blob/main/LICENSE.md) | Lightweight and informative system dashboard. |
-| 💬 | **Element Web** | `element-web/` | 8009 | [LICENSE](https://github.com/element-hq/element-web/blob/develop/LICENSE-AGPL-3.0) | Modern web client for the Matrix communication protocol. |
-| 🗂️ | **Homarr** | `homarr/` | 7575 | [LICENSE](https://github.com/homarr-labs/homarr/blob/dev/LICENSE) | Modular dashboard to manage all your services. |
-| 🖼️ | **Immich** | `immich-app/` | 2283 | [LICENSE](https://github.com/immich-app/immich/blob/main/LICENSE) | Self-hosted photo and video management solution (Google Photos alternative). |
-| 🎥 | **Jellyfin** | `jellyfin/` | 8096, 8920 | [LICENSE](https://github.com/jellyfin/jellyfin/blob/master/LICENSE) | Open-source media server for streaming movies, music, and TV. |
-| 🌐 | **LibreTranslate** | `libretranslate/` | 5001 | [LICENSE](https://github.com/LibreTranslate/LibreTranslate/blob/main/LICENSE) | Offline translation engine that respects privacy. |
-| 🔗 | **LinkStack** | `linkstack/` | 8003 | [LICENSE](https://github.com/LinkStackOrg/LinkStack/blob/main/LICENSE) | Self-hosted open-source link sharing platform (Linktree alternative). |
-| 🐘 | **Mastodon** | `mastodon/` | 4000, 4001 | [LICENSE](https://github.com/mastodon/mastodon/blob/main/LICENSE) | Federated social networking server (Twitter/X alternative). |
-| 🎵 | **Navidrome** | `navidrome/` | 4533 | [LICENSE](https://github.com/navidrome/navidrome/blob/master/LICENSE) | Modern music streaming server with Subsonic support. |
-| ☁️ | **Nextcloud** | `nextcloud/` | 5000 | [LICENSE](https://github.com/nextcloud/server/tree/master/LICENSES) | Complete cloud storage and collaboration platform. |
-| 🔔 | **ntfy** | `ntfy/` | 8010 | [LICENSE](https://github.com/binwiederhier/ntfy/blob/main/LICENSE) | Simple push notifications via HTTP, ideal for script integration. |
-| 🤖 | **Open WebUI + Ollama** | `open-webui/` | 3000, 11434 | [Open WebUI](https://github.com/open-webui/open-webui/blob/main/LICENSE), [Ollama](https://github.com/ollama/ollama/blob/main/LICENSE) | Intuitive LLM interface, supports Ollama and OpenAI API. |
-| 🛡️ | **Pi-hole** | `pi-hole/` | 53, 8080 | [LICENSE](https://github.com/pi-hole/pi-hole/blob/master/LICENSE) | DNS-level ad and tracker filtering for your entire network. |
-| 🐳 | **Portainer** | `portainer/` | 9443 | [LICENSE](https://github.com/portainer/portainer/blob/develop/LICENSE) | Docker container management via web interface. |
-| 🔍 | **SearXNG** | `searxng/` | 8888 | [LICENSE](https://github.com/searxng/searxng/blob/master/LICENSE) | Privacy-respecting metasearch engine. |
-| 📨 | **Synapse** | `synapse/` | 8008, 8448 | [LICENSE](https://github.com/element-hq/synapse/blob/develop/LICENSE-AGPL-3.0) | Reference server for the Matrix communication network. |
-| ⏱️ | **Uptime Kuma** | `uptime-kuma/` | 9442 | [LICENSE](https://github.com/louislam/uptime-kuma/blob/master/LICENSE) | Service status monitoring with real-time notifications. |
-| 🔐 | **Vaultwarden** | `vaultwarden/` | 8000 | [LICENSE](https://github.com/dani-garcia/vaultwarden/blob/main/LICENSE.txt) | Bitwarden-compatible password management server, lightweight version. |
-| 📚 | **MediaWiki** | `wiki/` | 8002 | [LICENSE](https://github.com/wikimedia/mediawiki?tab=License-1-ov-file) | Wiki platform used by Wikipedia. |
-| 🔗 | **YOURLS** | `yourls/` | 8001 | [LICENSE](https://github.com/YOURLS/YOURLS/blob/master/LICENSE) | Self-hosted URL shortening service. |
+| Icon | Service | Directory | Port | .env Required | Status |
+|------|---------|-----------|------|---------------|--------|
+| 🔑 | **Authentik** | `authentik/` | 9000, 9443 | ✅ Yes | Stable |
+| 📊 | **Dashdot** | `dashdot/` | 3001 | ❌ No | Stable |
+| 💬 | **Element Web** | `element-web/` | 8009 | ❌ No | Stable |
+| 🗂️ | **Homarr** | `homarr/` | 7575 | ✅ Yes | Stable |
+| 🖼️ | **Immich** | `immich-app/` | 2283 | ✅ Yes | Stable |
+| 🎥 | **Jellyfin** | `jellyfin/` | 8096, 8920 | ❌ No | Stable |
+| 🌐 | **LibreTranslate** | `libretranslate/` | 5001 | ❌ No | Stable |
+| 🔗 | **LinkStack** | `linkstack/` | 8003 | ✅ Yes | Stable |
+| 🐘 | **Mastodon** | `mastodon/` | 4000, 4001 | ✅ Yes (2 files)* | Stable |
+| 🎵 | **Navidrome** | `navidrome/` | 4533 | ❌ No | Stable |
+| ☁️ | **Nextcloud** | `nextcloud/` | 5000 | ✅ Yes | Stable |
+| 🔔 | **ntfy** | `ntfy/` | 8010 | ✅ Yes | Stable |
+| 🤖 | **Open WebUI** | `open-webui/` | 3000 | ✅ Yes | Stable |
+| 🛡️ | **Pi-hole** | `pi-hole/` | 53, 8080 | ✅ Yes | Stable |
+| 🐳 | **Portainer** | `portainer/` | 9443 | ❌ No | Stable |
+| 🔍 | **SearXNG** | `searxng/` | 8888 | ✅ Yes | Stable |
+| 📨 | **Synapse** | `synapse/` | 8008, 8448 | ✅ Yes | Stable |
+| ⏱️ | **Uptime Kuma** | `uptime-kuma/` | 9442 | ❌ No | Stable |
+| 🔐 | **Vaultwarden** | `vaultwarden/` | 8000 | ✅ Yes | Stable |
+| 📚 | **MediaWiki** | `wiki/` | 8002 | ✅ Yes | Stable |
+| 🔗 | **YOURLS** | `yourls/` | 8001 | ✅ Yes | Stable |
+| 📨 | **Mautrix-Telegram** | `synapse/mautrix-telegram/` | - | ❌ No | Stable |
+| 📨 | **Mautrix-WhatsApp** | `synapse/mautrix-whatsapp/` | - | ✅ Yes | Stable |
+
+> Mastodon requires both `.env` (for Docker) and `.env.production` (for Mastodon configuration)
 
 > Ports listed are the default ports on the host. Some services are only bound to `127.0.0.1` (localhost) for security reasons. Modify the configuration in each service's `docker-compose.yml` to bind to `0.0.0.0` or change the port.
 
 ### Additional Synapse Services (Bridges)
 
-- `synapse:mautrix-telegram` – Telegram bridge
-- `synapse:mautrix-whatsapp` – WhatsApp bridge
+- `synapse:mautrix-telegram` – Telegram bridge (no .env, uses config.yaml)
+- `synapse:mautrix-whatsapp` – WhatsApp bridge (requires .env for DB credentials)
+
+> These bridges are located in `synapse/mautrix-telegram/` and `synapse/mautrix-whatsapp/` directories. They share the same `matrix-network` as Synapse.
 
 ## 📋 Prerequisites
 
@@ -65,11 +133,12 @@ Before starting, ensure your system meets the following requirements:
 | Docker Compose | v2.0+ | Included with Docker Engine 29.4+ |
 | Git | Latest | For cloning the repository |
 | Operating System | Linux / macOS / WSL2 | Windows WSL2 recommended |
+| `curl` or `wget` | Latest | For healthchecks and downloads |
 
 ### Optional Dependencies
 
-- `whiptail` or `dialog` – For interactive menu
-- `curl` / `wget` – For downloading dependencies
+- `whiptail` or `dialog` – For interactive menu in `sovereign.sh`
+- `jq` – For JSON parsing in automation scripts
 
 ## 🚀 Getting Started
 
@@ -97,15 +166,37 @@ For Ubuntu:
 
 ### 3. Prepare Environment Files
 
-Some services require `.env` configuration files:
+Some services require `.env` configuration files. Each service that needs a `.env` includes an `.env.example` template:
 
 ```bash
+# Example for Authentik
+cp authentik/.env.example authentik/.env
+nano authentik/.env   # adjust as needed
+
 # Example for Immich
 cp immich-app/.env.example immich-app/.env
 nano immich-app/.env   # adjust as needed
 ```
 
-### 4. Manage Services
+Quick Password Generator:
+```bash
+# Generate a secure password
+openssl rand -base64 32
+
+# Generate multiple passwords at once
+for i in {1..5}; do openssl rand -base64 32; done
+```
+
+### 4. Create External Networks
+
+Some services require pre-created networks:
+
+```bash
+# For Synapse and Mautrix bridges
+docker network create matrix-network
+```
+
+### 5. Manage Services
 
 Use the `sovereign.sh` script to start, stop, and manage all services (see next section).
 
@@ -225,7 +316,7 @@ Access through Cloudflare without opening firewall ports.
 - 📖 [Cloudflare Tunnel Configuration Guide](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
 - Benefits: DDoS protection, built-in SSL, no public IP required
 
-## 🔐 Security & Maintenance Guidelines
+## 🔒 Security & Maintenance Guidelines
 
 To keep your system secure and stable, follow these recommendations:
 
@@ -306,9 +397,43 @@ Here are some areas where you can help:
 - Adding configurations for new services
 - Fixing bugs or improving features in `sovereign.sh`
 - Completing or improving documentation
+- Testing on different platforms (ARM, x86, etc.)
 
 Please open an [Issue](https://github.com/ricalnet/digital-independence/issues) or submit a [Pull Request](https://github.com/ricalnet/digital-independence/pulls).
 
 ## 📜 License
 
-This repository uses the [MIT License](LICENSE). However, each included service has its own license. Please comply with the license terms of each upstream project.
+### Repository License
+
+This repository is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
+
+### Upstream Project Licenses
+
+Each service included in this repository is a separate open-source project with its own license. Please review and comply with the license terms of each upstream project before using them in production.
+
+| Service | License |
+|---------|---------|
+| Authentik | [LICENSE](https://github.com/goauthentik/authentik/blob/main/LICENSE) |
+| Dashdot | [LICENSE](https://github.com/MauriceNino/dashdot/blob/main/LICENSE.md) |
+| Element Web | [LICENSE](https://github.com/element-hq/element-web/blob/develop/LICENSE-AGPL-3.0) |
+| Homarr | [LICENSE](https://github.com/homarr-labs/homarr/blob/dev/LICENSE) |
+| Immich | [LICENSE](https://github.com/immich-app/immich/blob/main/LICENSE) |
+| Jellyfin | [LICENSE](https://github.com/jellyfin/jellyfin/blob/master/LICENSE) |
+| LibreTranslate | [LICENSE](https://github.com/LibreTranslate/LibreTranslate/blob/main/LICENSE) |
+| LinkStack | [LICENSE](https://github.com/LinkStackOrg/LinkStack/blob/main/LICENSE) |
+| Mastodon | [LICENSE](https://github.com/mastodon/mastodon/blob/main/LICENSE) |
+| Navidrome | [LICENSE](https://github.com/navidrome/navidrome/blob/master/LICENSE) |
+| Nextcloud | [LICENSE](https://github.com/nextcloud/server/tree/master/LICENSES) |
+| ntfy | [LICENSE](https://github.com/binwiederhier/ntfy/blob/main/LICENSE) |
+| Open WebUI | [LICENSE](https://github.com/open-webui/open-webui/blob/main/LICENSE) |
+| Ollama | [LICENSE](https://github.com/ollama/ollama/blob/main/LICENSE) |
+| Pi-hole | [LICENSE](https://github.com/pi-hole/pi-hole/blob/master/LICENSE) |
+| Portainer | [LICENSE](https://github.com/portainer/portainer/blob/develop/LICENSE) |
+| SearXNG | [LICENSE](https://github.com/searxng/searxng/blob/master/LICENSE) |
+| Synapse | [LICENSE](https://github.com/element-hq/synapse/blob/develop/LICENSE-AGPL-3.0) |
+| Uptime Kuma | [LICENSE](https://github.com/louislam/uptime-kuma/blob/master/LICENSE) |
+| Vaultwarden | [LICENSE](https://github.com/dani-garcia/vaultwarden/blob/main/LICENSE.txt) |
+| MediaWiki | [LICENSE](https://github.com/wikimedia/mediawiki?tab=License-1-ov-file) |
+| YOURLS | [LICENSE](https://github.com/YOURLS/YOURLS/blob/master/LICENSE) |
+| Mautrix-Telegram | [LICENSE](https://github.com/mautrix/telegram/blob/main/LICENSE) |
+| Mautrix-WhatsApp | [LICENSE](https://github.com/mautrix/whatsapp/blob/main/LICENSE) |
