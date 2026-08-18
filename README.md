@@ -86,31 +86,73 @@ Digital Independence is a collection of ready-to-use Docker Compose configuratio
 
 ## ✨ Available Services
 
+### 🔐 Security
+
 | Icon | Service | Directory | Port | .env Required | Status |
 |------|---------|-----------|------|---------------|--------|
-| 🔑 | **Authentik** | `authentik/` | 9000, 9443 | ✅ Yes | Stable |
-| 📊 | **Dashdot** | `dashdot/` | 3001 | ❌ No | Stable |
-| 💬 | **Element Web** | `element-web/` | 8009 | ❌ No | Stable |
-| 🗂️ | **Homarr** | `homarr/` | 7575 | ✅ Yes | Stable |
-| 🖼️ | **Immich** | `immich-app/` | 2283 | ✅ Yes | Stable |
-| 🎥 | **Jellyfin** | `jellyfin/` | 8096, 8920 | ❌ No | Stable |
-| 🌐 | **LibreTranslate** | `libretranslate/` | 5001 | ❌ No | Stable |
-| 🔗 | **LinkStack** | `linkstack/` | 8003 | ✅ Yes | Stable |
-| 🐘 | **Mastodon** | `mastodon/` | 4000, 4001 | ✅ Yes (2 files)* | Stable |
-| 🎵 | **Navidrome** | `navidrome/` | 4533 | ❌ No | Stable |
-| ☁️ | **Nextcloud** | `nextcloud/` | 5000 | ✅ Yes | Stable |
-| 🔔 | **ntfy** | `ntfy/` | 8010 | ✅ Yes | Stable |
-| 🤖 | **Open WebUI** | `open-webui/` | 3000 | ✅ Yes | Stable |
+| 🛡️ | **Wazuh** | `wazuh/` | 443 | ✅ Yes | Stable |
 | 🛡️ | **Pi-hole** | `pi-hole/` | 53, 8080 | ✅ Yes | Stable |
-| 🐳 | **Portainer** | `portainer/` | 9443 | ❌ No | Stable |
-| 🔍 | **SearXNG** | `searxng/` | 8888 | ✅ Yes | Stable |
-| 📨 | **Synapse** | `synapse/` | 8008, 8448 | ✅ Yes | Stable |
-| ⏱️ | **Uptime Kuma** | `uptime-kuma/` | 9442 | ❌ No | Stable |
 | 🔐 | **Vaultwarden** | `vaultwarden/` | 8000 | ✅ Yes | Stable |
-| 📚 | **MediaWiki** | `wiki/` | 8002 | ✅ Yes | Stable |
-| 🔗 | **YOURLS** | `yourls/` | 8001 | ✅ Yes | Stable |
+| 🔑 | **Authentik** | `authentik/` | 9000, 9443 | ✅ Yes | Stable |
+
+### 🤖 AI
+
+| Icon | Service | Directory | Port | .env Required | Status |
+|------|---------|-----------|------|---------------|--------|
+| 🤖 | **Open WebUI + Ollama** | `open-webui/` | 3000 | ✅ Yes | Stable |
+
+### 🖥️ Management & Monitoring
+
+| Icon | Service | Directory | Port | .env Required | Status |
+|------|---------|-----------|------|---------------|--------|
+| 📊 | **Dashdot** | `dashdot/` | 3001 | ❌ No | Stable |
+| 🗂️ | **Homarr** | `homarr/` | 7575 | ✅ Yes | Stable |
+| 🔔 | **ntfy** | `ntfy/` | 8010 | ✅ Yes | Stable |
+| ⏱️ | **Uptime Kuma** | `uptime-kuma/` | 9442 | ❌ No | Stable |
+| 🐳 | **Portainer** | `portainer/` | 9443 | ❌ No | Stable |
+
+### 💬 Communication (Matrix)
+
+| Icon | Service | Directory | Port | .env Required | Status |
+|------|---------|-----------|------|---------------|--------|
+| 📨 | **Synapse** | `synapse/` | 8008, 8448 | ✅ Yes | Stable |
+| 💬 | **Element Web** | `element-web/` | 8009 | ❌ No | Stable |
 | 📨 | **Mautrix-Telegram** | `synapse/mautrix-telegram/` | - | ❌ No | Stable |
 | 📨 | **Mautrix-WhatsApp** | `synapse/mautrix-whatsapp/` | - | ✅ Yes | Stable |
+
+### 🌐 Search & Translate
+
+| Icon | Service | Directory | Port | .env Required | Status |
+|------|---------|-----------|------|---------------|--------|
+| 🌐 | **LibreTranslate** | `libretranslate/` | 5001 | ❌ No | Stable |
+| 🔍 | **SearXNG** | `searxng/` | 8888 | ✅ Yes | Stable |
+
+### 📁 Media & Content
+
+| Icon | Service | Directory | Port | .env Required | Status |
+|------|---------|-----------|------|---------------|--------|
+| 🖼️ | **Immich** | `immich-app/` | 2283 | ✅ Yes | Stable |
+| 🎵 | **Navidrome** | `navidrome/` | 4533 | ❌ No | Stable |
+| ☁️ | **Nextcloud** | `nextcloud/` | 5000 | ✅ Yes | Stable |
+| 🎥 | **Jellyfin** | `jellyfin/` | 8096, 8920 | ❌ No | Stable |
+
+### 🔗 Link Management
+
+| Icon | Service | Directory | Port | .env Required | Status |
+|------|---------|-----------|------|---------------|--------|
+| 🔗 | **YOURLS** | `yourls/` | 8001 | ✅ Yes | Stable |
+| 🔗 | **LinkStack** | `linkstack/` | 8003 | ✅ Yes | Stable |
+
+### 📚 Knowledge & Publishing
+| Icon | Service | Directory | Port | .env Required | Status |
+|------|---------|-----------|------|---------------|--------|
+| 📚 | **MediaWiki** | `wiki/` | 8002 | ✅ Yes | Stable |
+
+### 🐘 Social Media
+
+| Icon | Service | Directory | Port | .env Required | Status |
+|------|---------|-----------|------|---------------|--------|
+| 🐘 | **Mastodon** | `mastodon/` | 4000, 4001 | ✅ Yes (2 files)* | Stable |
 
 > Mastodon requires both `.env` (for Docker) and `.env.production` (for Mastodon configuration)
 
@@ -422,6 +464,9 @@ Each service included in this repository is a separate open-source project with 
 | LibreTranslate | [LICENSE](https://github.com/LibreTranslate/LibreTranslate/blob/main/LICENSE) |
 | LinkStack | [LICENSE](https://github.com/LinkStackOrg/LinkStack/blob/main/LICENSE) |
 | Mastodon | [LICENSE](https://github.com/mastodon/mastodon/blob/main/LICENSE) |
+| Mautrix-Telegram | [LICENSE](https://github.com/mautrix/telegram/blob/main/LICENSE) |
+| Mautrix-WhatsApp | [LICENSE](https://github.com/mautrix/whatsapp/blob/main/LICENSE) |
+| MediaWiki | [LICENSE](https://github.com/wikimedia/mediawiki?tab=License-1-ov-file) |
 | Navidrome | [LICENSE](https://github.com/navidrome/navidrome/blob/master/LICENSE) |
 | Nextcloud | [LICENSE](https://github.com/nextcloud/server/tree/master/LICENSES) |
 | ntfy | [LICENSE](https://github.com/binwiederhier/ntfy/blob/main/LICENSE) |
@@ -433,7 +478,5 @@ Each service included in this repository is a separate open-source project with 
 | Synapse | [LICENSE](https://github.com/element-hq/synapse/blob/develop/LICENSE-AGPL-3.0) |
 | Uptime Kuma | [LICENSE](https://github.com/louislam/uptime-kuma/blob/master/LICENSE) |
 | Vaultwarden | [LICENSE](https://github.com/dani-garcia/vaultwarden/blob/main/LICENSE.txt) |
-| MediaWiki | [LICENSE](https://github.com/wikimedia/mediawiki?tab=License-1-ov-file) |
+| Wazuh | [LICENSE](https://github.com/wazuh/wazuh-docker/blob/main/LICENSE) |
 | YOURLS | [LICENSE](https://github.com/YOURLS/YOURLS/blob/master/LICENSE) |
-| Mautrix-Telegram | [LICENSE](https://github.com/mautrix/telegram/blob/main/LICENSE) |
-| Mautrix-WhatsApp | [LICENSE](https://github.com/mautrix/whatsapp/blob/main/LICENSE) |

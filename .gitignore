@@ -87,6 +87,11 @@ uptime-kuma/data/
 vaultwarden/vw-data/
 vaultwarden/.env
 
+wazuh/config/wazuh_dashboard/wazuh.yml
+wazuh/config/wazuh_indexer/internal_users.yml
+wazuh/config/wazuh_indexer_ssl_certs
+wazuh/.env
+
 # Wiki (MediaWiki)
 wiki/db_data/
 wiki/mediawiki_data/
