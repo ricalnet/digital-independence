@@ -40,6 +40,7 @@ SERVICES=(
     ["libretranslate"]="libretranslate"
     ["linkstack"]="linkstack"
     ["mastodon"]="mastodon"
+    ["mediawiki"]="wiki"
     ["navidrome"]="navidrome"
     ["nextcloud"]="nextcloud"
     ["ntfy"]="ntfy"
@@ -50,7 +51,7 @@ SERVICES=(
     ["synapse"]="synapse"
     ["uptime-kuma"]="uptime-kuma"
     ["vaultwarden"]="vaultwarden"
-    ["mediawiki"]="wiki"
+    ["wazuh"]="wazuh"
     ["yourls"]="yourls"
 )
 
