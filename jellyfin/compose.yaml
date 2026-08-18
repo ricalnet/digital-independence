@@ -14,17 +14,11 @@ services:
         source: ./media
         target: /media
       - type: bind
-        source: ./media2
-        target: /media2
-        read_only: true
-      - type: bind
         source: /usr/share/fonts
         target: /usr/local/share/fonts/custom
         read_only: true
     environment:
-      - JELLYFIN_PublishedServerUrl=http://localhost:8096
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - JELLYFIN_PublishedServerUrl=${PUBLIC_URL:-http://localhost:8096}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8096/health"]
       interval: 30s
@@ -50,3 +44,9 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    networks:
+      - jellyfin-network
+
+networks:
+  jellyfin-network:
+    driver: bridge
