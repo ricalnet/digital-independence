@@ -7,6 +7,22 @@ services:
       - ./mautrix-telegram-data:/data
     networks:
       - matrix-network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CAP_CHOWN
+      - CAP_SETUID
+      - CAP_SETGID
+      - CAP_FOWNER
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "mautrix-telegram"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     deploy:
       resources:
         limits:
