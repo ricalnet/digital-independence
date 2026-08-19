@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./data:/data
-      - ./music:/music:ro
+      - ${MUSIC_PATH:-./music}:/music:ro
     environment:
       - ND_LOGLEVEL=info
     healthcheck:

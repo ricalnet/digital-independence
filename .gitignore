@@ -29,7 +29,7 @@ immich-app/.env
 jellyfin/cache/*
 jellyfin/config/*
 jellyfin/media/*
-jellyfin/media2/*
+jellyfin/.env
 
 # Linkstack
 linkstack/configs
@@ -46,6 +46,7 @@ mastodon/redis
 # Navidrome
 navidrome/data/*
 navidrome/music/*
+navidrome/.env
 
 # Nextcloud
 nextcloud/.env

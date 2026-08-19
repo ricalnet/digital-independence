@@ -144,9 +144,9 @@ While the repository has not been tested on 32-bit ARM (`arm/v7`) for all servic
 | Icon | Service | Directory | Port | .env Required | Status |
 |------|---------|-----------|------|---------------|--------|
 | 🖼️ | **Immich** | `immich-app/` | 2283 | ✅ Yes | Stable |
-| 🎵 | **Navidrome** | `navidrome/` | 4533 | ❌ No | Stable |
+| 🎵 | **Navidrome** | `navidrome/` | 4533 | ⚠️ Optional | Stable |
 | ☁️ | **Nextcloud** | `nextcloud/` | 5000 | ✅ Yes | Stable |
-| 🎥 | **Jellyfin** | `jellyfin/` | 8096, 8920 | ❌ No | Stable |
+| 🎥 | **Jellyfin** | `jellyfin/` | 8096, 8920 | ⚠️ Optional | Stable |
 
 ### 🔗 Link Management
 

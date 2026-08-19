@@ -11,7 +11,7 @@ services:
       - ./config:/config
       - ./cache:/cache
       - type: bind
-        source: ./media
+        source: ${MEDIA_PATH:-./media}
         target: /media
       - type: bind
         source: /usr/share/fonts
