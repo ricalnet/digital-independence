@@ -68,6 +68,7 @@ mindmap
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker](https://img.shields.io/badge/Docker-29.4+-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Architecture](https://img.shields.io/badge/Architecture-amd64_|_arm64-4EAA25?logo=linux&logoColor=white)](https://hub.docker.com/)
 [![GitHub Issues](https://img.shields.io/badge/GitHub_Issues-Open-orange?logo=github)](https://github.com/ricalnet/digital-independence/issues)
 [![Shell Script](https://img.shields.io/badge/Shell-Bash-4EAA25?logo=gnu-bash&logoColor=white)](https://www.gnu.org/software/bash/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/ricalnet/digital-independence/graphs/commit-activity)
@@ -83,6 +84,17 @@ Digital Independence is a collection of ready-to-use Docker Compose configuratio
 - 🔄 Enjoy freedom to switch, modify, or replace services
 - 💰 Eliminate recurring subscription fees
 - 🎯 Build valuable DevOps and system administration skills
+
+## 🏗️ Architecture Support
+
+All services in this repository are built and tested for two major CPU architectures out of the box:
+
+| Architecture | Platforms / Devices | Status |
+|--------------|----------------------|--------|
+| `linux/amd64` | Intel/AMD desktops, servers, VPS (x86_64) | ✅ Fully Supported |
+| `linux/arm64` | Raspberry Pi 4/5, Apple M1/M2/M3, AWS Graviton, ARM-based servers | ✅ Fully Supported |
+
+While the repository has not been tested on 32-bit ARM (`arm/v7`) for all services (as some heavier apps require 64-bit), the entire catalog is 100% compatible with both `amd64` and `arm64`.
 
 ## ✨ Available Services
 
