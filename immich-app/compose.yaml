@@ -6,7 +6,7 @@ services:
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     user: "${UID:-1000}:${GID:-1000}"
     volumes:
-      - immich-upload:/data
+      - ${UPLOAD_LOCATION}:/data
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
