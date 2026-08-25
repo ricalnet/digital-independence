@@ -12,9 +12,8 @@ authentik/.env
 
 # Element Web
 element-web/config/element-web-config.json
-element-web/config/element-web-config.json.bak
 element-web/modules/
-element-web/i18n
+element-web/.env
 
 # Homarr
 homarr/homarr/
@@ -30,6 +29,9 @@ jellyfin/cache/*
 jellyfin/config/*
 jellyfin/media/*
 jellyfin/.env
+
+# LibreTranslate
+libretranslate/.env
 
 # Linkstack
 linkstack/configs
@@ -65,6 +67,9 @@ pi-hole/etc-dnsmasq.d/
 pi-hole/.env
 pi-hole/dnscrypt-config/dnscrypt-proxy.toml
 
+# Portainer
+portainer/.env
+
 # SearXNG
 searxng/searxng/
 searxng/sources/
@@ -82,7 +87,7 @@ synapse/mautrix-whatsapp/postgres-data/
 synapse/mautrix-whatsapp/.env
 
 # Uptime Kuma
-uptime-kuma/data/
+uptime-kuma/.env
 
 # Vaultwarden
 vaultwarden/vw-data/
@@ -100,8 +105,8 @@ wiki/.env
 wiki/LocalSettings.php
 
 # Yourls
-yourls/admin-yourls-recaptcha-v3/
 yourls/Sleeky/
+yourls/frontend.sh
 yourls/.env
 
 

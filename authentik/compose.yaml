@@ -1,6 +1,6 @@
 services:
   authentik-postgres:
-    image: postgres:15-alpine
+    image: ${POSTGRES_IMAGE}
     container_name: authentik-postgres
     restart: unless-stopped
     environment:
@@ -29,7 +29,7 @@ services:
         max-file: "3"
 
   authentik-redis:
-    image: redis:alpine
+    image: ${REDIS_IMAGE}
     container_name: authentik-redis
     restart: unless-stopped
     command: --requirepass ${AUTHENTIK_REDIS_PASSWORD}
@@ -54,7 +54,7 @@ services:
         max-file: "3"
 
   authentik-server:
-    image: authentik/server:2026.5
+    image: ${AUTHENTIK_IMAGE}
     container_name: authentik-server
     restart: unless-stopped
     command: server
@@ -102,7 +102,7 @@ services:
         max-file: "3"
 
   authentik-worker:
-    image: authentik/server:2026.5
+    image: ${AUTHENTIK_IMAGE}
     container_name: authentik-worker
     restart: unless-stopped
     command: worker

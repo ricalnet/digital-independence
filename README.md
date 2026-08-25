@@ -170,6 +170,8 @@ While the repository has not been tested on 32-bit ARM (`arm/v7`) for all servic
 
 > Ports listed are the default ports on the host. Some services are only bound to `127.0.0.1` (localhost) for security reasons. Modify the configuration in each service's `docker-compose.yml` to bind to `0.0.0.0` or change the port.
 
+> All services are configured to use the `latest` image tag by default. For stable environments, it is **highly recommended** to pin specific version tags in your `.env` file or `compose.yaml` to avoid unexpected breaking changes from automatic updates.
+
 ### Additional Synapse Services (Bridges)
 
 - `synapse:mautrix-telegram` – Telegram bridge (no .env, uses config.yaml)

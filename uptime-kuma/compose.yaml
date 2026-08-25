@@ -1,6 +1,6 @@
 services:
   uptime-kuma:
-    image: louislam/uptime-kuma:latest
+    image: ${UPTIME_KUMA_IMAGE:-louislam/uptime-kuma:latest}
     container_name: uptime-kuma
     restart: unless-stopped
     ports:

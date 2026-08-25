@@ -1,7 +1,7 @@
 services:
   db:
     restart: always
-    image: postgres:15-alpine
+    image: ${MASTODON_DB_IMAGE:-postgres:15-alpine}
     container_name: mastodon_db
     shm_size: 256mb
     networks:
@@ -31,7 +31,7 @@ services:
 
   redis:
     restart: always
-    image: redis:alpine
+    image: ${MASTODON_REDIS_IMAGE:-redis:alpine}
     container_name: mastodon_redis
     networks:
       - internal_network
@@ -61,7 +61,7 @@ services:
         max-file: "3"
 
   web:
-    image: ghcr.io/mastodon/mastodon:v4.6.2
+    image: ${MASTODON_WEB_IMAGE:-ghcr.io/mastodon/mastodon:latest}
     restart: always
     container_name: mastodon_web
     env_file: .env.production
@@ -102,7 +102,7 @@ services:
         max-file: "3"
 
   streaming:
-    image: ghcr.io/mastodon/mastodon-streaming:v4.6.2
+    image: ${MASTODON_STREAMING_IMAGE:-ghcr.io/mastodon/mastodon-streaming:latest}
     restart: always
     container_name: mastodon_streaming
     env_file: .env.production
@@ -141,7 +141,7 @@ services:
         max-file: "3"
 
   sidekiq:
-    image: ghcr.io/mastodon/mastodon:v4.6.2
+    image: ${MASTODON_SIDEKIQ_IMAGE:-ghcr.io/mastodon/mastodon:latest}
     restart: always
     container_name: mastodon_sidekiq
     env_file: .env.production

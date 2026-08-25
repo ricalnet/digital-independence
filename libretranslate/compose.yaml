@@ -1,7 +1,7 @@
 services:
   libretranslate:
     container_name: libretranslate
-    image: libretranslate/libretranslate:latest
+    image: ${LIBRETRANSLATE_IMAGE:-libretranslate/libretranslate:latest}
     ports:
       - "127.0.0.1:5001:5000"
     restart: unless-stopped

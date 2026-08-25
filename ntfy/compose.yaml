@@ -1,6 +1,6 @@
 services:
   ntfy:
-    image: binwiederhier/ntfy:latest
+    image: ${NTFY_IMAGE:-binwiederhier/ntfy:latest}
     container_name: ntfy-server
     user: "1000:1000"
     command: serve

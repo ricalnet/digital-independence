@@ -1,34 +1,73 @@
 name: yourls
 
 services:
+  nginx:
+    image: nginx:alpine
+    container_name: yourls-nginx
+    restart: always
+    depends_on:
+      yourls:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8001:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - yourls-data:/var/www/html:ro
+    networks:
+      - yourls-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost/",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+        reservations:
+          memory: 32M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   yourls:
-    image: yourls:latest
+    image: ${YOURLS_IMAGE:-yourls:1.10.4-fpm-alpine}
+    container_name: yourls-fpm
     restart: always
     depends_on:
       mysql:
         condition: service_healthy
-    ports:
-      - "127.0.0.1:8001:8080"
     environment:
       YOURLS_DB_HOST: mysql
       YOURLS_DB_USER: yourls
       YOURLS_DB_PASS: ${YOURLS_DB_PASSWORD}
       YOURLS_DB_NAME: yourls
-      YOURLS_SITE: ${YOURLS_SITE}
-      YOURLS_USER: ${YOURLS_ADMIN_USER}
+      YOURLS_SITE: ${YOURLS_SITE:-http://localhost:8001}
+      YOURLS_USER: ${YOURLS_ADMIN_USER:-admin}
       YOURLS_PASS: ${YOURLS_ADMIN_PASSWORD}
-      YOURLS_HOURS_OFFSET: 0
-      YOURLS_LANG: id_ID
-      YOURLS_UNIQUE_URLS: true
-      YOURLS_PRIVATE: true
+      YOURLS_HOURS_OFFSET: ${YOURLS_HOURS_OFFSET:-0}
+      YOURLS_LANG: ${YOURLS_LANG:-id_ID}
+      YOURLS_UNIQUE_URLS: ${YOURLS_UNIQUE_URLS:-true}
+      YOURLS_PRIVATE: ${YOURLS_PRIVATE:-true}
       YOURLS_COOKIEKEY: ${YOURLS_COOKIEKEY}
-      APACHE_SERVER_NAME: localhost
     volumes:
       - yourls-config:/var/www/html/user
+      - yourls-data:/var/www/html
     networks:
       - yourls-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/admin"]
+      test: ["CMD", "php-fpm", "-t"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -46,7 +85,8 @@ services:
         max-file: "3"
 
   mysql:
-    image: mysql:8.0
+    image: ${YOURLS_MYSQL_IMAGE:-mysql:8.0}
+    container_name: yourls-mysql
     restart: always
     environment:
       MYSQL_DATABASE: yourls
@@ -88,9 +128,15 @@ services:
 networks:
   yourls-network:
     driver: bridge
+    name: yourls-network
 
 volumes:
   mysql-data:
     driver: local
+    name: yourls-mysql-data
   yourls-config:
     driver: local
+    name: yourls-config
+  yourls-data:
+    driver: local
+    name: yourls-data

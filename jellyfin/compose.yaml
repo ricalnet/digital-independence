@@ -1,6 +1,6 @@
 services:
   jellyfin:
-    image: jellyfin/jellyfin:latest
+    image: ${JELLYFIN_IMAGE:-jellyfin/jellyfin:latest}
     container_name: jellyfin
     user: 1000:1000
     restart: unless-stopped

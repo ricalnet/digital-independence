@@ -1,7 +1,7 @@
 services:
   linkstack:
     hostname: "linkstack"
-    image: "linkstackorg/linkstack:latest"
+    image: ${LINKSTACK_IMAGE:-linkstackorg/linkstack:latest}
     container_name: linkstack
     environment:
       TZ: ${TZ}
@@ -46,7 +46,7 @@ services:
         max-file: "3"
 
   mysql:
-    image: mysql:8.0
+    image: ${LINKSTACK_MYSQL_IMAGE:-mysql:8.0}
     container_name: linkstack-mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
