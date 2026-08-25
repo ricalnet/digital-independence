@@ -63,7 +63,7 @@ open-webui/.env
 pi-hole/etc-pihole/
 pi-hole/etc-dnsmasq.d/
 pi-hole/.env
-pi-hole/dnscrypt-proxy/dnscrypt-proxy.toml
+pi-hole/dnscrypt-config/dnscrypt-proxy.toml
 
 # SearXNG
 searxng/searxng/

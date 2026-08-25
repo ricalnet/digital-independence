@@ -16,10 +16,10 @@
 # ============================================
 # LISTEN & NETWORK
 # ============================================
-listen_addresses = ['0.0.0.0:5053']  # Default, adjust if needed
+listen_addresses = ['0.0.0.0:5053']
 max_clients = 250
 ipv4_servers = true
-ipv6_servers = false  # Set to true if you have IPv6
+ipv6_servers = false
 force_tcp = false
 timeout = 5000
 keepalive = 30
@@ -30,14 +30,17 @@ keepalive = 30
 dnscrypt_servers = true
 doh_servers = true
 lb_estimator = true
-lb_strategy = 'p2'  # p2 = latency-based, p = random, ph = prefer last
+lb_strategy = 'p2'
 
-# === FALLBACK RESOLVER ===
-# Choose one fallback resolver:
-fallback_resolver = '9.9.9.9:53' # Quad9
+# ============================================
+# FALLBACK RESOLVER
+# ============================================
+fallback_resolver = '9.9.9.9:53'
 ignore_system_dns = true
 
-# === SERVER NAMES ===
+# ============================================
+# SERVER NAMES
+# ============================================
 # Replace with your preferred servers from the public list
 server_names = [
     '<YOUR_PREFERRED_SERVER_1>',
@@ -62,9 +65,10 @@ edns_payload_size = 1452
 # ============================================
 # LOGGING
 # ============================================
-log_level = 0  # 0 = Error, 1 = Warning, 2 = Info, 3 = Debug
+# Log level: 0=ERROR, 1=WARNING, 2=NOTICE, 3=INFO, 4=DEBUG
+log_level = 0
 use_syslog = true
-log_file = '/var/log/dnscrypt-proxy.log'
+log_file = '/dev/null'
 
 # ============================================
 # STATIC SERVERS
@@ -114,36 +118,37 @@ urls = [
 ]
 minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
 cache_file = 'public-resolvers.md'
-refresh_delay = 72  # Hours
+refresh_delay = 72
 
 # ============================================
 # CACHE
 # ============================================
 [cache]
-size = 20000  # Maximum cache entries
-min_ttl = 600  # 10 minutes
-max_ttl = 86400  # 24 hours
-negative_min_ttl = 60  # 1 minute
-negative_max_ttl = 1800  # 30 minutes
+size = 20000
+min_ttl = 600
+max_ttl = 86400
+negative_min_ttl = 60
+negative_max_ttl = 1800
 prefetch = true
-prefetch_ttl = 7200  # 2 hours
+prefetch_ttl = 7200
 
 # ============================================
 # QUERY LOGGING
 # ============================================
 [query_log]
-file = '/dev/null'  # Disable logging for privacy
+file = '/dev/null'
 format = 'tsv'
 
 # ============================================
-# BLOCKING
+# BLOCKING (IPv6)
 # ============================================
 [blocking]
-block_ipv6 = false  # Set to true to block IPv6
+block_ipv6 = false
 
 # ============================================
 # IP ENCRYPTION
 # ============================================
+# Generate a new key using: openssl rand -hex 16
 [ip_encryption]
 algorithm = "ipcrypt-nd"
-key = "your-secret-key" # openssl rand -hex 16
+key = "your-secret-key"
