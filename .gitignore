@@ -52,7 +52,7 @@ navidrome/.env
 
 # Nextcloud
 nextcloud/.env
-nextcloud/skeleton
+nextcloud/nginx.conf
 
 # Ntfy
 ntfy/ntfy/
