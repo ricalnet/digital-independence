@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:15-alpine
+    image: postgres:18-alpine
     container_name: mautrix-whatsapp-db
     restart: unless-stopped
     environment:
@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - mautrix_whatsapp_postgres_data:/var/lib/postgresql
     networks:
       - matrix-network
     healthcheck:
@@ -68,6 +68,10 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+volumes:
+  mautrix_whatsapp_postgres_data:
+    name: mautrix_whatsapp_postgres_data
 
 networks:
   matrix-network:

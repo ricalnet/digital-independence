@@ -7,8 +7,9 @@ services:
       POSTGRES_PASSWORD: ${AUTHENTIK_POSTGRES_PASSWORD}
       POSTGRES_USER: authentik
       POSTGRES_DB: authentik
+      POSTGRES_INITDB_ARGS: "--data-checksums"
     volumes:
-      - authentik-postgres-data:/var/lib/postgresql/data
+      - authentik-postgres-data:/var/lib/postgresql
     networks:
       - authentic-network
     healthcheck:
