@@ -12,22 +12,22 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 echo "========================================"
-echo " Starting Docker Engine installation"
+echo " Starting Docker Engine installation (Ubuntu)"
 echo "========================================"
 
 # 1. Update package index and install dependencies
-echo "[1/5] Updating package index and installing ca-certificates, curl..."
+echo "[1/7] Updating package index and installing ca-certificates, curl..."
 apt update -y
 apt install -y ca-certificates curl
 
 # 2. Prepare keyring directory and download official Docker GPG key
-echo "[2/5] Adding official Docker GPG key..."
+echo "[2/7] Adding official Docker GPG key..."
 install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 chmod a+r /etc/apt/keyrings/docker.asc
 
 # 3. Add Docker repository to APT sources
-echo "[3/5] Adding Docker repository..."
+echo "[3/7] Adding Docker repository..."
 # Detect release codename (Ubuntu codename) and system architecture
 codename=$(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
 arch=$(dpkg --print-architecture)
@@ -42,14 +42,32 @@ Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 
 # 4. Update package index again after adding the repository
-echo "[4/5] Updating package index with Docker repository..."
+echo "[4/7] Updating package index with Docker repository..."
 apt update -y
 
 # 5. Install Docker Engine and supporting components
-echo "[5/5] Installing Docker Engine, CLI, containerd, and plugins..."
+echo "[5/7] Installing Docker Engine, CLI, containerd, and plugins..."
 apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 echo "========================================"
 echo " Docker Engine installation complete!"
 echo "========================================"
 echo "You can verify by running: docker --version"
+
+# 6. Add current user to docker group
+echo "[6/7] Adding user $USER to docker group..."
+usermod -aG docker $USER
+
+# 7. Apply group changes
+echo "[7/7] Applying group changes..."
+newgrp docker <<EOF
+echo "Group changes applied successfully!"
+echo "You can now run Docker commands without sudo."
+echo "Verification: docker --version"
+docker --version
+EOF
+
+echo "========================================"
+echo " Setup complete! Please log out and log back in"
+echo " or restart your terminal session to use Docker without sudo."
+echo "========================================"

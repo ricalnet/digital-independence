@@ -53,3 +53,21 @@ echo "========================================"
 echo " Docker Engine installation complete!"
 echo "========================================"
 echo "You can verify by running: docker --version"
+
+# 6. Add current user to docker group
+echo "[6/7] Adding user $USER to docker group..."
+sudo usermod -aG docker $USER
+
+# 7. Apply group changes
+echo "[7/7] Applying group changes..."
+newgrp docker <<EOF
+echo "Group changes applied successfully!"
+echo "You can now run Docker commands without sudo."
+echo "Verification: docker --version"
+docker --version
+EOF
+
+echo "========================================"
+echo " Setup complete! Please log out and log back in"
+echo " or restart your terminal session to use Docker without sudo."
+echo "========================================"
