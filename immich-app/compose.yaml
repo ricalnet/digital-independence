@@ -6,37 +6,51 @@ services:
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     user: "${UID:-1000}:${GID:-1000}"
     volumes:
-      - ${UPLOAD_LOCATION}:/data
+      - ${UPLOAD_LOCATION}:/data:rw
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
     ports:
       - "127.0.0.1:2283:2283"
     depends_on:
-      - redis
-      - database
-    restart: always
+      redis:
+        condition: service_healthy
+      database:
+        condition: service_healthy
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:2283/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:2283/server-info/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 60s
     deploy:
       resources:
         limits:
           memory: 1G
+          cpus: "1.0"
+        reservations:
+          memory: 512M
+          cpus: "0.5"
     security_opt:
       - no-new-privileges:true
     cap_drop:
       - ALL
     cap_add:
       - NET_BIND_SERVICE
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128M
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "50m"
+        max-file: "5"
+        compress: "true"
     networks:
       - immich-network
 
@@ -45,48 +59,97 @@ services:
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
     user: "${UID:-1000}:${GID:-1000}"
     volumes:
-      - model-cache:/cache
+      - model-cache:/cache:rw
     env_file:
       - .env
-    restart: always
+    environment:
+      - MPLCONFIGDIR=/tmp/matplotlib
+    restart: unless-stopped
     healthcheck:
       disable: true
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 4G
+          cpus: "2.0"
+        reservations:
+          memory: 1G
+          cpus: "0.5"
     security_opt:
       - no-new-privileges:true
     cap_drop:
       - ALL
     cap_add:
       - NET_BIND_SERVICE
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=512M
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "50m"
+        max-file: "5"
+        compress: "true"
     networks:
       - immich-network
 
   redis:
     container_name: immich_redis
-    image: docker.io/valkey/valkey:9@sha256:4963247afc4cd33c7d3b2d2816b9f7f8eeebab148d29056c2ca4d7cbc966f2d9
+    image: docker.io/valkey/valkey:9-alpine@sha256:4963247afc4cd33c7d3b2d2816b9f7f8eeebab148d29056c2ca4d7cbc966f2d9
+    command:
+      - "redis-server"
+      - "--bind"
+      - "0.0.0.0"
+      - "--port"
+      - "6379"
+      - "--requirepass"
+      - "${REDIS_PASSWORD:-}"
+      - "--maxmemory"
+      - "256mb"
+      - "--maxmemory-policy"
+      - "noeviction"
+      - "--save"
+      - "900"
+      - "1"
+      - "--save"
+      - "300"
+      - "10"
+      - "--save"
+      - "60"
+      - "10000"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
-    restart: always
+      start_period: 10s
+    restart: unless-stopped
     deploy:
       resources:
         limits:
-          memory: 256M
+          memory: 512M
+          cpus: "0.5"
+        reservations:
+          memory: 128M
+          cpus: "0.2"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128M
+    volumes:
+      - redis-data:/data:rw
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"
+        max-size: "20m"
         max-file: "3"
+        compress: "true"
     networks:
       - immich-network
 
@@ -99,30 +162,57 @@ services:
       POSTGRES_DB: ${DB_DATABASE_NAME}
       POSTGRES_INITDB_ARGS: "--data-checksums"
     volumes:
-      - immich-postgres:/var/lib/postgresql/data
-    shm_size: 128mb
-    restart: always
+      - immich-postgres:/var/lib/postgresql/data:rw
+    shm_size: 256mb
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE_NAME}"]
-      interval: 10s
-      timeout: 5s
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE_NAME} -h localhost -p 5432",
+        ]
+      interval: 30s
+      timeout: 10s
       retries: 5
+      start_period: 60s
     deploy:
       resources:
         limits:
-          memory: 1G
+          memory: 2G
+          cpus: "1.5"
+        reservations:
+          memory: 512M
+          cpus: "0.5"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - NET_BIND_SERVICE
+      - SYS_CHROOT
+    tmpfs:
+      - /run:rw,noexec,nosuid,size=64M
+      - /tmp:rw,noexec,nosuid,size=64M
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "50m"
+        max-file: "5"
+        compress: "true"
     networks:
       - immich-network
 
 volumes:
-  immich-upload:
   immich-postgres:
+    driver: local
   model-cache:
+    driver: local
+  redis-data:
+    driver: local
 
 networks:
   immich-network:
