@@ -4,13 +4,13 @@ services:
     image: ${LINKSTACK_IMAGE:-linkstackorg/linkstack:latest}
     container_name: linkstack
     environment:
-      TZ: ${TZ}
-      SERVER_ADMIN: ${SERVER_ADMIN}
-      HTTP_SERVER_NAME: ${HTTP_SERVER_NAME}
-      HTTPS_SERVER_NAME: ${HTTPS_SERVER_NAME}
-      LOG_LEVEL: ${LOG_LEVEL}
-      PHP_MEMORY_LIMIT: ${PHP_MEMORY_LIMIT}
-      UPLOAD_MAX_FILESIZE: ${UPLOAD_MAX_FILESIZE}
+      TZ: ${TZ:-Asia/Jakarta}
+      SERVER_ADMIN: ${SERVER_ADMIN:-admin@example.com}
+      HTTP_SERVER_NAME: ${HTTP_SERVER_NAME:-localhost}
+      HTTPS_SERVER_NAME: ${HTTPS_SERVER_NAME:-localhost}
+      LOG_LEVEL: ${LOG_LEVEL:-warn}
+      PHP_MEMORY_LIMIT: ${PHP_MEMORY_LIMIT:-256M}
+      UPLOAD_MAX_FILESIZE: ${UPLOAD_MAX_FILESIZE:-20M}
     volumes:
       - linkstack_data:/htdocs
       - linkstack_php:/usr/local/etc/php/conf.d
@@ -18,7 +18,8 @@ services:
       - "${HTTP_PORT:-8003}:80"
     restart: unless-stopped
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - linkstack-network
     healthcheck:
@@ -26,13 +27,15 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 40s
     deploy:
       resources:
         limits:
           memory: 512M
+          cpus: "0.5"
         reservations:
           memory: 256M
+          cpus: "0.25"
     security_opt:
       - no-new-privileges:true
     cap_drop:
@@ -44,14 +47,15 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+        compress: "true"
 
   mysql:
     image: ${LINKSTACK_MYSQL_IMAGE:-mysql:8.0}
     container_name: linkstack-mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-linkstack}
+      MYSQL_USER: ${MYSQL_USER:-linkstack_user}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
@@ -59,6 +63,15 @@ services:
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+      - --max-connections=150
+      - --innodb-buffer-pool-size=128M
+      - --performance-schema=OFF
+      - --slow-query-log=1
+      - --long-query-time=2
+      - --skip-name-resolve
+      - --max-allowed-packet=64M
+      - --thread-cache-size=16
+      - --table-open-cache=400
     networks:
       - linkstack-network
     healthcheck:
@@ -76,17 +89,32 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
     deploy:
       resources:
         limits:
           memory: 512M
+          cpus: "0.5"
         reservations:
           memory: 256M
+          cpus: "0.25"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
+      - KILL
+      - NET_BIND_SERVICE
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
+        compress: "true"
 
 networks:
   linkstack-network:
