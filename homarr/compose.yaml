@@ -3,9 +3,20 @@ services:
     container_name: homarr
     image: ${HOMARR_IMAGE:-ghcr.io/homarr-labs/homarr:latest}
     restart: unless-stopped
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - homarr_data:/appdata
+      - homarr_nginx:/var/lib/nginx
+      - homarr_nginx_conf:/etc/nginx
     env_file:
       - .env
     ports:
@@ -19,20 +30,75 @@ services:
       resources:
         limits:
           memory: 512M
+          cpus: "0.5"
         reservations:
           memory: 256M
+          cpus: "0.25"
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-file: "3"
+        max-file: "5"
+        compress: "true"
     networks:
       - homarr-network
+    stop_grace_period: 30s
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    container_name: homarr-redis
+    image: redis:alpine
+    restart: unless-stopped
+    command: >
+      redis-server 
+      --appendonly yes 
+      --appendfsync everysec 
+      --save 60 1 
+      --requirepass ${REDIS_PASSWORD:-}
+      --dir /data
+    volumes:
+      - homarr_redis_data:/data
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+    healthcheck:
+      test: ["CMD", "redis-cli", "--pass", "${REDIS_PASSWORD:-}", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 64M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+        compress: "true"
+    networks:
+      - homarr-network
+    security_opt:
+      - no-new-privileges:true
 
 volumes:
   homarr_data:
     name: homarr_data
+  homarr_redis_data:
+    name: homarr_redis_data
+  homarr_nginx:
+    name: homarr_nginx
+  homarr_nginx_conf:
+    name: homarr_nginx_conf
 
 networks:
   homarr-network:
+    name: homarr-network
     driver: bridge
