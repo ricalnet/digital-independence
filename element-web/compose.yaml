@@ -10,6 +10,12 @@ services:
       - ./modules:/modules:ro
     environment:
       - ELEMENT_WEB_PORT=80
+      - NODE_ENV=production
+      - NGINX_WORKER_PROCESSES=auto
+      - NGINX_WORKER_CONNECTIONS=1024
+      - NGINX_KEEPALIVE_TIMEOUT=65
+      - NGINX_CLIENT_MAX_BODY_SIZE=10M
+      - ELEMENT_WEB_SECURITY_HEADERS=1
     healthcheck:
       test: ["CMD", "pgrep", "nginx"]
       interval: 30s
@@ -20,22 +26,37 @@ services:
       resources:
         limits:
           memory: 256M
+          cpus: "0.5"
         reservations:
           memory: 128M
+          cpus: "0.25"
     security_opt:
       - no-new-privileges:true
+      - apparmor:unconfined
     cap_drop:
       - ALL
     cap_add:
       - NET_BIND_SERVICE
+      - CHOWN
+      - SETGID
+      - SETUID
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64M
+      - /run:rw,noexec,nosuid,size=64M
+      - /var/cache/nginx:rw,noexec,nosuid,size=128M
+    stop_grace_period: 30s
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-file: "3"
+        max-file: "5"
+        compress: "true"
+        tag: "{{.Name}}|{{.ImageName}}|{{.DaemonName}}"
+    init: true
     networks:
       - element-network
 
 networks:
   element-network:
     driver: bridge
+    name: element-network
