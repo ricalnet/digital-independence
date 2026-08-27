@@ -6,8 +6,6 @@ services:
     command: serve
     env_file:
       - .env
-    volumes:
-      - ntfy_data:/var/lib/ntfy
     ports:
       - "127.0.0.1:8010:80"
     restart: unless-stopped
@@ -26,12 +24,15 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 10s
+      start_period: 15s
+      start_interval: 5s
     deploy:
       resources:
         limits:
+          cpus: "0.50"
           memory: 256M
         reservations:
+          cpus: "0.10"
           memory: 128M
     security_opt:
       - no-new-privileges:true
@@ -39,11 +40,38 @@ services:
       - ALL
     cap_add:
       - NET_BIND_SERVICE
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64M
+      - /var/run:rw,noexec,nosuid,size=64M
+    environment:
+      - TZ=${TZ:-UTC}
+      - NTFY_CACHE_FILE=/var/lib/ntfy/cache.db
+      - NTFY_AUTH_FILE=/var/lib/ntfy/auth.db
+      - NTFY_BASE_URL=${NTFY_BASE_URL:-http://localhost:8010}
+      - NTFY_BEHIND_PROXY=${NTFY_BEHIND_PROXY:-true}
+    volumes:
+      - ntfy_data:/var/lib/ntfy
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-file: "3"
+        max-file: "5"
+        compress: "true"
+        tag: "ntfy-server"
+    stop_grace_period: 30s
+    stop_signal: SIGTERM
+    sysctls:
+      - net.core.somaxconn=1024
+      - net.ipv4.tcp_tw_reuse=1
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
 
 volumes:
   ntfy_data:
@@ -52,3 +80,4 @@ volumes:
 networks:
   ntfy-network:
     driver: bridge
+    name: ntfy_network
