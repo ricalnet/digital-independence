@@ -1,6 +1,6 @@
 services:
   authentik-postgres:
-    image: ${POSTGRES_IMAGE}
+    image: ${POSTGRES_IMAGE:-postgres:18-alpine}
     container_name: authentik-postgres
     restart: unless-stopped
     environment:
@@ -13,10 +13,15 @@ services:
     networks:
       - authentic-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U authentik -d authentik"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -d $${POSTGRES_DB:-authentik} -U $${POSTGRES_USER:-authentik}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 20s
     deploy:
       resources:
         limits:
@@ -27,21 +32,37 @@ services:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-file: "3"
+        max-file: "5"
+        compress: "true"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
 
   authentik-redis:
-    image: ${REDIS_IMAGE}
+    image: ${REDIS_IMAGE:-redis:alpine}
     container_name: authentik-redis
     restart: unless-stopped
-    command: --requirepass ${AUTHENTIK_REDIS_PASSWORD}
+    command: redis-server --requirepass ${AUTHENTIK_REDIS_PASSWORD} --appendonly yes --save 60 1000
     volumes:
       - authentik-redis-data:/data
     networks:
       - authentic-network
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
-      timeout: 20s
-      retries: 10
+      test: ["CMD", "redis-cli", "-a", "${AUTHENTIK_REDIS_PASSWORD}", "PING"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
     deploy:
       resources:
         limits:
@@ -52,10 +73,22 @@ services:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-file: "3"
+        max-file: "5"
+        compress: "true"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    read_only: true
+    tmpfs:
+      - /tmp
 
   authentik-server:
-    image: ${AUTHENTIK_IMAGE}
+    image: ${AUTHENTIK_IMAGE:-authentik/server:latest}
     container_name: authentik-server
     restart: unless-stopped
     command: server
@@ -71,10 +104,18 @@ services:
       AUTHENTIK_REDIS__HOST: authentik-redis
       AUTHENTIK_REDIS__PASSWORD: ${AUTHENTIK_REDIS_PASSWORD}
       AUTHENTIK_URL: https://${DOMAIN}
+      AUTHENTIK_LOG_LEVEL: ${AUTHENTIK_LOG_LEVEL}
+      AUTHENTIK_ERROR_REPORTING__ENABLED: ${AUTHENTIK_ERROR_REPORTING__ENABLED}
+      AUTHENTIK_SESSION_COOKIE_SECURE: ${AUTHENTIK_SESSION_COOKIE_SECURE}
+      AUTHENTIK_SESSION_COOKIE_HTTPONLY: ${AUTHENTIK_SESSION_COOKIE_HTTPONLY}
+      AUTHENTIK_SESSION_COOKIE_SAMESITE: ${AUTHENTIK_SESSION_COOKIE_SAMESITE}
+      AUTHENTIK_CSRF_TRUSTED_ORIGINS: https://${DOMAIN}
+      AUTHENTIK_DISABLE_UPDATE_CHECK: ${AUTHENTIK_DISABLE_UPDATE_CHECK}
+      AUTHENTIK_AVATARS__NONE: ${AUTHENTIK_AVATARS__NONE}
     volumes:
       - authentik-media:/media
-      - authentik-templates:/templates
-      - authentik-certs:/certs
+      - authentik-templates:/templates:ro
+      - authentik-certs:/certs:ro
     depends_on:
       authentik-postgres:
         condition: service_healthy
@@ -96,14 +137,23 @@ services:
       - ALL
     cap_add:
       - NET_BIND_SERVICE
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /run
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-file: "3"
+        max-file: "5"
+        compress: "true"
+    user: "${AUTHENTIK_UID:-1000}:${AUTHENTIK_GID:-1000}"
 
   authentik-worker:
-    image: ${AUTHENTIK_IMAGE}
+    image: ${AUTHENTIK_IMAGE:-authentik/server:latest}
     container_name: authentik-worker
     restart: unless-stopped
     command: worker
@@ -116,9 +166,13 @@ services:
       AUTHENTIK_REDIS__HOST: authentik-redis
       AUTHENTIK_REDIS__PASSWORD: ${AUTHENTIK_REDIS_PASSWORD}
       AUTHENTIK_URL: https://${DOMAIN}
+      AUTHENTIK_LOG_LEVEL: ${AUTHENTIK_LOG_LEVEL}
+      AUTHENTIK_ERROR_REPORTING__ENABLED: ${AUTHENTIK_ERROR_REPORTING__ENABLED}
+      AUTHENTIK_DISABLE_UPDATE_CHECK: ${AUTHENTIK_DISABLE_UPDATE_CHECK}
+      AUTHENTIK_AVATARS__NONE: ${AUTHENTIK_AVATARS__NONE}
     volumes:
       - authentik-media:/media
-      - authentik-certs:/certs
+      - authentik-certs:/certs:ro
     depends_on:
       authentik-postgres:
         condition: service_healthy
@@ -126,6 +180,12 @@ services:
         condition: service_healthy
     networks:
       - authentic-network
+    healthcheck:
+      test: ["CMD", "ak", "healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     deploy:
       resources:
         limits:
@@ -138,11 +198,20 @@ services:
       - ALL
     cap_add:
       - NET_BIND_SERVICE
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /run
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-file: "3"
+        max-file: "5"
+        compress: "true"
+    user: "${AUTHENTIK_UID:-1000}:${AUTHENTIK_GID:-1000}"
 
 volumes:
   authentik-postgres-data:
@@ -159,3 +228,5 @@ volumes:
 networks:
   authentic-network:
     driver: bridge
+    name: authentic-network
+    internal: false
