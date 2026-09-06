@@ -1,0 +1,106 @@
+services:
+  postgres:
+    image: docker.io/postgres:18-alpine
+    container_name: mautrix-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mautrix
+      POSTGRES_USER: mautrix
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - mautrix_postgres_data:/var/lib/postgresql
+    networks:
+      - matrix-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mautrix -d mautrix"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    mem_limit: 512m
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Mautrix Telegram
+  mautrix-telegram:
+    container_name: mautrix-telegram
+    image: dock.mau.dev/mautrix/telegram:latest
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./mautrix-telegram-data:/data
+    networks:
+      - matrix-network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - SETUID
+      - SETGID
+      - FOWNER
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "mautrix-telegram"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    mem_limit: 256m
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Mautrix WhatsApp Bridge
+  mautrix-whatsapp:
+    container_name: mautrix-whatsapp
+    image: dock.mau.dev/mautrix/whatsapp:latest
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./mautrix-whatsapp-data:/data
+    networks:
+      - matrix-network
+    environment:
+      - TZ=${TZ}
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - SETUID
+      - SETGID
+      - FOWNER
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "mautrix-whatsapp"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    mem_limit: 256m
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  mautrix_postgres_data:
+    name: mautrix_postgres_data
+
+networks:
+  matrix-network:
+    external: true
+    name: matrix-network

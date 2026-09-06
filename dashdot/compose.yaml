@@ -1,6 +1,6 @@
 services:
   dash:
-    image: mauricenino/dashdot:latest
+    image: docker.io/mauricenino/dashdot:latest
     container_name: dashdot
     restart: unless-stopped
     environment:
@@ -10,7 +10,7 @@ services:
     volumes:
       - /proc:/proc:ro
       - /sys:/sys:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro
     security_opt:
       - no-new-privileges:true
     cap_drop:
@@ -21,22 +21,13 @@ services:
     healthcheck:
       test:
         [
-          "CMD",
-          "wget",
-          "--no-verbose",
-          "--tries=1",
-          "--spider",
-          "http://localhost:3001",
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:3001 || exit 1",
         ]
       interval: 30s
       timeout: 10s
       retries: 3
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-        reservations:
-          memory: 128M
+    mem_limit: 256m
     logging:
       driver: "json-file"
       options:

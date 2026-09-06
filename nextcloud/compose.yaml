@@ -2,7 +2,7 @@ services:
   db:
     image: ${NEXTCLOUD_DB_IMAGE:-mariadb:11.8-ubi9}
     container_name: nextcloud_db
-    restart: always
+    restart: unless-stopped
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --innodb-read-only=0 --innodb-flush-log-at-trx-commit=2 --innodb-buffer-pool-size=512M
     volumes:
       - db_data:/var/lib/mysql
@@ -27,10 +27,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    deploy:
-      resources:
-        limits: { memory: 1G }
-        reservations: { memory: 512M }
+    mem_limit: 1g
     logging:
       driver: "json-file"
       options:
@@ -54,7 +51,7 @@ services:
     image: ${NEXTCLOUD_REDIS_IMAGE:-redis:alpine}
     user: "999:999"
     container_name: nextcloud_redis
-    restart: always
+    restart: unless-stopped
     command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru --protected-mode yes
     volumes:
       - redis_data:/data
@@ -64,10 +61,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-    deploy:
-      resources:
-        limits: { memory: 256M }
-        reservations: { memory: 128M }
+    mem_limit: 256m
     logging:
       driver: "json-file"
       options:
@@ -86,7 +80,7 @@ services:
   app:
     image: ${NEXTCLOUD_APP_IMAGE:-nextcloud:stable-fpm}
     container_name: nextcloud_app
-    restart: always
+    restart: unless-stopped
     volumes:
       - nextcloud_data:/var/www/html
       - ${EXTERNAL_STORAGE_PATH}:${EXTERNAL_STORAGE_MOUNT}:rw
@@ -117,10 +111,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 45s
-    deploy:
-      resources:
-        limits: { memory: 1G }
-        reservations: { memory: 512M }
+    mem_limit: 1g
     security_opt:
       - no-new-privileges:true
     cap_add:
@@ -143,7 +134,7 @@ services:
   web:
     image: ${NEXTCLOUD_WEB_IMAGE:-nginx:alpine}
     container_name: nextcloud_web
-    restart: always
+    restart: unless-stopped
     ports:
       - "127.0.0.1:5000:80"
     volumes:
@@ -159,10 +150,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
-    deploy:
-      resources:
-        limits: { memory: 256M }
-        reservations: { memory: 128M }
+    mem_limit: 256m
     logging:
       driver: "json-file"
       options:

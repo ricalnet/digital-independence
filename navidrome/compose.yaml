@@ -1,16 +1,16 @@
 services:
   navidrome:
-    image: ${NAVIDROME_IMAGE:-deluan/navidrome:latest}
+    image: ${NAVIDROME_IMAGE:-docker.io/deluan/navidrome:latest}
     container_name: navidrome
     user: 1000:1000
     ports:
       - "4533:4533"
     restart: unless-stopped
     volumes:
-      - ./data:/data
+      - navidrome_data:/data
       - ${MUSIC_PATH:-./music}:/music:ro
     environment:
-      - ND_LOGLEVEL=info
+      - ND_LOGLEVEL=${info}
     healthcheck:
       test:
         [
@@ -25,12 +25,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 20s
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 256M
+    mem_limit: 512m
     security_opt:
       - no-new-privileges:true
     cap_drop:
@@ -44,6 +39,10 @@ services:
         max-file: "3"
     networks:
       - navidrome-network
+
+volumes:
+  navidrome_data:
+    driver: local
 
 networks:
   navidrome-network:

@@ -2,495 +2,433 @@
 
 # Digital Independence
 
-```mermaid
-mindmap
-  root((Digital Independence))
-    Core Infrastructure
-      Docker
-      Docker Compose
-      Git
-      Linux / WSL2
-    Service Management
-      sovereign.sh
-        Interactive Menu
-        Start / Stop / Restart
-        Update / Recycle
-        Logs / Status
-      Automation
-        Weekly Updates
-        Monthly Recycle
-        Monitoring
-    Services
-      Authentication
-        Authentik
-      Communication
-        Element Web
-        Synapse
-        Mautrix Bridges
-      Media & Content
-        Jellyfin
-        Immich
-        Nextcloud
-      Productivity
-        Vaultwarden
-        LinkStack
-        YOURLS
-      Search & Translate
-        SearXNG
-        LibreTranslate
-      Security
-        Pi-hole
-        Ntfy
-      AI
-        Open WebUI
-        Ollama
-      Management
-        Portainer
-        Uptime Kuma
-        Dashdot
-        Homarr
-    Security
-      Hardening
-        no-new-privileges
-        cap_drop
-        read_only
-      Compatibility
-        Database exceptions
-        setpriv exceptions
-    Deployment
-      Localhost Only
-      Tor Hidden Service
-      Cloudflare Tunnel
-      Backup
-```
-
 **Take back control of your digital life, one container at a time.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Docker](https://img.shields.io/badge/Docker-29.4+-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Podman](https://img.shields.io/badge/Podman-5+-2496ED?logo=podman&logoColor=white)](https://podman.io/)
+[![Rootless](https://img.shields.io/badge/Rootless-✅_Supported-8A2BE2?logo=podman&logoColor=white)](https://podman.io/docs/rootless)
 [![Architecture](https://img.shields.io/badge/Architecture-amd64_|_arm64-4EAA25?logo=linux&logoColor=white)](https://hub.docker.com/)
-[![GitHub Issues](https://img.shields.io/badge/GitHub_Issues-Open-orange?logo=github)](https://github.com/ricalnet/digital-independence/issues)
-[![Shell Script](https://img.shields.io/badge/Shell-Bash-4EAA25?logo=gnu-bash&logoColor=white)](https://www.gnu.org/software/bash/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/ricalnet/digital-independence/graphs/commit-activity)
+[![Backup](https://img.shields.io/badge/Backup-ChaCha20--Poly1305-8A2BE2?logo=openssl&logoColor=white)](https://github.com/ricalnet/digital-independence#-chantik-encrypted-backup--restore)
 
 </div>
 
-## 📌 Overview
+## 📌 What is Digital Independence?
 
-Digital Independence is a collection of ready-to-use Docker Compose configurations for running various self-hosted services on your own infrastructure. This project empowers individuals and small organizations to:
+Digital Independence is a complete self-hosting solution that provides `podman-compose` configurations for 23+ popular open-source services. It eliminates dependency on third-party cloud services by giving you full control over your data and infrastructure.
 
-- 📊 Eliminate third-party access and data mining
-- 🔒 Keep everything within your infrastructure
-- 🔄 Enjoy freedom to switch, modify, or replace services
-- 💰 Eliminate recurring subscription fees
-- 🎯 Build valuable DevOps and system administration skills
+Core Philosophy:
+- 🔒 Total Data Ownership — Your data stays on your hardware, always
+- 💰 Zero Recurring Costs — Pay once for hardware, free forever
+- 🔄 Complete Freedom — Switch, modify, or replace any service anytime
+- 🎯 Practical Learning — Build real DevOps skills through hands-on experience
+- 🚀 Ready to Deploy — Just clone, install, and run
 
 ## 🏗️ Architecture Support
 
-All services in this repository are built and tested for two major CPU architectures out of the box:
+| Architecture | Platforms | Status |
+|--------------|-----------|--------|
+| `linux/amd64` | Intel/AMD, x86_64 | ✅ Supported |
+| `linux/arm64` | Raspberry Pi 4/5, Apple M1/M2/M3, AWS Graviton | ✅ Supported |
 
-| Architecture | Platforms / Devices | Status |
-|--------------|----------------------|--------|
-| `linux/amd64` | Intel/AMD desktops, servers, VPS (x86_64) | ✅ Fully Supported |
-| `linux/arm64` | Raspberry Pi 4/5, Apple M1/M2/M3, AWS Graviton, ARM-based servers | ✅ Fully Supported |
+## 📦 Available Services (23 Services)
 
-While the repository has not been tested on 32-bit ARM (`arm/v7`) for all services (as some heavier apps require 64-bit), the entire catalog is 100% compatible with both `amd64` and `arm64`.
+### 🔐 Security & Authentication
 
-## ✨ Available Services
+| Service | Directory | Port | Purpose |
+|---------|-----------|------|---------|
+| Wazuh | `wazuh/` | 443 | Security monitoring and threat detection |
+| Pi-hole | `pi-hole/` | 53, 8080 | Network-wide ad blocking and DNS filtering |
+| Vaultwarden | `vaultwarden/` | 8000 | Lightweight Bitwarden-compatible password manager |
+| Authentik | `authentik/` | 9000, 9443 | Complete identity and access management (SSO) |
 
-### 🔐 Security
+### 🤖 AI & Machine Learning
 
-| Icon | Service | Directory | Port | .env Required | Status |
-|------|---------|-----------|------|---------------|--------|
-| 🛡️ | **Wazuh** | `wazuh/` | 443 | ✅ Yes | Stable |
-| 🛡️ | **Pi-hole** | `pi-hole/` | 53, 8080 | ✅ Yes | Stable |
-| 🔐 | **Vaultwarden** | `vaultwarden/` | 8000 | ✅ Yes | Stable |
-| 🔑 | **Authentik** | `authentik/` | 9000, 9443 | ✅ Yes | Stable |
+| Service | Directory | Port | Purpose |
+|---------|-----------|------|---------|
+| Open WebUI | `open-webui/` | 3000 | Chat interface for Ollama LLMs |
 
-### 🤖 AI
-
-| Icon | Service | Directory | Port | .env Required | Status |
-|------|---------|-----------|------|---------------|--------|
-| 🤖 | **Open WebUI + Ollama** | `open-webui/` | 3000 | ✅ Yes | Stable |
+> Configure with `OLLAMA_BASE_URL` in `.env`
 
 ### 🖥️ Management & Monitoring
 
-| Icon | Service | Directory | Port | .env Required | Status |
-|------|---------|-----------|------|---------------|--------|
-| 📊 | **Dashdot** | `dashdot/` | 3001 | ❌ No | Stable |
-| 🗂️ | **Homarr** | `homarr/` | 7575 | ✅ Yes | Stable |
-| 🔔 | **ntfy** | `ntfy/` | 8010 | ✅ Yes | Stable |
-| ⏱️ | **Uptime Kuma** | `uptime-kuma/` | 9442 | ❌ No | Stable |
-| 🐳 | **Portainer** | `portainer/` | 9443 | ❌ No | Stable |
+| Service | Directory | Port | Purpose |
+|---------|-----------|------|---------|
+| Dashdot | `dashdot/` | 3001 | Modern server dashboard with system metrics |
+| Homarr | `homarr/` | 7575 | Clean and customizable home page dashboard |
+| ntfy | `ntfy/` | 8010 | Simple pub/sub notification service |
+| Uptime Kuma | `uptime-kuma/` | 9442 | Self-hosted uptime monitoring |
+| Portainer | `portainer/` | 9444 | Container management UI for Podman/Docker |
 
-### 💬 Communication (Matrix)
+### 💬 Communication (Matrix Ecosystem)
 
-| Icon | Service | Directory | Port | .env Required | Status |
-|------|---------|-----------|------|---------------|--------|
-| 📨 | **Synapse** | `synapse/` | 8008, 8448 | ✅ Yes | Stable |
-| 💬 | **Element Web** | `element-web/` | 8009 | ❌ No | Stable |
-| 📨 | **Mautrix-Telegram** | `synapse/mautrix-telegram/` | - | ❌ No | Stable |
-| 📨 | **Mautrix-WhatsApp** | `synapse/mautrix-whatsapp/` | - | ✅ Yes | Stable |
+| Service | Directory | Port | Purpose |
+|---------|-----------|------|---------|
+| Synapse | `synapse/` | 8008, 8448 | Matrix homeserver for decentralized chat |
+| Element Web | `element-web/` | 8009 | Web client for Matrix |
+| Mautrix Bridges | `synapse/mautrix/` | - | Telegram & WhatsApp bridges (single compose.yaml) |
 
-### 🌐 Search & Translate
+### 🌐 Search & Translation
 
-| Icon | Service | Directory | Port | .env Required | Status |
-|------|---------|-----------|------|---------------|--------|
-| 🌐 | **LibreTranslate** | `libretranslate/` | 5001 | ❌ No | Stable |
-| 🔍 | **SearXNG** | `searxng/` | 8888 | ✅ Yes | Stable |
+| Service | Directory | Port | Purpose |
+|---------|-----------|------|---------|
+| LibreTranslate | `libretranslate/` | 5001 | Open-source machine translation |
+| SearXNG | `searxng/` | 8888 | Privacy-respecting metasearch engine |
 
-### 📁 Media & Content
+### 📁 Media & Content Management
 
-| Icon | Service | Directory | Port | .env Required | Status |
-|------|---------|-----------|------|---------------|--------|
-| 🖼️ | **Immich** | `immich-app/` | 2283 | ✅ Yes | Stable |
-| 🎵 | **Navidrome** | `navidrome/` | 4533 | ⚠️ Optional | Stable |
-| ☁️ | **Nextcloud** | `nextcloud/` | 5000 | ✅ Yes | Stable |
-| 🎥 | **Jellyfin** | `jellyfin/` | 8096, 8920 | ⚠️ Optional | Stable |
+| Service | Directory | Port | Purpose |
+|---------|-----------|------|---------|
+| Immich | `immich/` | 2283 | Google Photos alternative (self-hosted) |
+| Navidrome | `navidrome/` | 4533 | Music streaming server (Subsonic-compatible) |
+| Nextcloud | `nextcloud/` | 5000 | Complete productivity suite (files, calendar, contacts) |
+| Jellyfin | `jellyfin/` | 8096, 8920 | Full-featured media server (Plex alternative) |
 
 ### 🔗 Link Management
 
-| Icon | Service | Directory | Port | .env Required | Status |
-|------|---------|-----------|------|---------------|--------|
-| 🔗 | **YOURLS** | `yourls/` | 8001 | ✅ Yes | Stable |
-| 🔗 | **LinkStack** | `linkstack/` | 8003 | ✅ Yes | Stable |
+| Service | Directory | Port | Purpose |
+|---------|-----------|------|---------|
+| YOURLS | `yourls/` | 8001 | URL shortener with analytics |
+| LinkStack | `linkstack/` | 8003 | Link-sharing and bookmark manager |
 
-### 📚 Knowledge & Publishing
-| Icon | Service | Directory | Port | .env Required | Status |
-|------|---------|-----------|------|---------------|--------|
-| 📚 | **MediaWiki** | `wiki/` | 8002 | ✅ Yes | Stable |
+### 📚 Knowledge Management
+
+| Service | Directory | Port | Purpose |
+|---------|-----------|------|---------|
+| MediaWiki | `wiki/` | 8002 | Wikipedia-style wiki engine |
 
 ### 🐘 Social Media
 
-| Icon | Service | Directory | Port | .env Required | Status |
-|------|---------|-----------|------|---------------|--------|
-| 🐘 | **Mastodon** | `mastodon/` | 4000, 4001 | ✅ Yes (2 files)* | Stable |
+| Service | Directory | Port | Purpose |
+|---------|-----------|------|---------|
+| Mastodon | `mastodon/` | 4000, 4001 | Federated social network (Twitter alternative) |
 
-> Mastodon requires both `.env` (for Docker) and `.env.production` (for Mastodon configuration)
+> Mastodon requires both `.env` (Podman) and `.env.production` (Mastodon configuration)
 
-> Ports listed are the default ports on the host. Some services are only bound to `127.0.0.1` (localhost) for security reasons. Modify the configuration in each service's `docker-compose.yml` to bind to `0.0.0.0` or change the port.
-
-> All services are configured to use the `latest` image tag by default. For stable environments, it is **highly recommended** to pin specific version tags in your `.env` file or `compose.yaml` to avoid unexpected breaking changes from automatic updates.
-
-### Additional Synapse Services (Bridges)
-
-- `synapse:mautrix-telegram` – Telegram bridge (no .env, uses config.yaml)
-- `synapse:mautrix-whatsapp` – WhatsApp bridge (requires .env for DB credentials)
-
-> These bridges are located in `synapse/mautrix-telegram/` and `synapse/mautrix-whatsapp/` directories. They share the same `matrix-network` as Synapse.
+Important Notes:
+- 📖 Full setup guides available in [`docs/`](docs/) directory
+- 🔧 Use `dipen env <service>` to automatically create and edit `.env` files
+- 🏷️ Services use `latest` tag by default — pin versions for stability if needed
+- 🌐 Services bind to `127.0.0.1` (localhost) by default for security
 
 ## 📋 Prerequisites
 
-Before starting, ensure your system meets the following requirements:
-
 | Requirement | Minimum Version | Notes |
-|-------------|----------------|-------|
-| Docker Engine | 29.4+ | Required for all container operations |
-| Docker Compose | v2.0+ | Included with Docker Engine 29.4+ |
-| Git | Latest | For cloning the repository |
-| Operating System | Linux / macOS / WSL2 | Windows WSL2 recommended |
-| `curl` or `wget` | Latest | For healthchecks and downloads |
+|-------------|-----------------|-------|
+| Podman | 5.4+ | Rootless container engine |
+| podman-compose | v1.3+ | Compose orchestration for Podman |
+| Git | Latest | Version control |
+| OS | Linux / macOS / WSL2 | Any POSIX-compatible system |
+| Memory | 4GB+ | Depends on services running |
+| Storage | 50GB+ | Based on services and data volume |
 
-### Optional Dependencies
+## 🚀 Quick Start (3 Steps)
 
-- `whiptail` or `dialog` – For interactive menu in `sovereign.sh`
-- `jq` – For JSON parsing in automation scripts
-
-## 🚀 Getting Started
-
-### 1. Clone the Repository
-
+### Step 1: Clone Repository
 ```bash
-cd ~/
 git clone https://github.com/ricalnet/digital-independence.git
 cd digital-independence
 ```
 
-### 2. Install Docker Engine
-
-If Docker is not already installed, use the provided installation scripts:
-
-For Debian:
+### Step 2: Install Everything
 ```bash
-./install-docker-engine-on-debian.sh
+./install-podman-on-debian.sh
 ```
 
-For Ubuntu:
+What the installer does:
+- Updates and upgrades system
+- Installs Podman and podman-compose
+- Installs supporting packages (uidmap, slirp4netns, dbus-user-session, fuse-overlayfs)
+- Enables linger for user (allows services to run after logout)
+- Configures container registries (Docker Hub, GitHub Container Registry, Matrix)
+- Enables podman.socket for API access
+- Creates `dipen` alias (service orchestration)
+- Creates `chantik` alias (backup tool)
+
+### Step 3: Start Services
 ```bash
-./install-docker-engine-on-ubuntu.sh
+# List available services
+dipen list
+
+# Configure environment (auto-creates .env from .env.example)
+dipen env nextcloud
+
+# Start your service
+dipen up nextcloud
+
+# Start all services
+dipen all up
 ```
 
-### 3. Prepare Environment Files
+## ⚙️ dipen: Service Orchestration
 
-Some services require `.env` configuration files. Each service that needs a `.env` includes an `.env.example` template:
+`dipen` is the central command-line tool for managing all services.
 
-```bash
-# Example for Authentik
-cp authentik/.env.example authentik/.env
-nano authentik/.env   # adjust as needed
-
-# Example for Immich
-cp immich-app/.env.example immich-app/.env
-nano immich-app/.env   # adjust as needed
-```
-
-Quick Password Generator:
-```bash
-# Generate a secure password
-openssl rand -base64 32
-
-# Generate multiple passwords at once
-for i in {1..5}; do openssl rand -base64 32; done
-```
-
-### 4. Create External Networks
-
-Some services require pre-created networks:
+### Usage Examples
 
 ```bash
-# For Synapse and Mautrix bridges
-docker network create matrix-network
-```
+# Wildcard matching
+dipen env n*              # Edit all services starting with 'n'
+dipen up n*               # Start all services starting with 'n'
 
-### 5. Manage Services
+# Multiple services
+dipen env nextcloud immich authentik
 
-Use the `sovereign.sh` script to start, stop, and manage all services (see next section).
+# Custom editor
+EDITOR=vim dipen env immich
 
-## ⚙️ Using `sovereign.sh`
-
-`sovereign.sh` is a powerful command-line tool designed to simplify management of all services in one command.
-
-### Interactive Menu (Easiest for Beginners)
-
-```bash
-./sovereign.sh -i
-```
-
-Or simply run without arguments:
-
-```bash
-./sovereign.sh
-```
-
-### Quick Command Examples
-
-| Purpose | Command |
-|---------|---------|
-| Start a single service | `./sovereign.sh portainer` |
-| Start all services | `./sovereign.sh -a up` |
-| Stop a service | `./sovereign.sh -d portainer` |
-| Restart services | `./sovereign.sh -r portainer vaultwarden` |
-| Update images and restart | `./sovereign.sh recycle synapse` |
-| Update without downtime | `./sovereign.sh update immich` |
-| Simulate commands (dry-run) | `./sovereign.sh -n up portainer` |
-| View service logs | `./sovereign.sh logs portainer` |
-| Check service status | `./sovereign.sh ps` |
-
-> For Synapse sub-services, use `synapse:mautrix-telegram` or `synapse:mautrix-whatsapp`.
-
-### Full Help Guide
-
-```bash
-./sovereign.sh -h
+# All services
+dipen all up              # Start everything
+dipen all down            # Stop everything
 ```
 
 <details>
-<summary>📘 Click to expand full help guide</summary>
+<summary>📘 Complete dipen Help</summary>
 
-```bash
-Digital Independence by Ricalnet
-SOVEREIGN.SH v2.0.0
+```
+dipen v1.1 - Podman Orchestration Tool for Digital Independence
+Issues: https://github.com/ricalnet/digital-independence/issues 
 
 USAGE:
-    ./sovereign.sh [OPTIONS] [ACTION] [SERVICE...]
-
-OPTIONS:
-    -h, --help              Show this help message
-    -l, --list              List all available services
-    -a, --all               Run action on all services
-    -d, --down              Stop and remove containers (ACTION)
-    -r, --restart           Restart services (ACTION)
-    -p, --pull              Pull latest images before action
-    -b, --build             Build images before action
-    -v, --verbose           Show detailed output
-    -i, --interactive       Interactive checkbox menu
-    -n, --dry-run           Show what would be executed (no changes)
-    -s, --sudo              Use sudo for docker commands
-    --no-color              Disable colored output
+    dipen [ACTION] [SERVICE...] [OPTIONS]
 
 ACTIONS:
-    up                      Start services (default)
-    down                    Stop and remove services
-    restart                 Restart services
-    logs                    Show logs (last 50 lines)
-    ps                      Show container status
-    prune                   Clean up unused resources
+    env                 Edit .env file (create from .env.example if missing)
+    up                  Start services
+    down                Stop services
+    restart             Restart services
+    pull                Pull latest images
+    logs                Show logs (last 50 lines)
+    ps                  Show status
+    prune               Clean unused resources
+    recycle             Pull → Down → Up
+    update              Pull → Up
+    fresh               Down → Up
 
-COMBINED ACTIONS:
-    recycle                 PULL → DOWN → UP (full refresh with new images)
-    update                  PULL → UP (update without downtime)
-    fresh                   DOWN → UP (recreate without pull)
+OPTIONS:
+    help                Show this help
+    version             Show version
+    list                List services
+    all                 Run on all services
+    dry-run             Show what would be executed
 
 EXAMPLES:
-    ./sovereign.sh portainer                                    # Start portainer
-    ./sovereign.sh -a up                                        # Start all services
-    ./sovereign.sh -d portainer                                 # Stop portainer
-    ./sovereign.sh -r portainer vaultwarden                     # Restart services
-    ./sovereign.sh --pull --all up                              # Update all services
-    ./sovereign.sh recycle synapse                              # Full refresh synapse
-    ./sovereign.sh recycle synapse synapse:mautrix-telegram     # Refresh synapse + bridges
-    ./sovereign.sh fresh immich                                 # Recreate immich only
-    ./sovereign.sh -n up portainer                              # Dry run
-    ./sovereign.sh -i                                           # Interactive mode
-
-SERVICE NAMING:
-    • Main services: use service name directly
-    • Synapse sub-services: synapse:mautrix-telegram, synapse:mautrix-whatsapp
-
-RECYCLE SEQUENCE:
-    1. PULL  → Download latest images (container still running)
-    2. DOWN  → Stop and remove old container
-    3. UP    → Start new container with fresh image and config
+    dipen list
+    dipen env nextcloud immich
+    dipen env n*
+    dipen up nextcloud
+    dipen down nextcloud
+    dipen restart nextcloud
+    dipen pull nextcloud
+    dipen logs nextcloud
+    dipen ps nextcloud
+    dipen prune nextcloud
+    dipen update nextcloud
+    dipen fresh nextcloud
+    dipen recycle nextcloud
+    dipen all up
+    dipen dry-run up nextcloud
+    dipen up n*
 ```
 </details>
 
-## 🌐 Exposing Services to the Internet
 
-By default, services are only accessible from localhost. To access them securely from the internet, this repository supports two approaches:
+## 🌐 Exposing Services Externally
 
-### 🧅 Tor Hidden Service (.onion)
-
-Anonymous access through the Tor network, ideal for maximum privacy.
-
-- 📖 [Tor Hidden Service Implementation Guide](https://docs.ricalnet.my.id/posts/panduan-implementasi-hidden-service-tor/)
-- Benefits: No need for domain names, true anonymity, resistant to censorship
+### 🧅 Tor Hidden Service
+Provide anonymous access through the Tor network.
+- 📖 [Tor Implementation Guide](https://docs.ricalnet.my.id/posts/panduan-implementasi-hidden-service-tor/)
 
 ### ☁️ Cloudflare Tunnel
+Access services without opening firewall ports.
+- 📖 [Cloudflare Tunnel Guide](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
 
-Access through Cloudflare without opening firewall ports.
+## 💾 Chantik: Encrypted Backup & Restore
 
-- 📖 [Cloudflare Tunnel Configuration Guide](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
-- Benefits: DDoS protection, built-in SSL, no public IP required
+Chantik is a ChaCha20-Authenticated Backup Protection tool included in the repository.
 
-## 🔒 Security & Maintenance Guidelines
+### Key Features
 
-To keep your system secure and stable, follow these recommendations:
+| Feature | Description |
+|---------|-------------|
+| 🔐 ChaCha20-Poly1305 | Military-grade encryption via OpenSSL |
+| 📦 Podman Volume Backup | Backup specific volumes or all |
+| 📁 Custom Directory Backup | Backup any directory on your system |
+| ⚡ Incremental Backup | Space-efficient with hardlink support |
+| 🔄 Auto Rotation | Keep only N latest backups (default: 7) |
+| 🔔 NTFY Notifications | Get real-time backup status updates |
+| 🔒 Lock Protection | Prevent concurrent backups |
+
+### Quick Setup
+
+```bash
+# Copy example configuration
+cp chantik.example.conf chantik.conf
+
+# Edit configuration
+nano chantik.conf
+```
+
+### Usage Examples
+
+```bash
+# Basic backup
+chantik backup
+
+# Backup with specific config
+chantik -c /etc/chantik/chantik.conf backup
+
+# Restore latest backup
+chantik restore
+
+# Restore specific service
+chantik restore -s nextcloud
+
+# Restore specific backup file
+chantik restore -b /backup/chantik-20260109-120000.tar.gz.enc
+
+# List all backups
+chantik list
+
+# Verify last backup
+chantik verify
+
+# Clean old backups
+chantik clean
+```
+
+<details>
+<summary>📘 Complete chantik Help</summary>
+
+```
+chantik v1.0 - ChaCha20-Authenticated Backup Protection
+
+USAGE:
+    chantik [ACTION] [OPTIONS]
+
+ACTIONS:
+    backup              Perform full backup
+    restore             Restore from backup
+    list                List available backups
+    verify              Verify backup integrity
+    clean               Clean old backups (rotation)
+    status              Show backup status
+
+OPTIONS:
+    -c, --config FILE   Use alternative config file
+    -b, --backup FILE   Restore from specific backup file
+    -s, --service NAME  Restore specific service
+    -p, --password PASS Password for encryption (optional)
+    -h, --help          Show this help
+
+EXAMPLES:
+    chantik backup                          # Backup all
+    chantik restore                         # Restore last backup
+    chantik restore -s nextcloud            # Restore specific service
+    chantik restore -b /backup/file.enc     # Restore specific file
+    chantik list                            # List backups
+    chantik verify                          # Verify last backup
+    chantik clean                           # Clean old backups
+    chantik status                          # Show status
+```
+</details>
+
+## 🤖 Automation (Cron Jobs)
+
+> ⚠️ All cron jobs run in **rootless** mode. Never use `sudo` with podman commands in cron.
+
+### User Cron Jobs (`crontab -e`)
+
+| Schedule | Command | Purpose |
+|----------|---------|---------|
+| `*/5 * * * *` | `podman exec -u www-data nextcloud_app php -f /var/www/html/cron.php` | NextCloud background tasks |
+| `0 1 * * *` | `podman exec pihole pihole -g && podman exec pihole pihole -f` | Pi-hole gravity update |
+| `0 6 * * 0` | `/path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.sh` | Weekly service updates |
+| `0 8 1 * *` | `/path/to/digital-independence/automation-scripts/monthly-recycle/monthly_recycle.sh` | Monthly service recycle |
+| `0 11 * * 0` | `/path/to/digital-independence/dipen.sh prune all` | Weekly container cleanup |
+| `0 2 * * *` | `/path/to/digital-independence/chantik backup` | Daily encrypted backup |
+
+### System Cron Jobs (`sudo crontab -e`)
+
+| Schedule | Command | Purpose |
+|----------|---------|---------|
+| `0 2 * * 0` | `/path/to/digital-independence/automation-scripts/cleanup-system/cleanup_system.sh` | Weekly system cleanup |
+| `0 4 * * 0` | `/path/to/digital-independence/automation-scripts/system-update/system_update.sh` | Weekly system updates |
+
+### Complete Cron Example
+
+```bash
+# Edit user crontab
+crontab -e
+
+# Add these lines
+# ──────────────────────────────────────────────────────────────
+# Digital Independence Automation
+# ──────────────────────────────────────────────────────────────
+
+# NextCloud cron - every 5 minutes (background jobs)
+*/5 * * * * podman exec -u www-data nextcloud_app php -f /var/www/html/cron.php
+
+# Pi-hole gravity update - daily at 1 AM (update blocklist)
+0 1 * * * podman exec pihole pihole -g && podman exec pihole pihole -f
+
+# Daily backup - 2 AM
+0 2 * * * /path/to/digital-independence/chantik backup
+
+# Weekly container updates - Sunday 6 AM
+0 6 * * 0 /path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.sh
+
+# Weekly container cleanup - Sunday 11 AM
+0 11 * * 0 /path/to/digital-independence/dipen.sh prune all
+
+# Monthly recycle - 1st at 8 AM
+0 8 1 * * /path/to/digital-independence/automation-scripts/monthly-recycle/monthly_recycle.sh
+
+# ──────────────────────────────────────────────────────────────
+# System Cron (sudo crontab -e)
+# ──────────────────────────────────────────────────────────────
+
+# Weekly system cleanup - Sunday 2 AM
+0 2 * * 0 /path/to/digital-independence/automation-scripts/cleanup-system/cleanup_system.sh
+
+# Weekly system updates - Sunday 4 AM
+0 4 * * 0 /path/to/digital-independence/automation-scripts/system-update/system_update.sh
+```
+
+> 📝 Replace `/path/to/digital-independence/` with your actual installation path.
+
+## 🔒 Security Guidelines
 
 ### Initial Setup
-
-- 🔑 Change all default passwords immediately in `.env` files
+- 🔑 Change all default passwords in `.env` files (use `dipen env <service>`)
 - 🔒 Use strong, unique secrets for each service
-- 🌐 Bind to localhost (127.0.0.1) unless you need external access
-- 📁 Set proper file permissions: `chmod 600 .env` for sensitive files
+- 🌐 Bind to `127.0.0.1` (localhost) unless external access is required
+- 📁 Set `chmod 600 .env` for all environment files
 
 ### Ongoing Maintenance
-
-- 📦 Container data is stored in local directories or Docker volumes
-- ⬆️ Use `--pull` option to get security patches and updates
-- 📰 Read upstream changelogs before major version upgrades
-- 🔍 Monitor logs for suspicious activity: `./sovereign.sh logs [service]`
-- 📊 Enable health checks and monitoring with Uptime Kuma
-
-## 💾 Backup & Recovery
-
-Protect your data with a robust backup solution using [Chantik](https://github.com/ricalnet/chantik) – a ChaCha20-Authenticated Backup Protection tool designed specifically for Docker environments.
-
-## 🤖 Automation Scripts
-
-This repository includes automation scripts for scheduled maintenance. The scripts are located in `automation-scripts/` and can be configured via cron jobs.
-
-### 📅 Weekly Updates
-
-Automatically pulls latest images and updates services without downtime.
-
-```bash
-# Copy and configure the config file
-cp automation-scripts/weekly-updates/weekly_updates.conf.example automation-scripts/weekly-updates/weekly_updates.conf
-nano automation-scripts/weekly-updates/weekly_updates.conf
-```
-
-### 🔄 Monthly Recycle
-
-Performs a full refresh (pull → down → up) on selected services to ensure fresh containers.
-
-```bash
-# Copy and configure the config file
-cp automation-scripts/monthly-recycle/monthly_recycle.conf.example automation-scripts/monthly-recycle/monthly_recycle.conf
-nano automation-scripts/monthly-recycle/monthly_recycle.conf
-```
-
-### ⏰ Setting Up Cron Jobs
-
-Add these entries to your crontab for automated maintenance:
-
-```bash
-sudo crontab -e
-```
-
-```bash
-# Weekly updates - every Sunday at 3 AM
-0 3 * * 0 /path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.sh
-
-# Monthly recycle - every 1st day of the month at 6 AM
-0 6 1 * * /path/to/digital-independence/automation-scripts/monthly-recycle/monthly_recycle.sh
-```
-
-> Replace `/path/to/digital-independence/` with the actual path where you cloned the repository.
-
-### Script Configuration
-
-| Script | Config File | Purpose |
-|--------|-------------|---------|
-| `weekly_updates.sh` | `weekly_updates.conf` | List of services to update weekly |
-| `monthly_recycle.sh` | `monthly_recycle.conf` | List of services to recycle monthly |
-
-The scripts automatically log their output to `logs/` directory for monitoring and troubleshooting.
+- 📦 Data stored in local directories or Podman volumes (persistent)
+- ⬆️ Regularly run `dipen pull` or `dipen update` for security patches
+- 🔍 Monitor logs with `dipen logs [service]` for anomalies
+- 📊 Enable health checks using Uptime Kuma
+- 💾 Regular backups with `chantik backup`
 
 ## 🤝 Contributing
 
-Here are some areas where you can help:
+Areas for Contribution:
+- Adding new services
+- Bug fixes in `dipen.sh`, `chantik`, or services configuration
+- Documentation improvements
+- Testing on different platforms
 
-- Adding configurations for new services
-- Fixing bugs or improving features in `sovereign.sh`
-- Completing or improving documentation
-- Testing on different platforms (ARM, x86, etc.)
+How to Contribute:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a Pull Request
 
-Please open an [Issue](https://github.com/ricalnet/digital-independence/issues) or submit a [Pull Request](https://github.com/ricalnet/digital-independence/pulls).
+Open an [Issue](https://github.com/ricalnet/digital-independence/issues) or [Pull Request](https://github.com/ricalnet/digital-independence/pulls).
 
 ## 📜 License
 
-### Repository License
-
-This repository is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
-
-### Upstream Project Licenses
-
-Each service included in this repository is a separate open-source project with its own license. Please review and comply with the license terms of each upstream project before using them in production.
-
-| Service | License |
-|---------|---------|
-| Authentik | [LICENSE](https://github.com/goauthentik/authentik/blob/main/LICENSE) |
-| Dashdot | [LICENSE](https://github.com/MauriceNino/dashdot/blob/main/LICENSE.md) |
-| Element Web | [LICENSE](https://github.com/element-hq/element-web/blob/develop/LICENSE-AGPL-3.0) |
-| Homarr | [LICENSE](https://github.com/homarr-labs/homarr/blob/dev/LICENSE) |
-| Immich | [LICENSE](https://github.com/immich-app/immich/blob/main/LICENSE) |
-| Jellyfin | [LICENSE](https://github.com/jellyfin/jellyfin/blob/master/LICENSE) |
-| LibreTranslate | [LICENSE](https://github.com/LibreTranslate/LibreTranslate/blob/main/LICENSE) |
-| LinkStack | [LICENSE](https://github.com/LinkStackOrg/LinkStack/blob/main/LICENSE) |
-| Mastodon | [LICENSE](https://github.com/mastodon/mastodon/blob/main/LICENSE) |
-| Mautrix-Telegram | [LICENSE](https://github.com/mautrix/telegram/blob/main/LICENSE) |
-| Mautrix-WhatsApp | [LICENSE](https://github.com/mautrix/whatsapp/blob/main/LICENSE) |
-| MediaWiki | [LICENSE](https://github.com/wikimedia/mediawiki?tab=License-1-ov-file) |
-| Navidrome | [LICENSE](https://github.com/navidrome/navidrome/blob/master/LICENSE) |
-| Nextcloud | [LICENSE](https://github.com/nextcloud/server/tree/master/LICENSES) |
-| ntfy | [LICENSE](https://github.com/binwiederhier/ntfy/blob/main/LICENSE) |
-| Open WebUI | [LICENSE](https://github.com/open-webui/open-webui/blob/main/LICENSE) |
-| Ollama | [LICENSE](https://github.com/ollama/ollama/blob/main/LICENSE) |
-| Pi-hole | [LICENSE](https://github.com/pi-hole/pi-hole/blob/master/LICENSE) |
-| Portainer | [LICENSE](https://github.com/portainer/portainer/blob/develop/LICENSE) |
-| SearXNG | [LICENSE](https://github.com/searxng/searxng/blob/master/LICENSE) |
-| Synapse | [LICENSE](https://github.com/element-hq/synapse/blob/develop/LICENSE-AGPL-3.0) |
-| Uptime Kuma | [LICENSE](https://github.com/louislam/uptime-kuma/blob/master/LICENSE) |
-| Vaultwarden | [LICENSE](https://github.com/dani-garcia/vaultwarden/blob/main/LICENSE.txt) |
-| Wazuh | [LICENSE](https://github.com/wazuh/wazuh-docker/blob/main/LICENSE) |
-| YOURLS | [LICENSE](https://github.com/YOURLS/YOURLS/blob/master/LICENSE) |
+### Repository
+MIT License – see [LICENSE](LICENSE) file for details.

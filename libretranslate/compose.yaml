@@ -1,27 +1,23 @@
 services:
   libretranslate:
     container_name: libretranslate
-    image: ${LIBRETRANSLATE_IMAGE:-libretranslate/libretranslate:latest}
+    image: ${LIBRETRANSLATE_IMAGE:-docker.io/libretranslate/libretranslate:latest}
     ports:
       - "127.0.0.1:5001:5000"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "./venv/bin/python scripts/healthcheck.py"]
+      test: "CMD-SHELL ./venv/bin/python scripts/healthcheck.py"
       interval: 10s
       timeout: 4s
       retries: 4
       start_period: 5s
     tty: true
     environment:
-      - LT_LOAD_ONLY=en,id
+      - LT_LOAD_ONLY=${LT_LOAD_ONLY}
+      - LT_DEBUG=${LT_DEBUG}
     volumes:
       - libretranslate_models:/home/libretranslate/.local:rw
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-        reservations:
-          memory: 512M
+    mem_limit: 1g
     security_opt:
       - no-new-privileges:true
     cap_drop:

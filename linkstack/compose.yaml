@@ -1,14 +1,14 @@
 services:
   linkstack:
     hostname: "linkstack"
-    image: ${LINKSTACK_IMAGE:-linkstackorg/linkstack:latest}
+    image: ${LINKSTACK_IMAGE:-docker.io/linkstackorg/linkstack:latest}
     container_name: linkstack
     environment:
       TZ: ${TZ:-Asia/Jakarta}
       SERVER_ADMIN: ${SERVER_ADMIN:-admin@example.com}
       HTTP_SERVER_NAME: ${HTTP_SERVER_NAME:-localhost}
       HTTPS_SERVER_NAME: ${HTTPS_SERVER_NAME:-localhost}
-      LOG_LEVEL: ${LOG_LEVEL:-warn}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
       PHP_MEMORY_LIMIT: ${PHP_MEMORY_LIMIT:-256M}
       UPLOAD_MAX_FILESIZE: ${UPLOAD_MAX_FILESIZE:-20M}
     volumes:
@@ -28,14 +28,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-          cpus: "0.5"
-        reservations:
-          memory: 256M
-          cpus: "0.25"
+    mem_limit: 512m
+    cpus: 0.5
     security_opt:
       - no-new-privileges:true
     cap_drop:
@@ -94,10 +88,10 @@ services:
       resources:
         limits:
           memory: 512M
-          cpus: "0.5"
+          cpus: 0.5
         reservations:
           memory: 256M
-          cpus: "0.25"
+          cpus: 0.25
     security_opt:
       - no-new-privileges:true
     cap_drop:

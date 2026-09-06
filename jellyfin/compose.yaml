@@ -1,6 +1,6 @@
 services:
   jellyfin:
-    image: ${JELLYFIN_IMAGE:-jellyfin/jellyfin:latest}
+    image: ${JELLYFIN_IMAGE:-docker.io/jellyfin/jellyfin:latest}
     container_name: jellyfin
     user: 1000:1000
     restart: unless-stopped
@@ -32,14 +32,8 @@ services:
       retries: 3
       start_period: 60s
       start_interval: 5s
-    deploy:
-      resources:
-        limits:
-          memory: ${MEMORY_LIMIT:-2048M}
-          cpus: ${CPU_LIMIT:-2.0}
-        reservations:
-          memory: ${MEMORY_RESERVATION:-512M}
-          cpus: ${CPU_RESERVATION:-1.0}
+    mem_limit: ${MEMORY_LIMIT:-2g}
+    cpus: ${CPU_LIMIT:-2.0}
     security_opt:
       - no-new-privileges:true
     cap_drop:
@@ -55,15 +49,13 @@ services:
       - /tmp:rw,noexec,nosuid,size=256M
       - /run:rw,noexec,nosuid,size=64M
     devices:
-      - /dev/dri:/dev/dri:ro
+      - /dev/dri/card0:/dev/dri/card0:rwm
+      - /dev/dri/renderD128:/dev/dri/renderD128:rwm
     sysctls:
       - net.core.somaxconn=1024
       - net.ipv4.tcp_syncookies=1
     ulimits:
       nofile:
-        soft: 65536
-        hard: 65536
-      nproc:
         soft: 65536
         hard: 65536
     logging:

@@ -2,6 +2,7 @@ services:
   homarr:
     container_name: homarr
     image: ${HOMARR_IMAGE:-ghcr.io/homarr-labs/homarr:latest}
+    user: "1000:1000"
     restart: unless-stopped
     cap_add:
       - CHOWN
@@ -13,7 +14,7 @@ services:
     security_opt:
       - no-new-privileges:true
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${XDG_RUNTIME_DIR}/podman/podman.sock:/var/run/podman.sock:ro
       - homarr_data:/appdata
       - homarr_nginx:/var/lib/nginx
       - homarr_nginx_conf:/etc/nginx
@@ -26,14 +27,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-          cpus: "0.5"
-        reservations:
-          memory: 256M
-          cpus: "0.25"
+    mem_limit: 512m
+    cpus: 0.5
     logging:
       driver: "json-file"
       options:
@@ -71,12 +66,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
-    deploy:
-      resources:
-        limits:
-          memory: 128M
-        reservations:
-          memory: 64M
+    mem_limit: 128m
     logging:
       driver: "json-file"
       options:

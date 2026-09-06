@@ -1,13 +1,48 @@
-# ============================================
-# Docker Volumes & Persistent Data
-# ============================================
+# ============================
+# OS & Editor Files
+# ============================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.iml
+
+# ============================
+# Temporary & Logs
+# ============================
+.temp/
+logs/
+*.log
+
+# ============================
+# Automation Scripts
+# ============================
+automation-scripts/cleanup-system/cleanup_system.conf
+automation-scripts/cpu-monitor/cpu_monitor.conf
+automation-scripts/memory-monitor/memory_monitor.conf
+automation-scripts/monthly-recycle/monthly_recycle.conf
+automation-scripts/system-update/system_update.conf
+automation-scripts/weekly-updates/weekly_updates.conf
+automation-scripts/monitorctl.sh
+automation-scripts/setup-services.sh
+automation-scripts/logs/
+
+# ============================
+# Scripts
+# ============================
+fix_permissions.sh
+migration_script.sh
+myservice.sh
+chantik.conf
+
+# ============================
+# Service Configurations
+# ============================
 
 # Authentik
-authentik/certs/
-authentik/media/
-authentik/postgres-data/
-authentik/redis-data/
-authentik/templates/
 authentik/.env
 
 # Element Web
@@ -16,43 +51,41 @@ element-web/modules/
 element-web/.env
 
 # Homarr
-homarr/homarr/
 homarr/.env
 
 # Immich
-immich-app/library/
-immich-app/postgres/
-immich-app/.env
+immich/.env
 
 # Jellyfin
-jellyfin/cache/*
-jellyfin/config/*
-jellyfin/media/*
+jellyfin/cache/
+jellyfin/config/
+jellyfin/media/
 jellyfin/.env
 
 # LibreTranslate
 libretranslate/.env
 
 # Linkstack
-linkstack/configs
-linkstack/linkstack
+linkstack/configs/
+linkstack/linkstack/
 linkstack/.env
 
 # Mastodon
-mastodon/.env
-mastodon/.env.production
 mastodon/postgres14/
 mastodon/public/
-mastodon/redis
+mastodon/redis/
+mastodon/.env
+mastodon/.env.production
 
 # Navidrome
-navidrome/data/*
-navidrome/music/*
+navidrome/data/
+navidrome/music/
 navidrome/.env
 
 # Nextcloud
 nextcloud/.env
 nextcloud/nginx.conf
+nextcloud/directory.sh
 
 # Ntfy
 ntfy/ntfy/
@@ -62,40 +95,38 @@ ntfy/.env
 open-webui/.env
 
 # Pi-hole
-pi-hole/etc-pihole/
-pi-hole/etc-dnsmasq.d/
-pi-hole/.env
 pi-hole/dnscrypt-config/dnscrypt-proxy.toml
+pi-hole/.env
 
 # Portainer
 portainer/.env
 
 # SearXNG
 searxng/searxng/
-searxng/sources/
 searxng/.env
 
 # Synapse
 synapse/synapse-data/
-synapse/postgres-data/
 synapse/.env
 
 # Synapse - Mautrix Bridges
 synapse/mautrix-telegram/mautrix-telegram-data/
 synapse/mautrix-whatsapp/mautrix-whatsapp-data/
-synapse/mautrix-whatsapp/postgres-data/
 synapse/mautrix-whatsapp/.env
+synapse/mautrix/mautrix-telegram-data/
+synapse/mautrix/mautrix-whatsapp-data/
+synapse/mautrix/.env
 
 # Uptime Kuma
 uptime-kuma/.env
 
 # Vaultwarden
-vaultwarden/vw-data/
 vaultwarden/.env
 
+# Wazuh
 wazuh/config/wazuh_dashboard/wazuh.yml
 wazuh/config/wazuh_indexer/internal_users.yml
-wazuh/config/wazuh_indexer_ssl_certs
+wazuh/config/wazuh_indexer_ssl_certs/
 wazuh/.env
 
 # Wiki (MediaWiki)
@@ -108,24 +139,3 @@ wiki/LocalSettings.php
 yourls/Sleeky/
 yourls/frontend.sh
 yourls/.env
-
-
-# ============================================
-# Logs
-# ============================================
-logs/*
-
-
-# ============================================
-# Automation Scripts
-# ============================================
-automation-scripts/cpu-monitor/cpu_monitor.conf
-automation-scripts/memory-monitor/memory_monitor.conf
-automation-scripts/monitorctl.sh
-automation-scripts/setup-services.sh
-automation-scripts/logs/
-automation-scripts/weekly-updates/weekly_updates.conf
-automation-scripts/monthly-recycle/monthly_recycle.conf
-
-# System cleanup script
-cleanup_system.sh

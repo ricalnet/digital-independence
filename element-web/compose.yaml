@@ -1,6 +1,6 @@
 services:
   element-web:
-    image: ${ELEMENT_WEB_IMAGE:-vectorim/element-web:latest}
+    image: ${ELEMENT_WEB_IMAGE:-docker.io/vectorim/element-web:latest}
     container_name: element-web
     restart: unless-stopped
     ports:
@@ -22,14 +22,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: "0.5"
-        reservations:
-          memory: 128M
-          cpus: "0.25"
+    mem_limit: 256m
+    cpus: 0.5
     security_opt:
       - no-new-privileges:true
       - apparmor:unconfined
@@ -51,7 +45,6 @@ services:
         max-size: "10m"
         max-file: "5"
         compress: "true"
-        tag: "{{.Name}}|{{.ImageName}}|{{.DaemonName}}"
     init: true
     networks:
       - element-network

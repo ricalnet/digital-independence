@@ -1,10 +1,10 @@
 services:
   portainer:
     container_name: portainer
-    image: ${PORTAINER_IMAGE:-portainer/portainer-ce:latest}
+    image: ${PORTAINER_IMAGE:-docker.io/portainer/portainer-ce:latest}
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro
       - portainer_data:/data
       - /etc/localtime:/etc/localtime:ro
     ports:
@@ -26,14 +26,8 @@ services:
     #   timeout: 5s
     #   retries: 3
     #   start_period: 30s
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: "0.5"
-        reservations:
-          memory: 128M
-          cpus: "0.25"
+    mem_limit: 300m
+    cpus: 0.5
     security_opt:
       - no-new-privileges:true
     cap_drop:

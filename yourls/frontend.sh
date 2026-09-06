@@ -17,23 +17,23 @@ check_error() {
 echo -e "${YELLOW}Mulai proses penyalinan file ke container yourls-fpm...${NC}"
 echo "==================================="
 
-docker ps | grep yourls-fpm > /dev/null
+podman ps | grep yourls-fpm > /dev/null
 if [ $? -ne 0 ]; then
     echo -e "${RED}❌ Container yourls-fpm tidak ditemukan atau tidak running${NC}"
     exit 1
 fi
 
 echo "Menyalin index.php..."
-docker cp /home/rpi/digital-independence/yourls/Sleeky/sleeky-frontend/index.php yourls-fpm:/var/www/html/
+podman cp /home/rpi/digital-independence/yourls/Sleeky/sleeky-frontend/index.php yourls-fpm:/var/www/html/
 check_error "Menyalin index.php"
 
 echo "Menyalin folder frontend..."
-docker cp /home/rpi/digital-independence/yourls/Sleeky/sleeky-frontend/frontend/ yourls-fpm:/var/www/html/
+podman cp /home/rpi/digital-independence/yourls/Sleeky/sleeky-frontend/frontend/ yourls-fpm:/var/www/html/
 check_error "Menyalin folder frontend"
 
 echo "==================================="
 echo -e "${YELLOW}Merestart container yourls-fpm...${NC}"
-docker container restart yourls-fpm
+podman container restart yourls-fpm
 check_error "Merestart container"
 
 echo "==================================="
