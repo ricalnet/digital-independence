@@ -2,78 +2,119 @@ services:
   redis:
     container_name: searxng-redis
     image: ${SEARXNG_REDIS_IMAGE:-docker.io/valkey/valkey:alpine}
-    command: valkey-server --save 30 1 --loglevel warning
     restart: unless-stopped
+    command: >
+      valkey-server
+      --save 30 1
+      --loglevel warning
+      --maxmemory 200mb
+      --maxmemory-policy allkeys-lru
+      --appendonly no
+      --protected-mode yes
+      --bind 0.0.0.0
+      --port 6379
+      --requirepass ${REDIS_PASSWORD}
+      --rename-command FLUSHALL ""
+      --rename-command FLUSHDB ""
+      --rename-command CONFIG "CONFIG_${REDIS_CONFIG_RENAME:-SEARXNG_CONFIG}"
     networks:
       - searxng
     volumes:
       - valkey-data:/data
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-        reservations:
-          memory: 128M
+      start_period: 10s
+    mem_limit: 256m
+    mem_reservation: 64m
+    cpus: 0.3
+    pids_limit: 100
+    mem_swappiness: 0
+    oom_score_adj: -800
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+    read_only: true
+    tmpfs:
+      - /run:rw,noexec,nosuid,size=32M
+      - /tmp:rw,noexec,nosuid,size=32M
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
-        max-file: "3"
+        max-file: "5"
+        compress: "true"
+    stop_grace_period: 30s
 
   searxng:
     container_name: searxng
     image: ${SEARXNG_IMAGE:-docker.io/searxng/searxng:latest}
     restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
     networks:
       - searxng
     ports:
-      - "127.0.0.1:8888:8080"
+      - "${SEARXNG_BIND_ADDRESS:-127.0.0.1}:${SEARXNG_PORT:-8888}:8080"
     volumes:
       - ./searxng:/etc/searxng:rw
       - searxng-data:/var/cache/searxng:rw
     environment:
       - SEARXNG_BASE_URL=https://${SEARXNG_HOSTNAME:-localhost}/
+      - SEARXNG_DEBUG=${SEARXNG_DEBUG:-false}
+      - SEARXNG_SECRET_KEY=${SEARXNG_SECRET_KEY}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@searxng-redis:6379/0
     healthcheck:
-      test:
-        [
-          "CMD",
-          "wget",
-          "--no-verbose",
-          "--tries=1",
-          "--spider",
-          "http://localhost:8080/",
-        ]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/ || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 256M
+    mem_limit: 768m
+    mem_reservation: 256m
+    cpus: 1.0
+    pids_limit: 300
+    mem_swappiness: 10
+    oom_score_adj: -100
     security_opt:
-      - no-new-privileges:true
+      - no-new-privileges=true
     cap_drop:
       - ALL
     cap_add:
       - NET_BIND_SERVICE
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - FOWNER
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "20m"
+        max-file: "5"
+        compress: "true"
+    stop_grace_period: 30s
 
 networks:
   searxng:
+    name: searxng-network
     driver: bridge
 
 volumes:
   valkey-data:
+    name: valkey_data
   searxng-data:
+    name: searxng_data

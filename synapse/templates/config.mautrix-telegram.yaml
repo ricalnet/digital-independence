@@ -1,0 +1,61 @@
+network:
+    # Get your own API keys at https://my.telegram.org/apps
+    api_id: 12345
+    api_hash: tjyd5yge35lbodk1xwzw2jstp90k55qz
+
+bridge:
+    permissions:
+        "*": relay
+        "example.com": user
+        "@admin:example.com": admin
+
+database:
+    type: postgres
+    uri: postgres://mautrix:CHANGE_ME_POSTGRES_PASSWORD@postgres/mautrix_telegram?sslmode=disable
+
+homeserver:
+    address: http://synapse:8008
+    domain: matrix.yourdomain.com
+
+appservice:
+    address: http://mautrix-telegram:29317
+    public_address: https://bridge.example.com
+    hostname: 0.0.0.0  
+    port: 29317
+    id: telegram
+    bot:
+        username: telegrambot
+        displayname: Telegram bridge bot
+        avatar: ""
+
+encryption:
+    allow: true
+    default: true
+    require: true
+    appservice: false
+    msc4190: false
+    msc4392: false
+    self_sign: false
+    allow_key_sharing: false
+    plaintext_mentions: false
+    delete_keys:
+        delete_outbound_on_ack: true
+        dont_store_outbound: false
+        ratchet_on_decrypt: true
+        delete_fully_used_on_decrypt: true
+        delete_prev_on_new_session: true
+        delete_on_device_delete: true
+        periodically_delete_expired: true
+        delete_outdated_inbound: true
+    verification_levels:
+        receive: cross-signed-tofu
+        send: cross-signed-tofu
+        share: cross-signed-tofu
+    rotation:
+        enable_custom: true
+        milliseconds: 604800000
+        messages: 50
+        disable_device_change_key_rotation: false
+
+    logging:
+        min_level: info

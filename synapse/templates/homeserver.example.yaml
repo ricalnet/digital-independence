@@ -259,14 +259,14 @@ allow_guest_access: false
 # Application service configuration files for bridges
 # =============================================================================
 
-app_service_config_files:
-  # Telegram bridge
-  - /data/mautrix-telegram-registration.yaml
-  # WhatsApp bridge
-  - /data/mautrix-whatsapp-registration.yaml
-  # Add more bridges as needed:
-  # - /data/mautrix-signal-registration.yaml
-  # - /data/mautrix-discord-registration.yaml
+# app_service_config_files:
+#   # Telegram bridge
+#   - /data/mautrix-telegram-registration.yaml
+#   # WhatsApp bridge
+#   - /data/mautrix-whatsapp-registration.yaml
+#   # Add more bridges as needed:
+#   # - /data/mautrix-signal-registration.yaml
+#   # - /data/mautrix-discord-registration.yaml
 
 # =============================================================================
 # RETENTION POLICY
@@ -648,34 +648,34 @@ background_updates:
 # Configure Single Sign-On providers
 # =============================================================================
 
-oidc_providers:
-  # Authentik SSO provider
-  - idp_id: authentik # Unique identifier
-    idp_name: SSO # Display name
-    discover: true # Use OIDC discovery endpoint
-    backchannel_logout_enabled: true # Enable logout from SSO
-    issuer: "https://auth.domain.com/application/o/<application_slug>/"
-    client_id: "<Client ID from authentik>"
-    client_secret: "<Client Secret from authentik>"
-    scopes:
-      - "openid"
-      - "profile"
-      - "email"
-    user_mapping_provider:
-      config:
-        # Template for username (MXID localpart)
-        localpart_template: "{{ user.preferred_username }}"
-        # Template for display name
-        display_name_template: "{{ user.preferred_username|capitalize }}"
+# oidc_providers:
+#   # Authentik SSO provider
+#   - idp_id: authentik # Unique identifier
+#     idp_name: SSO # Display name
+#     discover: true # Use OIDC discovery endpoint
+#     backchannel_logout_enabled: true # Enable logout from SSO
+#     issuer: "https://auth.domain.com/application/o/<application_slug>/"
+#     client_id: "<Client ID from authentik>"
+#     client_secret: "<Client Secret from authentik>"
+#     scopes:
+#       - "openid"
+#       - "profile"
+#       - "email"
+#     user_mapping_provider:
+#       config:
+#         # Template for username (MXID localpart)
+#         localpart_template: "{{ user.preferred_username }}"
+#         # Template for display name
+#         display_name_template: "{{ user.preferred_username|capitalize }}"
 
-  # Add more providers as needed:
-  # - idp_id: google
-  #   idp_name: Google
-  #   discover: true
-  #   issuer: "https://accounts.google.com"
-  #   client_id: "<your-client-id>"
-  #   client_secret: "<your-client-secret>"
-  #   scopes: ["openid", "profile", "email"]
+# Add more providers as needed:
+# - idp_id: google
+#   idp_name: Google
+#   discover: true
+#   issuer: "https://accounts.google.com"
+#   client_id: "<your-client-id>"
+#   client_secret: "<your-client-secret>"
+#   scopes: ["openid", "profile", "email"]
 
 # =============================================================================
 # JWT Authentication
@@ -683,17 +683,17 @@ oidc_providers:
 # JSON Web Token authentication for APIs
 # =============================================================================
 
-jwt_config:
-  # Enable JWT authentication
-  enabled: true
+# jwt_config:
+#   # Enable JWT authentication
+#   enabled: true
 
-  # Secret or RSA private key
-  # For HS256: use a strong random string (32+ chars)
-  # For RS256: use RSA private key in PEM format
-  secret: "<Client Secret from authentik>"
+#   # Secret or RSA private key
+#   # For HS256: use a strong random string (32+ chars)
+#   # For RS256: use RSA private key in PEM format
+#   secret: "<Client Secret from authentik>"
 
-  # Algorithm:
-  #   - HS256: Symmetric (shared secret) - simpler
-  #   - RS256: Asymmetric (RSA) - more secure
-  # WARNING: RS256 requires a PEM-encoded RSA private key, not a client secret!
-  algorithm: "RS256"
+#   # Algorithm:
+#   #   - HS256: Symmetric (shared secret) - simpler
+#   #   - RS256: Asymmetric (RSA) - more secure
+#   # WARNING: RS256 requires a PEM-encoded RSA private key, not a client secret!
+#   algorithm: "RS256"

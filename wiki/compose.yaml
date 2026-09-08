@@ -1,38 +1,98 @@
 services:
   mediawiki:
-    image: mediawiki:${MEDIAWIKI_VERSION:-latest}
-    container_name: ${MEDIAWIKI_CONTAINER_NAME:-mediawiki}
+    container_name: mediawiki
+    image: docker.io/mediawiki:latest
+    restart: unless-stopped
     ports:
-      - "${MEDIAWIKI_HOST:-127.0.0.1}:${MEDIAWIKI_PORT:-8002}:80"
+      - "127.0.0.1:8002:80"
     environment:
-      MEDIAWIKI_DB_HOST: ${DB_HOST:-db}
-      MEDIAWIKI_DB_USER: ${MYSQL_USER:-mediawiki}
-      MEDIAWIKI_DB_PASSWORD: ${MYSQL_PASSWORD}
-      MEDIAWIKI_DB_NAME: ${MYSQL_DATABASE:-mediawiki}
+      - MEDIAWIKI_DB_HOST=db
+      - MEDIAWIKI_DB_USER=mediawiki
+      - MEDIAWIKI_DB_PASSWORD=${MYSQL_PASSWORD}
+      - MEDIAWIKI_DB_NAME=mediawiki
     depends_on:
       - db
     volumes:
-      - ${MEDIAWIKI_IMAGES_PATH:-./mediawiki_data}:/var/www/html/images
+      - mediawiki_data:/var/www/html/images
       # Uncomment after installation is complete and LocalSettings.php has been created
-      - ${LOCALSETTINGS_PATH:-./LocalSettings.php}:/var/www/html/LocalSettings.php
-    restart: ${RESTART_POLICY:-unless-stopped}
+      # - ./LocalSettings.php:/var/www/html/LocalSettings.php:ro
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:80/w/index.php"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    mem_limit: 384m
+    cpus: 0.5
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128M
+      - /run:rw,noexec,nosuid,size=64M
+      - /var/run:rw,noexec,nosuid,size=64M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+        compress: "true"
+    networks:
+      - mediawiki-network
 
   db:
-    image: ${DB_IMAGE:-mariadb}:${DB_VERSION:-10.11}
-    container_name: ${DB_CONTAINER_NAME:-mediawiki_db}
-    ports:
-      - "${DB_HOST_BIND:-127.0.0.1}:${DB_PORT_BIND:-3307}:3306"
+    container_name: mediawiki_db
+    image: mariadb:10.11
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-mediawiki}
-      MYSQL_USER: ${MYSQL_USER:-mediawiki}
+      MYSQL_DATABASE: mediawiki
+      MYSQL_USER: mediawiki
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
-      - ${DB_DATA_PATH:-./db_data}:/var/lib/mysql
-    restart: ${RESTART_POLICY:-unless-stopped}
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    mem_limit: 384m
+    cpus: 0.3
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - NET_BIND_SERVICE
+      - SYS_CHROOT
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64M
+      - /run:rw,noexec,nosuid,size=64M
+      - /var/run:rw,noexec,nosuid,size=64M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+        compress: "true"
+    networks:
+      - mediawiki-network
 
 volumes:
   mediawiki_data:
-    name: ${MEDIAWIKI_VOLUME_NAME:-mediawiki_data}
+    name: mediawiki_data
   db_data:
-    name: ${DB_VOLUME_NAME:-db_data}
+    name: mediawiki_db_data
+
+networks:
+  mediawiki-network:
+    name: mediawiki_network
+    driver: bridge

@@ -1,0 +1,152 @@
+services:
+  postgres:
+    image: ${MAUTRIX_POSTGRES_IMAGE:-docker.io/postgres:18-alpine}
+    container_name: mautrix-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${MAUTRIX_POSTGRES_DB:-mautrix}
+      POSTGRES_USER: ${MAUTRIX_POSTGRES_USER:-mautrix}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_SHARED_BUFFERS: ${POSTGRES_SHARED_BUFFERS:-128MB}
+      POSTGRES_EFFECTIVE_CACHE_SIZE: ${POSTGRES_EFFECTIVE_CACHE_SIZE:-256MB}
+      POSTGRES_MAINTENANCE_WORK_MEM: ${POSTGRES_MAINTENANCE_WORK_MEM:-64MB}
+      POSTGRES_WORK_MEM: ${POSTGRES_WORK_MEM:-16MB}
+      POSTGRES_MAX_CONNECTIONS: ${POSTGRES_MAX_CONNECTIONS:-50}
+    volumes:
+      - mautrix_postgres_data:/var/lib/postgresql
+    networks:
+      - matrix-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${MAUTRIX_POSTGRES_USER:-mautrix} -d ${MAUTRIX_POSTGRES_DB:-mautrix}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    mem_limit: 512m
+    mem_reservation: 128m
+    cpus: 0.5
+    pids_limit: 200
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - FOWNER
+      - NET_BIND_SERVICE
+      - SYS_CHROOT
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64M
+      - /run:rw,noexec,nosuid,size=32M
+      - /var/run:rw,noexec,nosuid,size=32M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+        compress: "true"
+    stop_grace_period: 60s
+
+  mautrix-telegram:
+    container_name: mautrix-telegram
+    image: ${MAUTRIX_TELEGRAM_IMAGE:-dock.mau.dev/mautrix/telegram:latest}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./mautrix-telegram-data:/data
+    networks:
+      - matrix-network
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - SETUID
+      - SETGID
+      - FOWNER
+      - DAC_OVERRIDE
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64M
+      - /run:rw,noexec,nosuid,size=32M
+      - /var/run:rw,noexec,nosuid,size=32M
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f mautrix-telegram || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    mem_limit: 256m
+    mem_reservation: 64m
+    cpus: 0.3
+    pids_limit: 100
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+        compress: "true"
+    stop_grace_period: 30s
+    environment:
+      - TZ=${TZ:-Asia/Jakarta}
+
+  mautrix-whatsapp:
+    container_name: mautrix-whatsapp
+    image: ${MAUTRIX_WHATSAPP_IMAGE:-dock.mau.dev/mautrix/whatsapp:latest}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./mautrix-whatsapp-data:/data
+    networks:
+      - matrix-network
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - SETUID
+      - SETGID
+      - FOWNER
+      - DAC_OVERRIDE
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64M
+      - /run:rw,noexec,nosuid,size=32M
+      - /var/run:rw,noexec,nosuid,size=32M
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f mautrix-whatsapp || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    mem_limit: 256m
+    mem_reservation: 64m
+    cpus: 0.3
+    pids_limit: 100
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+        compress: "true"
+    stop_grace_period: 30s
+    environment:
+      - TZ=${TZ:-Asia/Jakarta}
+
+volumes:
+  mautrix_postgres_data:
+    name: mautrix_postgres_data
+
+networks:
+  matrix-network:
+    external: true
+    name: matrix-network

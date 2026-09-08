@@ -8,3 +8,34 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Upstream Projects License
+==============
+
+| Service | License |
+|---------|---------|
+| Authentik | [LICENSE](https://github.com/goauthentik/authentik/blob/main/LICENSE) |
+| Dashdot | [LICENSE](https://github.com/MauriceNino/dashdot/blob/main/LICENSE.md) |
+| Element Web | [LICENSE](https://github.com/element-hq/element-web/blob/develop/LICENSE-AGPL-3.0) |
+| Homarr | [LICENSE](https://github.com/homarr-labs/homarr/blob/dev/LICENSE) |
+| Immich | [LICENSE](https://github.com/immich-app/immich/blob/main/LICENSE) |
+| Jellyfin | [LICENSE](https://github.com/jellyfin/jellyfin/blob/master/LICENSE) |
+| LibreTranslate | [LICENSE](https://github.com/LibreTranslate/LibreTranslate/blob/main/LICENSE) |
+| LinkStack | [LICENSE](https://github.com/LinkStackOrg/LinkStack/blob/main/LICENSE) |
+| Mastodon | [LICENSE](https://github.com/mastodon/mastodon/blob/main/LICENSE) |
+| Mautrix-Telegram | [LICENSE](https://github.com/mautrix/telegram/blob/main/LICENSE) |
+| Mautrix-WhatsApp | [LICENSE](https://github.com/mautrix/whatsapp/blob/main/LICENSE) |
+| MediaWiki | [LICENSE](https://github.com/wikimedia/mediawiki?tab=License-1-ov-file) |
+| Navidrome | [LICENSE](https://github.com/navidrome/navidrome/blob/master/LICENSE) |
+| Nextcloud | [LICENSE](https://github.com/nextcloud/server/tree/master/LICENSES) |
+| ntfy | [LICENSE](https://github.com/binwiederhier/ntfy/blob/main/LICENSE) |
+| Open WebUI | [LICENSE](https://github.com/open-webui/open-webui/blob/main/LICENSE) |
+| Ollama | [LICENSE](https://github.com/ollama/ollama/blob/main/LICENSE) |
+| Pi-hole | [LICENSE](https://github.com/pi-hole/pi-hole/blob/master/LICENSE) |
+| Portainer | [LICENSE](https://github.com/portainer/portainer/blob/develop/LICENSE) |
+| SearXNG | [LICENSE](https://github.com/searxng/searxng/blob/master/LICENSE) |
+| Synapse | [LICENSE](https://github.com/element-hq/synapse/blob/develop/LICENSE-AGPL-3.0) |
+| Uptime Kuma | [LICENSE](https://github.com/louislam/uptime-kuma/blob/master/LICENSE) |
+| Vaultwarden | [LICENSE](https://github.com/dani-garcia/vaultwarden/blob/main/LICENSE.txt) |
+| Wazuh | [LICENSE](https://github.com/wazuh/wazuh-docker/blob/main/LICENSE) |
+| YOURLS | [LICENSE](https://github.com/YOURLS/YOURLS/blob/master/LICENSE) |

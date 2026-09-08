@@ -1,11 +1,4 @@
 #!/bin/bash
-# ============================================================
-# WEEKLY UPDATE SCRIPT - RUNS sovereign.sh update
-# ============================================================
-# Location: /path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.sh
-# Config: /path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.conf
-# Action: update (pull + up) for registered services
-# ============================================================
 
 set -euo pipefail
 
@@ -15,73 +8,51 @@ CONF_FILE="${SCRIPT_DIR}/weekly_updates.conf"
 if [ -f "$CONF_FILE" ]; then
     source "$CONF_FILE"
 else
-    echo "❌ Configuration not found: $CONF_FILE"
+    echo "❌ Config not found: $CONF_FILE"
     echo "📋 Copy template: cp weekly_updates.conf.example weekly_updates.conf"
     exit 1
 fi
 
 mkdir -p "$LOG_DIR"
-
 TIMESTAMP=$(date '+%Y%m%d-%H%M%S')
 LOG_FILE="${LOG_DIR}/weekly_update_${TIMESTAMP}.log"
 START_TIME=$(date +%s)
+LOCK_FILE="${LOG_DIR}/weekly_update.lock"
 
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"
 }
 
 format_duration() {
-    local seconds=$1
-    local hours=$((seconds / 3600))
-    local minutes=$(((seconds % 3600) / 60))
-    local secs=$((seconds % 60))
-    if [ $hours -gt 0 ]; then
-        echo "${hours}h ${minutes}m ${secs}s"
-    elif [ $minutes -gt 0 ]; then
-        echo "${minutes}m ${secs}s"
-    else
-        echo "${secs}s"
-    fi
+    local s=$1
+    printf '%02dh %02dm %02ds' $((s/3600)) $(((s%3600)/60)) $((s%60))
 }
 
 get_system_info() {
-    echo "🖥️  **Hostname** : $(hostname)"
-    echo "🐧  **OS**       : $(lsb_release -ds 2>/dev/null || echo "Unknown")"
-    echo "🔧  **Kernel**   : $(uname -r)"
-    echo "⏱️  **Uptime**   : $(uptime -p | sed 's/up //')"
+    echo "🖥️  **Host** : $(hostname)"
+    echo "🐧 **OS**   : $(lsb_release -ds 2>/dev/null || echo "Unknown")"
+    echo "🔧 **Kernel**: $(uname -r)"
+    echo "⏱️  **Uptime**: $(uptime -p | sed 's/up //')"
 }
 
-get_disk_usage() {
-    df -h / | awk 'NR==2 {print $5 " (" $3 "/" $2 ")"}'
-}
-
-get_memory_usage() {
-    free -h | awk '/Mem:/ {print $3 "/" $2}'
-}
-
-get_docker_info() {
-    local running=$(docker ps -q 2>/dev/null | wc -l)
-    local stopped=$(docker ps -a -q -f status=exited 2>/dev/null | wc -l)
-    local images=$(docker images -q 2>/dev/null | wc -l)
-    echo "📦 **Containers** : $running running, $stopped stopped"
-    echo "🖼️  **Images**    : $images"
+get_resources() {
+    echo "💾 **Disk**  : $(df -h / | awk 'NR==2 {print $5 " (" $3 "/" $2 ")"}')"
+    echo "🧠 **Memory**: $(free -h | awk '/Mem:/ {print $3 "/" $2}')"
+    echo "🐳 **Containers**: $(podman ps -q 2>/dev/null | wc -l) running, $(podman ps -a -q -f status=exited 2>/dev/null | wc -l) stopped"
 }
 
 format_service_list() {
     local services="$1"
+    local total=$(echo "$services" | wc -w)
     local formatted=""
     local count=0
+    
     for service in $services; do
         count=$((count + 1))
-        formatted="${formatted}- \`${service}\`\n"
-        if [ $count -ge 20 ]; then
-            break
-        fi
+        [ $count -le 20 ] && formatted="${formatted}- \`${service}\`\n"
     done
-    local total=$(echo "$services" | wc -w)
-    if [ $total -gt 20 ]; then
-        formatted="${formatted}- ... *and $((total - 20)) other services*\n"
-    fi
+    
+    [ $total -gt 20 ] && formatted="${formatted}- ... *and $((total - 20)) more*"
     echo -e "$formatted"
 }
 
@@ -89,192 +60,137 @@ send_ntfy() {
     local title="$1"
     local message="$2"
     local priority="${3:-3}"
-    local tags="${4:-}"
-
+    
     [ "$ENABLE_NTFY" != "true" ] && return 0
-    [ -z "$NTFY_URL" ] && return 0
-    [ -z "$NTFY_TOPIC" ] && return 0
-
-    local escaped=$(echo "$message" | sed 's/\\/\\\\/g; s/"/\\"/g')
-    local curl_args=(
-        -X POST
-        -H "Title: $title"
-        -H "Priority: $priority"
-        -H "Tags: $tags"
-        -H "Markdown: yes"
-        -d "$escaped"
-        --max-time 10
-        --silent
-        --show-error
-    )
-
-    if [ -n "$NTFY_TOKEN" ]; then
-        curl_args+=(-H "Authorization: Bearer $NTFY_TOKEN")
-    fi
-
-    if curl "${curl_args[@]}" "${NTFY_URL}/${NTFY_TOPIC}" >/dev/null 2>&1; then
-        log "✅ Notification sent: $title"
-    else
+    [ -z "$NTFY_URL" ] || [ -z "$NTFY_TOPIC" ] && return 0
+    
+    local curl_cmd="curl -X POST -H \"Title: $title\" -H \"Priority: $priority\" -H \"Markdown: yes\""
+    [ -n "$NTFY_TOKEN" ] && curl_cmd="$curl_cmd -H \"Authorization: Bearer $NTFY_TOKEN\""
+    
+    echo "$message" | eval "$curl_cmd --data-binary @- $NTFY_URL/$NTFY_TOPIC" >/dev/null 2>&1 || {
         log "⚠️ Failed to send notification: $title"
-    fi
+    }
 }
 
 notify_start() {
-    local current_time=$(date '+%Y-%m-%d %H:%M:%S')
-    local service_list=$(format_service_list "$SERVICES")
-    local total_services=$(echo "$SERVICES" | wc -w)
-    local sys_info=$(get_system_info)
-    local disk=$(get_disk_usage)
-    local mem=$(get_memory_usage)
-    local docker_info=$(get_docker_info)
-
-    local message=$(cat <<EOF
-# 🔄 **WEEKLY UPDATE IN PROGRESS**
-
----
-
-## 📋 **Update Information**
-
-**⏰ Start Time** | \`${current_time}\` 
-**📁 Working Dir** | \`${WORK_DIR}\` 
-**📊 Total Services** | **${total_services}** services 
-**🎯 Action** | \`update\` (pull + up - zero downtime) 
-
----
-
-## 🖥️ **System**
-
-${sys_info}
-
----
-
-## 📦 **Service List** (${total_services})
-
-${service_list}
-
----
-
-## 💾 **Initial Resources**
-
-**Disk (/)** | ${disk} 
-**Memory** | ${mem} 
-
-${docker_info}
-
----
-
-## 📝 **Log File**
-
-\`\`\`
-${LOG_FILE}
-\`\`\`
-
----
-*⚡ Status: Running - Please wait until process completes...*
-EOF
-)
-    send_ntfy "🔄 Weekly Update Started" "$message" "3" "arrows_counterclockwise,desktop_computer"
-}
-
-notify_success() {
-    local duration=$1
-    local duration_str=$(format_duration $duration)
-    local end_time=$(date '+%Y-%m-%d %H:%M:%S')
-    local sys_info=$(get_system_info)
-    local disk=$(get_disk_usage)
-    local mem=$(get_memory_usage)
-    local docker_info=$(get_docker_info)
-    local service_list=$(format_service_list "$SERVICES")
-    local total_services=$(echo "$SERVICES" | wc -w)
-
-    local message=$(cat <<EOF
-# ✅ **WEEKLY UPDATE SUCCESSFUL!**
+    local msg="
+# 🔄 **WEEKLY UPDATE STARTED**
 
 ---
 
 ## 📊 **Summary**
 
-**⏱️ Duration** | **${duration_str}** 
-**📦 Services Updated** | **${total_services}** services 
-**✅ Status** | **All successful** 
-**⏰ End Time** | \`${end_time}\` 
+**⏰ Start** | \`$(date '+%Y-%m-%d %H:%M:%S')\`
+**📁 Work Dir** | \`${WORK_DIR}\`
+**📦 Services** | **$(echo "$SERVICES" | wc -w)** services
+**🎯 Action** | \`update\` (pull + up)
 
 ---
 
 ## 🖥️ **System**
 
-${sys_info}
+$(get_system_info)
+
+---
+
+## 📦 **Services**
+
+$(format_service_list "$SERVICES")
+
+---
+
+## 💾 **Resources**
+
+$(get_resources)
+
+---
+
+## 📝 **Log**
+
+\`${LOG_FILE}\`
+
+---
+*⏳ Running... Please wait*
+"
+
+    send_ntfy "🔄 Weekly Update Started" "$msg" "3"
+}
+
+notify_success() {
+    local msg="
+# ✅ **WEEKLY UPDATE SUCCESSFUL**
+
+---
+
+## 📊 **Summary**
+
+**⏱️ Duration** | **$(format_duration $1)**
+**📦 Services** | **$(echo "$SERVICES" | wc -w)** updated
+**✅ Status** | **All successful**
+**⏰ End** | \`$(date '+%Y-%m-%d %H:%M:%S')\`
+
+---
+
+## 🖥️ **System**
+
+$(get_system_info)
 
 ---
 
 ## 📦 **Updated Services**
 
-${service_list}
+$(format_service_list "$SERVICES")
 
 ---
 
-## 💾 **Final Resources**
+## 💾 **Resources**
 
-**Disk (/)** | ${disk}
-**Memory** | ${mem} 
-
-${docker_info}
+$(get_resources)
 
 ---
 
 ## 🧹 **Cleanup**
 
-- ✅ Docker system prune (if run by sovereign.sh)
 - ✅ Old logs cleaned (>${CLEANUP_LOGS_DAYS} days)
+- ✅ dipen prune service
 
 ---
 
-## 📝 **Log File**
+## 📝 **Log**
 
-\`\`\`
-${LOG_FILE}
-\`\`\`
+\`${LOG_FILE}\`
 
 ---
-*🎉 All services successfully updated with zero downtime!*
-EOF
-)
-    send_ntfy "✅ Weekly Update Completed" "$message" "3" "white_check_mark,party_popper"
+*🎉 Zero downtime updates completed!*
+"
+
+    send_ntfy "✅ Weekly Update Completed" "$msg" "3"
 }
 
 notify_failure() {
     local exit_code=$1
-    local duration=$2
-    local duration_str=$(format_duration $duration)
-    local end_time=$(date '+%Y-%m-%d %H:%M:%S')
-    local sys_info=$(get_system_info)
-    local disk=$(get_disk_usage)
-    local mem=$(get_memory_usage)
-    local docker_info=$(get_docker_info)
-
-    local error_log=$(tail -50 "$LOG_FILE" | grep -iE "error|failed|exception|fatal" | tail -5)
-    [ -z "$error_log" ] && error_log="No specific errors found, check full log."
-
-    local message=$(cat <<EOF
-# ❌ **WEEKLY UPDATE FAILED!**
+    local error_log=$(tail -50 "$LOG_FILE" | grep -iE "error|failed|exception" | tail -5 || echo "No errors found")
+    
+    local msg="
+# ❌ **WEEKLY UPDATE FAILED**
 
 ---
 
 ## 📊 **Error Summary**
 
-**⏱️ Duration** | **${duration_str}** 
-**❌ Exit Code** | \`${exit_code}\` 
-**⏰ Failure Time** | \`${end_time}\` 
+**⏱️ Duration** | **$(format_duration $2)**
+**❌ Exit Code** | \`${exit_code}\`
+**⏰ Failed** | \`$(date '+%Y-%m-%d %H:%M:%S')\`
 
 ---
 
 ## 🖥️ **System**
 
-${sys_info}
+$(get_system_info)
 
 ---
 
-## 🔍 **Error Log (last 5 lines)**
+## 🔍 **Last Errors**
 
 \`\`\`
 ${error_log}
@@ -284,87 +200,45 @@ ${error_log}
 
 ## 🔧 **Troubleshooting**
 
-1. 📖 **Check full log**:
-   \`\`\`bash
-   tail -100 ${LOG_FILE}
-   \`\`\`
+1. **Check full log**:
+   \`tail -100 ${LOG_FILE}\`
 
-2. 🔄 **Run manually**:
-   \`\`\`bash
-   cd ${WORK_DIR}
-   ./sovereign.sh update ${SERVICES}
-   \`\`\`
+2. **Manual run**:
+   \`cd ${WORK_DIR} && ./dipen.sh update ${SERVICES}\`
 
-3. 🌐 **Check internet connection**:
-   \`\`\`bash
-   ping -c 4 google.com
-   \`\`\`
+3. **Check internet**: \`ping -c 4 google.com\`
 
-4. 💾 **Check disk space**:
-   \`\`\`bash
-   df -h
-   docker system df
-   \`\`\`
+4. **Check disk**: \`df -h && podman system df\`
 
 ---
 
 ## 💾 **Resources**
 
-**Disk (/)** | ${disk} 
-**Memory** | ${mem} 
-
-${docker_info}
+$(get_resources)
 
 ---
 
-## 📝 **Log File**
+## 📝 **Log**
 
-\`\`\`
-${LOG_FILE}
-\`\`\`
+\`${LOG_FILE}\`
 
 ---
-*⚠️ **Please investigate and fix the issue immediately!***
-EOF
-)
-    send_ntfy "❌ Weekly Update Failed" "$message" "5" "warning,skull,rotating_light"
+*⚠️ **Please investigate immediately!***
+"
+
+    send_ntfy "❌ Weekly Update Failed" "$msg" "5"
 }
 
 run_yourls_frontend() {
-    log "🔗 Running YOURLS frontend script..."
+    local script="${WORK_DIR}/yourls/frontend.sh"
+    [ ! -f "$script" ] && { log "⚠️ YOURLS script not found"; return 1; }
+    [ ! -x "$script" ] && chmod +x "$script"
     
-    local YOURS_SCRIPT="${WORK_DIR}/yourls/frontend.sh"
-    
-    if [ ! -f "$YOURS_SCRIPT" ]; then
-        log "⚠️ YOURLS frontend script not found: $YOURS_SCRIPT"
-        return 1
-    fi
-    
-    if [ ! -x "$YOURS_SCRIPT" ]; then
-        log "⚠️ YOURLS frontend script is not executable. Attempting to fix..."
-        chmod +x "$YOURS_SCRIPT" || {
-            log "❌ Failed to make YOURLS script executable"
-            return 1
-        }
-    fi
-    
-    log "▶️ Executing: $YOURS_SCRIPT"
-    set +e
-    bash "$YOURS_SCRIPT" >> "$LOG_FILE" 2>&1
-    local YOURS_EXIT=$?
-    set -e
-    
-    if [ $YOURS_EXIT -eq 0 ]; then
-        log "✅ YOURLS frontend script completed successfully"
-        return 0
-    else
-        log "❌ YOURLS frontend script failed with exit code $YOURS_EXIT"
-        return 1
-    fi
+    log "▶️ Running YOURLS frontend..."
+    bash "$script" >> "$LOG_FILE" 2>&1 && log "✅ YOURLS completed" || log "❌ YOURLS failed"
 }
 
 cleanup_old_logs() {
-    log "🧹 Cleaning old logs (> ${CLEANUP_LOGS_DAYS} days)..."
     local deleted=$(find "$LOG_DIR" -name "weekly_update_*.log" -mtime +${CLEANUP_LOGS_DAYS} -delete -print 2>/dev/null | wc -l)
     log "✅ Removed $deleted old log files"
 }
@@ -372,12 +246,11 @@ cleanup_old_logs() {
 if [ -f "$LOCK_FILE" ]; then
     PID=$(cat "$LOCK_FILE" 2>/dev/null)
     if kill -0 "$PID" 2>/dev/null; then
-        log "❌ Another process is running (PID: $PID). Exiting."
-        send_ntfy "⏭️ Weekly Update Skipped" "Another process is running (PID: $PID)" "2" "no_entry,calendar"
+        log "❌ Another process running (PID: $PID)"
+        send_ntfy "⏭️ Weekly Update Skipped" "Another process is running (PID: $PID)" "2"
         exit 1
-    else
-        rm -f "$LOCK_FILE"
     fi
+    rm -f "$LOCK_FILE"
 fi
 echo $$ > "$LOCK_FILE"
 
@@ -386,21 +259,19 @@ notify_start
 
 cd "$WORK_DIR" || {
     log "❌ Failed to enter $WORK_DIR"
-    send_ntfy "❌ Weekly Update Failed" "Failed to enter directory $WORK_DIR" "5" "warning"
+    send_ntfy "❌ Weekly Update Failed" "Failed to enter directory $WORK_DIR" "5"
     rm -f "$LOCK_FILE"
     exit 1
 }
 
-log "▶️ Executing: ./sovereign.sh update $SERVICES"
+log "▶️ Running: ./dipen.sh update $SERVICES"
 set +e
-./sovereign.sh update $SERVICES >> "$LOG_FILE" 2>&1
+./dipen.sh update $SERVICES >> "$LOG_FILE" 2>&1
 EXIT_CODE=$?
 set -e
 
 if [ "${RUN_YOURLS_FRONTEND_AFTER:-false}" = "true" ] && [ $EXIT_CODE -eq 0 ]; then
-    log "🔄 Running YOURLS frontend script after update..."
     run_yourls_frontend
-    YOURLS_FRONTEND_AFTER_EXIT=$?
 fi
 
 cleanup_old_logs
@@ -409,10 +280,10 @@ END_TIME=$(date +%s)
 DURATION=$((END_TIME - START_TIME))
 
 if [ $EXIT_CODE -eq 0 ]; then
-    log "✅ Weekly update completed successfully"
+    log "✅ Update completed successfully"
     notify_success $DURATION
 else
-    log "❌ Weekly update failed with exit code $EXIT_CODE"
+    log "❌ Update failed with exit code $EXIT_CODE"
     notify_failure $EXIT_CODE $DURATION
 fi
 

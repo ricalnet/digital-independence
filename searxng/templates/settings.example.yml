@@ -1,0 +1,531 @@
+general:
+  debug: false
+  instance_name: "Private Search"
+  privacypolicy_url: https://searxng.domain.com
+  donation_url: false
+  contact_url: false
+  enable_metrics: false
+  open_metrics: ''
+
+brand:
+  docs_url: https://docs.searxng.org/
+  public_instances: https://searx.space
+  wiki_url: https://github.com/searxng/searxng/wiki
+  issue_url: https://github.com/searxng/searxng/issues
+  custom:
+    # Custom entries in the footer: [title]: [link]
+    links:
+      Uptime: https://status.domain.com
+      About: "https://searxng.domain.com/about"
+  # pwa_colors:
+  #   # Custom settings for PWA icon an colors used in manifest.json
+  #   # Default colors are:
+  #    theme_color_light: "#3050ff"
+  #    background_color_light: "fff"
+  #    theme_color_dark: "#58f"
+  #    background_color_dark: "#222428"
+  #    theme_color_black: "#3050ff"
+  #    background_color_black: "#000"
+
+search:
+  safe_search: 0
+  autocomplete: ""
+  autocomplete_min: 3
+  favicon_resolver: ""
+  default_lang: "auto"
+  ban_time_on_fail: 30
+  max_ban_time_on_fail: 3600
+  suspended_times:
+    SearxEngineAccessDenied: 1800
+    SearxEngineCaptcha: 7200
+    SearxEngineTooManyRequests: 1800
+    cf_SearxEngineCaptcha: 2592000
+    cf_SearxEngineAccessDenied: 86400
+    recaptcha_SearxEngineCaptcha: 1209600
+  formats:
+    - html
+    - json
+
+# ===== SERVER CONFIGURATION =====
+server:
+  port: 8888
+  bind_address: "0.0.0.0"
+  base_url: https://searxng.domain.com
+  limiter: true
+  public_instance: false
+  secret_key: "auto-generated-after-installation"
+  image_proxy: true
+  http_protocol_version: "1.1"
+  method: "POST"
+  forwarded_for_headers:
+    - "CF-Connecting-IP"
+    - "X-Forwarded-For"
+    - "X-Real-IP"
+  default_http_headers:
+    X-Content-Type-Options: nosniff
+    X-Download-Options: noopen
+    X-Robots-Tag: noindex, nofollow
+    Referrer-Policy: no-referrer
+    Cache-Control: no-cache, no-store, must-revalidate
+    Pragma: no-cache
+    Expires: "0"
+    User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    
+    # === CLOUDFLARE HEADERS ===
+    X-Forwarded-For: ""
+    X-Forwarded-Proto: "https"
+    CF-Connecting-IP: ""
+    CF-IPCountry: ""
+    CF-Ray: ""
+    CF-Visitor: ""
+
+valkey:
+  url: redis://:CHANGE_ME_REDIS_PASSWORD@redis:6379/0
+
+ui:
+  static_path: ""
+  templates_path: "/etc/searxng/templates"
+  query_in_title: false
+  default_theme: simple
+  center_alignment: false
+  default_locale: "en"
+  theme_args:
+    simple_style: auto
+  search_on_category_select: true
+  hotkeys: default
+  url_formatting: pretty
+
+preferences:
+  lock: []
+
+# ===== OUTGOING CONFIGURATION =====
+outgoing:
+  request_timeout: 10.0
+  max_request_timeout: 30.0
+  useragent_suffix: ""
+  pool_connections: 100
+  enable_http2: true
+  max_retries: 3
+  retry_delay: 1.0
+  # resolvers:
+  #   - 1.1.1.1
+  #   - 8.8.8.8
+  #   - 9.9.9.9
+
+
+# Plugin configuration, for more details see
+#   https://docs.searxng.org/admin/settings/settings_plugins.html
+#
+plugins:
+  searx.plugins.calculator.SXNGPlugin:
+    active: true
+  searx.plugins.infinite_scroll.SXNGPlugin:
+    active: false
+  searx.plugins.hash_plugin.SXNGPlugin:
+    active: true
+  searx.plugins.self_info.SXNGPlugin:
+    active: true
+  searx.plugins.unit_converter.SXNGPlugin:
+    active: true
+  searx.plugins.ahmia_filter.SXNGPlugin:
+    active: true
+  searx.plugins.hostnames.SXNGPlugin:
+    active: true
+  searx.plugins.time_zone.SXNGPlugin:
+    active: true
+  searx.plugins.oa_doi_rewrite.SXNGPlugin:
+    active: false
+  searx.plugins.tor_check.SXNGPlugin:
+    active: false
+  searx.plugins.tracker_url_remover.SXNGPlugin:
+    active: true
+
+
+# Configuration of the "Hostnames plugin":
+#
+# hostnames:
+#   replace:
+#     '(.*\.)?youtube\.com$': 'yt.example.com'
+#     '(.*\.)?youtu\.be$': 'yt.example.com'
+#     '(.*\.)?reddit\.com$': 'teddit.example.com'
+#     '(.*\.)?redd\.it$': 'teddit.example.com'
+#     '(www\.)?twitter\.com$': 'nitter.example.com'
+#   remove:
+#     - '(.*\.)?facebook.com$'
+#   low_priority:
+#     - '(.*\.)?google(\..*)?$'
+#   high_priority:
+#     - '(.*\.)?wikipedia.org$'
+#
+# Alternatively you can use external files for configuring the "Hostnames plugin":
+#
+# hostnames:
+#  replace: 'rewrite-hosts.yml'
+#
+# Content of 'rewrite-hosts.yml' (place the file in the same directory as 'settings.yml'):
+# '(.*\.)?youtube\.com$': 'yt.example.com'
+# '(.*\.)?youtu\.be$': 'yt.example.com'
+#
+
+
+categories_as_tabs:
+  general:
+  images:
+  videos:
+  news:
+  map:
+  music:
+  it:
+  science:
+  files:
+  social media:
+
+engines:
+  # ===== GENERAL SEARCH =====
+  
+  # Yahoo
+  - name: yahoo
+    engine: yahoo
+    shortcut: yh
+    weight: 1.0
+    categories: [general]
+    timeout: 10.0
+    max_retries: 3
+    retry_delay: 2.0
+
+  # Dogpile
+  - name: dogpile
+    engine: dogpile
+    shortcut: dog
+    weight: 0.8
+    dogpile_categ: search
+    categories: [general]
+    timeout: 12.0
+    max_retries: 3
+
+  # Brave
+  - name: brave
+    engine: brave
+    shortcut: br
+    weight: 0.6
+    time_range_support: true
+    paging: true
+    categories: [general, web]
+    brave_category: search
+    brave_spellcheck: true
+    timeout: 10.0
+
+  # Google
+  - name: google
+    engine: google
+    shortcut: go
+    weight: 0.4
+    categories: [general]
+    timeout: 12.0
+
+  # Google CSE
+  - name: google cse
+    engine: google_cse
+    shortcut: goc
+    weight: 0.2
+    categories: [general]
+    timeout: 12.0
+
+  # Wikipedia
+  - name: wikipedia
+    engine: wikipedia
+    shortcut: wp
+    weight: 0.0
+    display_type: ["infobox", "list"]
+    categories: [general]
+    timeout: 8.0
+    language: "en"
+
+  # DuckDuckGo
+  - name: duckduckgo
+    engine: duckduckgo
+    shortcut: ddg
+    disabled: true
+
+
+  # ===== IMAGES =====
+  
+  # Google Images
+  - name: google images
+    engine: google_images
+    shortcut: goi
+    weight: 1.0
+    categories: [images]
+    timeout: 12.0
+    max_retries: 3
+
+  # Brave Images
+  - name: brave.images
+    engine: brave
+    network: brave
+    shortcut: brimg
+    weight: 0.8
+    categories: [images, web]
+    brave_category: images
+    timeout: 10.0
+
+  # Dogpile Images
+  - name: dogpile images
+    engine: dogpile
+    shortcut: dogi
+    weight: 0.6
+    dogpile_categ: images
+    categories: [images]
+    timeout: 12.0
+
+  # Startpage Images
+  - name: startpage images
+    engine: startpage
+    startpage_categ: images
+    categories: [images, web]
+    shortcut: spi
+    weight: 0.4
+    timeout: 10.0
+
+  # Flickr
+  - name: flickr
+    engine: flickr_noapi
+    categories: [images]
+    shortcut: fl
+    weight: 0.2
+    timeout: 8.0
+
+  # Wikimedia Commons Images
+  - name: wikicommons.images
+    engine: wikicommons
+    shortcut: wci
+    weight: 0.1
+    categories: [images]
+    wc_search_type: image
+    timeout: 8.0
+
+  # DuckDuckGo Images
+  # - name: duckduckgo images
+  #   engine: duckduckgo_extra
+  #   categories: [images]
+  #   ddg_category: images
+  #   shortcut: ddi
+  #   disabled: true
+
+
+  # ===== VIDEOS =====
+  
+  # YouTube
+  - name: youtube
+    shortcut: yt
+    weight: 1.0
+    engine: youtube_noapi
+    categories: [videos]
+    timeout: 10.0
+    max_retries: 3
+
+  # Google Videos
+  - name: google videos
+    engine: google_videos
+    shortcut: gov
+    weight: 0.8
+    categories: [videos]
+    timeout: 12.0
+    max_retries: 3
+
+  # Brave Videos
+  - name: brave.videos
+    engine: brave
+    network: brave
+    shortcut: brvid
+    weight: 0.6
+    categories: [videos, web]
+    brave_category: videos
+    timeout: 10.0
+
+  # Dogpile Videos
+  - name: dogpile videos
+    engine: dogpile
+    shortcut: dogv
+    weight: 0.5
+    dogpile_categ: videos
+    categories: [videos]
+    timeout: 12.0
+
+  # Dailymotion
+  - name: dailymotion
+    engine: dailymotion
+    shortcut: dm
+    weight: 0.3
+    categories: [videos]
+    timeout: 8.0
+
+  # Vimeo
+  - name: vimeo
+    engine: vimeo
+    shortcut: vm
+    weight: 0.2
+    categories: [videos]
+    timeout: 8.0
+
+  # DuckDuckGo Videos
+  # - name: duckduckgo videos
+  #   engine: duckduckgo_extra
+  #   categories: [videos]
+  #   ddg_category: videos
+  #   shortcut: ddv
+  #   disabled: true
+
+
+  # ===== NEWS =====
+  
+  # Google News
+  - name: google news
+    engine: google_news
+    shortcut: gon
+    weight: 1.0
+    categories: [news]
+    timeout: 10.0
+    max_retries: 3
+
+  # Yahoo News
+  - name: yahoo news
+    engine: yahoo_news
+    shortcut: yhn
+    weight: 0.8
+    categories: [news]
+    timeout: 10.0
+    max_retries: 3
+
+  # Brave News
+  - name: brave.news
+    engine: brave
+    network: brave
+    shortcut: brnews
+    weight: 0.6
+    categories: [news]
+    brave_category: news
+    timeout: 10.0
+
+  # Dogpile News
+  - name: dogpile news
+    engine: dogpile
+    shortcut: dogn
+    weight: 0.5
+    dogpile_categ: news
+    categories: [news]
+    timeout: 12.0
+
+  # Reuters
+  - name: reuters
+    engine: reuters
+    shortcut: reu
+    weight: 0.2
+    categories: [news]
+    timeout: 8.0
+
+  # Wikinews
+  - name: wikinews
+    engine: mediawiki
+    shortcut: wn
+    weight: 0.1
+    categories: [news, wikimedia]
+    base_url: "https://en.wikinews.org/"
+    search_type: text
+    srsort: create_timestamp_desc
+    timeout: 8.0
+
+  # DuckDuckGo News
+  # - name: duckduckgo news
+  #   engine: duckduckgo_extra
+  #   categories: [news]
+  #   ddg_category: news
+  #   shortcut: ddn
+  #   disabled: true
+
+# Doku engine lets you access to any Doku wiki instance:
+# A public one or a privete/corporate one.
+#  - name: ubuntuwiki
+#    engine: doku
+#    shortcut: uw
+#    base_url: 'https://doc.ubuntu-fr.org'
+
+# Be careful when enabling this engine if you are
+# running a public instance. Do not expose any sensitive
+# information. You can restrict access by configuring a list
+# of access tokens under tokens.
+#  - name: git grep
+#    engine: command
+#    command: ['git', 'grep', '{{QUERY}}']
+#    shortcut: gg
+#    tokens: []
+#    disabled: true
+#    delimiter:
+#        chars: ':'
+#        keys: ['filepath', 'code']
+
+# Be careful when enabling this engine if you are
+# running a public instance. Do not expose any sensitive
+# information. You can restrict access by configuring a list
+# of access tokens under tokens.
+#  - name: locate
+#    engine: command
+#    command: ['locate', '{{QUERY}}']
+#    shortcut: loc
+#    tokens: []
+#    disabled: true
+#    delimiter:
+#        chars: ' '
+#        keys: ['line']
+
+# Be careful when enabling this engine if you are
+# running a public instance. Do not expose any sensitive
+# information. You can restrict access by configuring a list
+# of access tokens under tokens.
+#  - name: find
+#    engine: command
+#    command: ['find', '.', '-name', '{{QUERY}}']
+#    query_type: path
+#    shortcut: fnd
+#    tokens: []
+#    disabled: true
+#    delimiter:
+#        chars: ' '
+#        keys: ['line']
+
+# Be careful when enabling this engine if you are
+# running a public instance. Do not expose any sensitive
+# information. You can restrict access by configuring a list
+# of access tokens under tokens.
+#  - name: pattern search in files
+#    engine: command
+#    command: ['fgrep', '{{QUERY}}']
+#    shortcut: fgr
+#    tokens: []
+#    disabled: true
+#    delimiter:
+#        chars: ' '
+#        keys: ['line']
+
+# Be careful when enabling this engine if you are
+# running a public instance. Do not expose any sensitive
+# information. You can restrict access by configuring a list
+# of access tokens under tokens.
+#  - name: regex search in files
+#    engine: command
+#    command: ['grep', '{{QUERY}}']
+#    shortcut: gr
+#    tokens: []
+#    disabled: true
+#    delimiter:
+#        chars: ' '
+#        keys: ['line']
+
+doi_resolvers:
+  oadoi.org: 'https://oadoi.org/'
+  doi.org: 'https://doi.org/'
+  sci-hub.se: 'https://sci-hub.se/'
+  sci-hub.st: 'https://sci-hub.st/'
+  sci-hub.ru: 'https://sci-hub.ru/'
+
+default_doi_resolver: 'oadoi.org'

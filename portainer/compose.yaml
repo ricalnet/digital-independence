@@ -1,41 +1,31 @@
 services:
   portainer:
     container_name: portainer
-    image: ${PORTAINER_IMAGE:-portainer/portainer-ce:latest}
+    image: ${PORTAINER_IMAGE:-docker.io/portainer/portainer-ce:latest}
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro
       - portainer_data:/data
-      - /etc/localtime:/etc/localtime:ro
     ports:
-      - "127.0.0.1:9444:9000"
+      - "${PORTAINER_BIND_ADDRESS:-127.0.0.1}:${PORTAINER_PORT:-9444}:9000"
     environment:
       - TZ=${TZ:-UTC}
       - PORTAINER_LOGS_LEVEL=${PORTAINER_LOGS_LEVEL:-info}
-    # healthcheck:
-    #   test:
-    #     [
-    #       "CMD",
-    #       "wget",
-    #       "--no-verbose",
-    #       "--tries=1",
-    #       "--spider",
-    #       "http://localhost:9000/ping",
-    #     ]
-    #   interval: 30s
-    #   timeout: 5s
-    #   retries: 3
-    #   start_period: 30s
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: "0.5"
-        reservations:
-          memory: 128M
-          cpus: "0.25"
+      - PORTAINER_SSL=false
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9000/ping || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    mem_limit: 512m
+    mem_reservation: 128m
+    cpus: 0.8
+    pids_limit: 200
+    mem_swappiness: 10
+    oom_score_adj: -100
     security_opt:
-      - no-new-privileges:true
+      - no-new-privileges=true
     cap_drop:
       - ALL
     cap_add:
@@ -44,21 +34,28 @@ services:
       - CHOWN
       - SETGID
       - SETUID
+      - FOWNER
+      - AUDIT_WRITE
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64M
+      - /run:rw,noexec,nosuid,size=32M
+      - /var/run:rw,noexec,nosuid,size=32M
     stop_grace_period: 30s
+    stop_signal: SIGTERM
     logging:
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: "5"
         compress: "true"
+    networks:
+      - portainer-network
 
 volumes:
   portainer_data:
     name: portainer_data
-    external: false
 
 networks:
-  default:
+  portainer-network:
     name: portainer_network
     driver: bridge
-    internal: false

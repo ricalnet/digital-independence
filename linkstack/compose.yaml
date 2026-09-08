@@ -1,129 +1,113 @@
 services:
   linkstack:
-    hostname: "linkstack"
-    image: ${LINKSTACK_IMAGE:-linkstackorg/linkstack:latest}
+    hostname: linkstack
     container_name: linkstack
+    image: ${LINKSTACK_IMAGE:-linkstackorg/linkstack:latest}
     environment:
       TZ: ${TZ:-Asia/Jakarta}
       SERVER_ADMIN: ${SERVER_ADMIN:-admin@example.com}
       HTTP_SERVER_NAME: ${HTTP_SERVER_NAME:-localhost}
       HTTPS_SERVER_NAME: ${HTTPS_SERVER_NAME:-localhost}
-      LOG_LEVEL: ${LOG_LEVEL:-warn}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
       PHP_MEMORY_LIMIT: ${PHP_MEMORY_LIMIT:-256M}
-      UPLOAD_MAX_FILESIZE: ${UPLOAD_MAX_FILESIZE:-20M}
+      UPLOAD_MAX_FILESIZE: ${UPLOAD_MAX_FILESIZE:-8M}
     volumes:
-      - linkstack_data:/htdocs
-      - linkstack_php:/usr/local/etc/php/conf.d
+      - linkstack_htdocs:/htdocs
     ports:
-      - "${HTTP_PORT:-8003}:80"
+      - "${LINKSTACK_BIND_ADDRESS:-127.0.0.1}:${LINKSTACK_HTTP_PORT:-8003}:80"
     restart: unless-stopped
     depends_on:
       mysql:
         condition: service_healthy
-    networks:
-      - linkstack-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-          cpus: "0.5"
-        reservations:
-          memory: 256M
-          cpus: "0.25"
+    mem_limit: 512m
+    mem_reservation: 128m
+    cpus: 0.8
+    pids_limit: 200
     security_opt:
-      - no-new-privileges:true
+      - no-new-privileges=true
     cap_drop:
       - ALL
     cap_add:
       - NET_BIND_SERVICE
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - FOWNER
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64M
+      - /run:rw,noexec,nosuid,size=32M
+      - /var/run:rw,noexec,nosuid,size=32M
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "20m"
+        max-file: "5"
         compress: "true"
+    networks:
+      - linkstack-network
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   mysql:
-    image: ${LINKSTACK_MYSQL_IMAGE:-mysql:8.0}
     container_name: linkstack-mysql
+    image: ${MYSQL_IMAGE:-mysql:8.0}
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-linkstack}
-      MYSQL_USER: ${MYSQL_USER:-linkstack_user}
+      MYSQL_USER: ${MYSQL_USER:-linkstack}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
-      - mysql_data:/var/lib/mysql
-    restart: unless-stopped
-    command:
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
-      - --max-connections=150
-      - --innodb-buffer-pool-size=128M
-      - --performance-schema=OFF
-      - --slow-query-log=1
-      - --long-query-time=2
-      - --skip-name-resolve
-      - --max-allowed-packet=64M
-      - --thread-cache-size=16
-      - --table-open-cache=400
-    networks:
-      - linkstack-network
+      - linkstack_mysql_data:/var/lib/mysql:rw
     healthcheck:
-      test:
-        [
-          "CMD",
-          "mysqladmin",
-          "ping",
-          "-h",
-          "localhost",
-          "-u",
-          "root",
-          "-p${MYSQL_ROOT_PASSWORD}",
-        ]
-      interval: 10s
-      timeout: 5s
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
       retries: 5
-      start_period: 30s
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-          cpus: "0.5"
-        reservations:
-          memory: 256M
-          cpus: "0.25"
+      start_period: 60s
+    mem_limit: 512m
+    mem_reservation: 128m
+    cpus: 0.5
+    pids_limit: 150
     security_opt:
-      - no-new-privileges:true
+      - no-new-privileges=true
     cap_drop:
       - ALL
     cap_add:
       - CHOWN
       - DAC_OVERRIDE
-      - SETUID
       - SETGID
-      - KILL
+      - SETUID
       - NET_BIND_SERVICE
+      - SYS_CHROOT
+      - FOWNER
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64M
+      - /run:rw,noexec,nosuid,size=64M
+      - /var/run:rw,noexec,nosuid,size=64M
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "20m"
+        max-file: "5"
         compress: "true"
+    networks:
+      - linkstack-network
+    stop_grace_period: 60s
+
+volumes:
+  linkstack_htdocs:
+    name: linkstack_htdocs
+  linkstack_mysql_data:
+    name: linkstack_mysql_data
 
 networks:
   linkstack-network:
+    name: linkstack-network
     driver: bridge
-
-volumes:
-  linkstack_data:
-    name: linkstack_web_data
-  linkstack_php:
-    name: linkstack_php_config
-  mysql_data:
-    name: linkstack_mysql_data

@@ -10,12 +10,15 @@ Monitor CPU usage and send alert via ntfy if threshold exceeded.
 
 Options:
   -c, --config FILE   Path to configuration file (default: ./cpu_monitor.conf or /etc/cpu_monitor.conf)
+  -l, --log FILE      Path to log file (overrides LOG_FILE in config)
   -h, --help          Show this help message
 EOF
     exit 0
 }
 
 CONFIG_FILE=""
+LOG_FILE_OVERRIDE=""
+
 if [[ -f "./cpu_monitor.conf" ]]; then
     CONFIG_FILE="./cpu_monitor.conf"
 elif [[ -f "/etc/cpu_monitor.conf" ]]; then
@@ -26,6 +29,10 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         -c|--config)
             CONFIG_FILE="$2"
+            shift 2
+            ;;
+        -l|--log)
+            LOG_FILE_OVERRIDE="$2"
             shift 2
             ;;
         -h|--help)
@@ -55,11 +62,32 @@ INTERVAL="${INTERVAL:-60}"
 NTFY_TOPIC="${NTFY_TOPIC:-}"
 NTFY_TOKEN="${NTFY_TOKEN:-}"
 NTFY_URL="${NTFY_URL:-https://ntfy.sh}"
+LOG_FILE="${LOG_FILE:-./cpu_monitor.log}"
+
+if [[ -n "$LOG_FILE_OVERRIDE" ]]; then
+    LOG_FILE="$LOG_FILE_OVERRIDE"
+fi
 
 if [[ -z "$NTFY_TOPIC" || -z "$NTFY_TOKEN" ]]; then
     echo "Error: NTFY_TOPIC and NTFY_TOKEN must be set in configuration."
     exit 1
 fi
+
+LOG_DIR=$(dirname "$LOG_FILE")
+if [[ ! -d "$LOG_DIR" ]]; then
+    mkdir -p "$LOG_DIR" 2>/dev/null || {
+        echo "Error: Cannot create log directory '$LOG_DIR'"
+        exit 1
+    }
+fi
+
+log_message() {
+    local message="$1"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    echo "$message" | while IFS= read -r line; do
+        echo "[$timestamp] $line" | tee -a "$LOG_FILE"
+    done
+}
 
 get_cpu_usage() {
     local cpu1=$(cat /proc/stat | grep '^cpu ' | head -1)
@@ -106,9 +134,9 @@ send_notification() {
         "$NTFY_URL/$NTFY_TOPIC" > /dev/null 2>&1
 
     if [[ $? -eq 0 ]]; then
-        echo "[$(date '+%Y-%m-%d %H:%M:%S')] NOTIFICATION SENT: $message"
+        log_message "NOTIFICATION SENT: $message"
     else
-        echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Failed to send notification."
+        log_message "ERROR: Failed to send notification."
     fi
 }
 
@@ -121,9 +149,9 @@ else
     RED=''; GREEN=''; YELLOW=''; NC=''
 fi
 
-trap 'echo -e "\n[$(date)] Exiting CPU monitor."; exit 0' INT TERM
+trap 'log_message "CPU monitor stopped."; exit 0' INT TERM
 
-echo -e "${GREEN}[$(date '+%Y-%m-%d %H:%M:%S')] CPU Monitor started. Threshold: ${THRESHOLD}%, Interval: ${INTERVAL}s${NC}"
+log_message "CPU Monitor started. Threshold: ${THRESHOLD}%, Interval: ${INTERVAL}s, Log: ${LOG_FILE}"
 
 while true; do
     cpu=$(get_cpu_usage)
@@ -140,7 +168,7 @@ while true; do
         color=$GREEN
     fi
 
-    echo -e "[$timestamp] CPU Usage: ${color}${cpu}%${NC} (Status: ${color}${status}${NC})"
+    log_message "CPU Usage: ${cpu}% (Status: ${status})"
 
     sleep "$INTERVAL"
 done

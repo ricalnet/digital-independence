@@ -176,5 +176,8 @@
     
     "sync_timeline_limit": 100,
     
-    "modules": []
+    "modules": [],
+
+    "debug_app": false,
+    "verbose_logging": false
 }

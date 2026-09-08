@@ -1,44 +1,71 @@
 services:
   libretranslate:
     container_name: libretranslate
-    image: ${LIBRETRANSLATE_IMAGE:-libretranslate/libretranslate:latest}
+    image: ${LIBRETRANSLATE_IMAGE:-docker.io/libretranslate/libretranslate:latest}
     ports:
-      - "127.0.0.1:5001:5000"
+      - "${LIBRETRANSLATE_BIND_ADDRESS:-127.0.0.1}:${LIBRETRANSLATE_PORT:-5001}:5000"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "./venv/bin/python scripts/healthcheck.py"]
-      interval: 10s
-      timeout: 4s
-      retries: 4
-      start_period: 5s
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5000/health || exit 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 90s
     tty: true
     environment:
-      - LT_LOAD_ONLY=en,id
+      - LT_LOAD_ONLY=${LT_LOAD_ONLY:-en,id,ja,zh,es,fr,de}
+      - LT_DEBUG=${LT_DEBUG:-false}
+      - LT_THREADS=${LT_THREADS:-4}
+      - LT_UPDATE_MODELS=${LT_UPDATE_MODELS:-false}
+      - LT_REQ_LIMIT=${LT_REQ_LIMIT:-60}
+      - LT_SERVER_WORKERS=${LT_SERVER_WORKERS:-4}
+      - LT_SSL=${LT_SSL:-false}
+      - LT_API_KEYS=${LT_API_KEYS:-false}
+      - LT_DISABLE_WEB_UI=${LT_DISABLE_WEB_UI:-false}
+      - LT_GA_TRACKING=${LT_GA_TRACKING:-false}
+      - LT_DISABLE_FILES_TRANSLATION=${LT_DISABLE_FILES_TRANSLATION:-false}
+      - LT_CHAR_LIMIT=${LT_CHAR_LIMIT:-5000}
+      - LT_FRONTEND_LANGUAGE_SOURCE=${LT_FRONTEND_LANGUAGE_SOURCE:-en}
+      - LT_FRONTEND_LANGUAGE_TARGET=${LT_FRONTEND_LANGUAGE_TARGET:-id}
     volumes:
       - libretranslate_models:/home/libretranslate/.local:rw
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-        reservations:
-          memory: 512M
+    mem_limit: 1g
+    mem_reservation: 256m
+    cpus: 1.0
+    pids_limit: 200
+    mem_swappiness: 10
+    oom_score_adj: -100
     security_opt:
-      - no-new-privileges:true
+      - no-new-privileges=true
     cap_drop:
       - ALL
     cap_add:
       - NET_BIND_SERVICE
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - FOWNER
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=256M
+      - /run:rw,noexec,nosuid,size=128M
+      - /var/run:rw,noexec,nosuid,size=128M
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "20m"
+        max-file: "5"
+        compress: "true"
     networks:
       - libretranslate-network
+    stop_grace_period: 90s
+    stop_signal: SIGTERM
 
 volumes:
   libretranslate_models:
+    name: libretranslate_models
 
 networks:
   libretranslate-network:
+    name: libretranslate_network
     driver: bridge
