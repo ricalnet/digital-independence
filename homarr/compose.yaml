@@ -15,11 +15,22 @@ services:
     cap_drop:
       - ALL
     volumes:
+      - ${XDG_RUNTIME_DIR:-/run/user/1000}/podman/podman.sock:/var/run/podman.sock:ro
       - homarr_data:/appdata
       - homarr_nginx:/var/lib/nginx
       - homarr_nginx_conf:/etc/nginx
     env_file:
       - .env
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - SECRET_ENCRYPTION_KEY=${SECRET_ENCRYPTION_KEY}
+      - DATABASE_URL=${DATABASE_URL:-}
+      - DOCKER_SOCKET_PATHS=/var/run/podman.sock
     ports:
       - "${HOMARR_BIND_ADDRESS:-127.0.0.1}:${HOMARR_PORT:-7575}:7575"
     healthcheck:
@@ -48,15 +59,6 @@ services:
       - homarr-network
     stop_grace_period: 30s
     stop_signal: SIGTERM
-    environment:
-      - NODE_ENV=production
-      - NEXT_TELEMETRY_DISABLED=1
-      - LOG_LEVEL=${LOG_LEVEL:-info}
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - SECRET_ENCRYPTION_KEY=${SECRET_ENCRYPTION_KEY}
-      - DATABASE_URL=${DATABASE_URL:-}
     depends_on:
       redis:
         condition: service_healthy

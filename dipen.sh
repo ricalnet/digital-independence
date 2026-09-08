@@ -3,7 +3,7 @@
 set -o pipefail
 set -o errtrace
 
-readonly VERSION="1.1"
+readonly VERSION="1.1.1"
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly BASE_DIR="${DIPEN_BASE:-${SCRIPT_DIR}}"
 
@@ -45,6 +45,32 @@ declare -A SERVICES=(
     ["yourls"]="yourls"
 )
 
+declare -A IMAGE_REGISTRY=(
+    ["authentik"]="ghcr.io/goauthentik/server"
+    ["dashdot"]="ghcr.io/mauricenino/dashdot"
+    ["element-web"]="ghcr.io/element-hq/element-web"
+    ["homarr"]="ghcr.io/homarr-labs/homarr"
+    ["immich"]="ghcr.io/immich-app/immich-server"
+    ["jellyfin"]="ghcr.io/jellyfin/jellyfin"
+    ["libretranslate"]="docker.io/libretranslate/libretranslate"
+    ["linkstack"]="docker.io/linkstackorg/linkstack"
+    ["mastodon"]="ghcr.io/mastodon/mastodon"
+    ["mediawiki"]="docker.io/mediawiki"
+    ["navidrome"]="ghcr.io/navidrome/navidrome"
+    ["nextcloud"]="docker.io/nextcloud"
+    ["ntfy"]="docker.io/binwiederhier/ntfy"
+    ["open-webui"]="ghcr.io/open-webui/open-webui"
+    ["pi-hole"]="docker.io/pihole/pihole"
+    ["portainer"]="docker.io/portainer/portainer-ce"
+    ["searxng"]="docker.io/searxng/searxng"
+    ["synapse"]="ghcr.io/element-hq/synapse"
+    ["synapse-mautrix"]="dock.mau.dev/mautrix/telegram"
+    ["uptime-kuma"]="ghcr.io/louislam/uptime-kuma"
+    ["vaultwarden"]="ghcr.io/dani-garcia/vaultwarden"
+    ["wazuh"]="docker.io/wazuh/wazuh-manager"
+    ["yourls"]="docker.io/yourls"
+)
+
 declare -A CONTAINER_PATTERNS=(
     ["synapse-mautrix"]="mautrix"
 )
@@ -69,6 +95,7 @@ ${BOLD}ACTIONS:${NC}
     recycle             Pull → Down → Up
     update              Pull → Up
     fresh               Down → Up
+    check-version       Check latest stable image versions
 
 ${BOLD}OPTIONS:${NC}
     help                Show this help
@@ -94,6 +121,8 @@ ${BOLD}EXAMPLES:${NC}
     dipen all up
     dipen dry-run up nextcloud
     dipen up n*
+    dipen check-version
+    dipen check-version nextcloud immich
 
 ${BOLD}ALIAS:${NC}
     Aliases auto-configured by ./install-podman-on-debian.sh
@@ -117,6 +146,92 @@ check() {
     command -v podman &>/dev/null || { echo "${RED}Error:${NC} Podman not installed"; return 1; }
     command -v podman-compose &>/dev/null || { echo "${RED}Error:${NC} podman-compose not installed"; return 1; }
     return 0
+}
+
+check_skopeo() {
+    command -v skopeo &>/dev/null || { echo "${RED}Error:${NC} skopeo not installed. Install with: apt install skopeo"; return 1; }
+    command -v jq &>/dev/null || { echo "${RED}Error:${NC} jq not installed. Install with: apt install jq"; return 1; }
+    return 0
+}
+
+get_latest_stable_version() {
+    local image=$1
+    local tags=$(skopeo list-tags "docker://$image" 2>/dev/null | jq -r '.Tags[]' 2>/dev/null)
+    
+    if [[ -z "$tags" ]]; then
+        echo "ERROR"
+        return 1
+    fi
+    
+    local version=$(echo "$tags" | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$|^v?[0-9]+\.[0-9]+$' | \
+                   sed 's/^v//' | sort -V | tail -1)
+    
+    if [[ -n "$version" ]]; then
+        local original=$(echo "$tags" | grep -E "^v?${version}$" | head -1)
+        echo "${original:-$version}"
+        return 0
+    fi
+    
+    local latest=$(echo "$tags" | grep -E '^v?latest$' | head -1)
+    if [[ -n "$latest" ]]; then
+        echo "$latest"
+        return 0
+    fi
+    
+    echo "$(echo "$tags" | head -1)"
+    return 0
+}
+
+check_version() {
+    local services=("$@")
+    local expanded=()
+    
+    if [[ ${#services[@]} -eq 0 ]]; then
+        expanded=($(printf '%s\n' "${!IMAGE_REGISTRY[@]}" | sort))
+    else
+        for s in "${services[@]}"; do
+            for item in $(expand "$s"); do
+                local exists=false
+                for e in "${expanded[@]}"; do
+                    [[ "$e" == "$item" ]] && exists=true && break
+                done
+                [[ "$exists" == false ]] && expanded+=("$item")
+            done
+        done
+    fi
+    
+    check_skopeo || return 1
+    
+    echo
+    echo "${BOLD}${CYAN}════════════════════════════════════════════════════════════════════════════${NC}"
+    echo "${BOLD}${CYAN}              LATEST STABLE IMAGE VERSIONS                                 ${NC}"
+    echo "${BOLD}${CYAN}════════════════════════════════════════════════════════════════════════════${NC}"
+    echo
+    
+    local ok=0 fail=0
+    
+    for s in "${expanded[@]}"; do
+        local image="${IMAGE_REGISTRY[$s]}"
+        if [[ -z "$image" ]]; then
+            printf "${RED}%-25s${NC} | ${RED}%s${NC}\n" "$s" "NO IMAGE"
+            ((fail++))
+            continue
+        fi
+        
+        local version=$(get_latest_stable_version "$image")
+        if [[ "$version" == "ERROR" ]]; then
+            printf "${RED}%-25s${NC} | ${RED}%s${NC}\n" "$s" "$image:ERROR"
+            ((fail++))
+        else
+            printf "${GREEN}%-25s${NC} | ${CYAN}%s${NC}\n" "$s" "$image:$version"
+            ((ok++))
+        fi
+    done
+    
+    echo
+    echo "${BOLD}${CYAN}─────────────────────────────────────────────────────────────────${NC}"
+    echo "${GREEN}✓${NC} ${ok} succeeded  ${RED}✗${NC} ${fail} failed"
+    echo
 }
 
 edit_env() {
@@ -284,6 +399,8 @@ main() {
             list)     list; exit 0 ;;
             all)      run_all=true; shift ;;
             dry-run)  dry_run=true; shift ;;
+            check-version)
+                action="$1"; shift ;;
             up|down|restart|pull|logs|ps|prune|recycle|update|fresh|env)
                 action="$1"; shift ;;
             *)  services+=("$1"); shift ;;
@@ -297,6 +414,12 @@ main() {
     echo "${BOLD}${CYAN}  dipen v${VERSION} - Podman Orchestration Tool for Digital Independence   ${NC}"
     echo "${BOLD}${CYAN}════════════════════════════════════════════════════════════════════════════${NC}"
     echo
+    
+    if [[ "$action" == "check-version" ]]; then
+        check || exit 1
+        check_version "${services[@]}"
+        exit $?
+    fi
     
     check || exit 1
     
