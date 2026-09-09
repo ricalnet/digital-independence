@@ -53,6 +53,9 @@ element-web/config/element-web-config.json
 element-web/modules/
 element-web/.env
 
+# Forgejo
+forgejo/.env
+
 # Homarr
 homarr/.env
 

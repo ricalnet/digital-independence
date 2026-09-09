@@ -1,0 +1,143 @@
+services:
+  forgejo:
+    image: ${FORGEJO_IMAGE:-codeberg.org/forgejo/forgejo:latest}
+    container_name: forgejo
+    restart: unless-stopped
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - FORGEJO__database__DB_TYPE=postgres
+      - FORGEJO__database__HOST=db:5432
+      - FORGEJO__database__NAME=${FORGEJO_DB_NAME:-forgejo}
+      - FORGEJO__database__USER=${FORGEJO_DB_USER:-forgejo}
+      - FORGEJO__database__PASSWD=${FORGEJO_DB_PASS}
+      - FORGEJO__service__REQUIRE_SIGNIN_VIEW=${FORGEJO_REQUIRE_SIGNIN_VIEW:-false}
+      - FORGEJO__server__SSH_PORT=${FORGEJO_SSH_PORT:-2222}
+      - FORGEJO__server__SSH_LISTEN_PORT=${FORGEJO_SSH_LISTEN_PORT:-2222}
+      - FORGEJO__server__DOMAIN=${FORGEJO_DOMAIN}
+      - FORGEJO__server__ROOT_URL=${FORGEJO_ROOT_URL}
+      - FORGEJO__server__HTTP_PORT=3000
+      - FORGEJO__server__LFS_START_SERVER=true
+      - FORGEJO__server__ENABLE_PPROF=${FORGEJO_ENABLE_PPROF:-false}
+      - FORGEJO__cache__ADAPTER=memory
+      - FORGEJO__session__PROVIDER=memory
+      - FORGEJO__log__LEVEL=${FORGEJO_LOG_LEVEL:-Info}
+      - FORGEJO__log__MODE=console,file
+      - FORGEJO__log__ROOT_PATH=/var/lib/gitea/log
+      - FORGEJO__log__BUFFER_LEN=10000
+      - FORGEJO__security__SECRET_KEY=${FORGEJO_SECRET_KEY}
+      - FORGEJO__security__INTERNAL_TOKEN=${FORGEJO_INTERNAL_TOKEN}
+      - FORGEJO__metrics__ENABLED=${FORGEJO_METRICS_ENABLED:-false}
+    ports:
+      - "${FORGEJO_BIND_ADDRESS:-127.0.0.1}:${FORGEJO_HTTP_PORT:-3002}:3000"
+      - "${FORGEJO_BIND_ADDRESS:-127.0.0.1}:${FORGEJO_SSH_PORT:-2222}:2222"
+    volumes:
+      - forgejo_data:/var/lib/gitea
+    networks:
+      - forgejo-network
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    mem_limit: 768m
+    mem_reservation: 256m
+    cpus: 0.8
+    pids_limit: 300
+    mem_swappiness: 10
+    oom_score_adj: -100
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - FOWNER
+    read_only: false
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128M
+      - /run:rw,noexec,nosuid,size=64M
+      - /var/run:rw,noexec,nosuid,size=64M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+        compress: "true"
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+
+  db:
+    image: ${POSTGRES_IMAGE:-docker.io/postgres:18-alpine}
+    container_name: forgejo-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${FORGEJO_DB_USER:-forgejo}
+      POSTGRES_PASSWORD: ${FORGEJO_DB_PASS}
+      POSTGRES_DB: ${FORGEJO_DB_NAME:-forgejo}
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+      POSTGRES_SHARED_BUFFERS: ${POSTGRES_SHARED_BUFFERS:-128MB}
+      POSTGRES_EFFECTIVE_CACHE_SIZE: ${POSTGRES_EFFECTIVE_CACHE_SIZE:-256MB}
+      POSTGRES_MAINTENANCE_WORK_MEM: ${POSTGRES_MAINTENANCE_WORK_MEM:-64MB}
+      POSTGRES_WORK_MEM: ${POSTGRES_WORK_MEM:-8MB}
+      POSTGRES_MAX_CONNECTIONS: ${POSTGRES_MAX_CONNECTIONS:-50}
+    volumes:
+      - forgejo_db_data:/var/lib/postgresql
+    networks:
+      - forgejo-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${FORGEJO_DB_USER:-forgejo} -d ${FORGEJO_DB_NAME:-forgejo}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    mem_limit: 384m
+    mem_reservation: 128m
+    cpus: 0.4
+    pids_limit: 150
+    mem_swappiness: 10
+    oom_score_adj: -500
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - NET_BIND_SERVICE
+      - SYS_CHROOT
+      - FOWNER
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64M
+      - /run:rw,noexec,nosuid,size=64M
+      - /var/run:rw,noexec,nosuid,size=64M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+
+volumes:
+  forgejo_data:
+    name: forgejo_data
+  forgejo_db_data:
+    name: forgejo_db_data
+
+networks:
+  forgejo-network:
+    name: forgejo_network
+    driver: bridge
+    internal: ${FORGEJO_NETWORK_INTERNAL:-false}
