@@ -10,6 +10,7 @@
 [![Arsitektur](https://img.shields.io/badge/Arsitektur-amd64_|_arm64-4EAA25?logo=linux&logoColor=putih)](https://hub.docker.com/)
 [![Pemeliharaan](https://img.shields.io/badge/Dipelihara%3F-ya-hijau.svg)](https://github.com/ricalnet/digital-independence/graphs/commit-activity)
 [![Cadangan](https://img.shields.io/badge/Cadangan-ChaCha20--Poly1305-8A2BE2?logo=openssl&logoColor=putih)](https://github.com/ricalnet/digital-independence#-chantik-encrypted-backup--restore)
+[![Firewall](https://img.shields.io/badge/Firewall-IPC_(Iptables)-FF6B6B?logo=linux&logoColor=putih)](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller)
 
 </div>
 
@@ -23,6 +24,7 @@ Filosofi Inti:
 - 🔄 Kebebasan Penuh — Ganti, modifikasi, atau ganti layanan apa pun kapan saja
 - 🎯 Pembelajaran Praktis — Bangun keterampilan DevOps nyata melalui pengalaman langsung
 - 🚀 Siap Deploy — Clone, instal, dan jalankan
+- 🔥 Keamanan Terintegrasi — Firewall bawaan dengan IPC (Iptables Controller)
 
 ## 🏗️ Dukungan Arsitektur
 
@@ -117,6 +119,33 @@ Catatan Penting:
 - 🌐 Layanan terikat ke `127.0.0.1` (localhost) secara default untuk keamanan
 - 📖 Panduan deployment dan penyesuaian lengkap tersedia di [Wiki Resmi](https://git.ricalnet.my.id/rical/digital-independence/wiki)
 
+## 🔥 IPC: Iptables Port Controller
+
+IPC adalah alat manajemen firewall bawaan untuk mengontrol akses jaringan ke layanan self-hosted Anda.
+
+### Filosofi Keamanan
+
+IPC menerapkan kebijakan **default-deny** untuk lalu lintas masuk:
+- 🚫 **INPUT DROP** — Semua koneksi masuk ditolak secara default
+- ✅ **OUTPUT ACCEPT** — Koneksi keluar diizinkan (server dapat mengakses internet)
+- 🚫 **FORWARD DROP** — Routing antar antarmuka dinonaktifkan
+
+### Fitur Utama
+
+| Fitur | Deskripsi |
+|-------|-----------|
+| 🔌 Manajemen Port | Aktifkan/nonaktifkan port dengan mudah |
+| 🌐 Dual-stack | Dukungan penuh IPv4 dan IPv6 |
+| 📦 Persistence | Aturan tetap berlaku setelah reboot |
+| 🔄 Auto-restore | Aturan dipulihkan saat boot |
+| 📊 Status Monitoring | Lihat aturan yang aktif |
+| 🧹 Reset | Kembali ke kebijakan default |
+
+### 📖 Dokumentasi Lengkap
+
+Untuk panduan mendetail tentang konfigurasi firewall, contoh deployment, dan troubleshooting:
+- 📚 [Wiki: Iptables Port Controller](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall)
+
 ## 📋 Prasyarat
 
 | Persyaratan | Versi Minimum | Catatan |
@@ -128,7 +157,7 @@ Catatan Penting:
 | Memori | 4GB+ | Tergantung layanan yang berjalan |
 | Penyimpanan | 50GB+ | Berdasarkan layanan dan volume data |
 
-## 🚀 Mulai Cepat (3 Langkah)
+## 🚀 Mulai Cepat (4 Langkah)
 
 ### Langkah 1: Clone Repositori
 ```bash
@@ -156,6 +185,15 @@ dipen up nextcloud
 
 # Untuk memulai semua layanan
 dipen all up
+```
+
+### Langkah 4: Konfigurasi Firewall
+```bash
+# Setup persistence dan aktifkan port yang diperlukan
+sudo ipc setup-persistence
+sudo ipc init
+sudo ipc enable 22     # SSH
+sudo ipc enable 5353   # DNS
 ```
 
 ## ⚙️ dipen: Orkestrasi Layanan
@@ -234,6 +272,16 @@ EXAMPLES:
 </details>
 
 ## 🌐 Mengekspos Layanan Secara Eksternal
+
+### 🔥 Firewall Terintegrasi (IPC)
+Gunakan IPC untuk mengatur port yang terbuka ke publik:
+```bash
+# Tampilkan status firewall
+sudo ipc status
+
+# Aktifkan port untuk layanan eksternal
+sudo ipc enable 443   # HTTPS
+```
 
 ### 🧅 Layanan Tersembunyi Tor
 Menyediakan akses anonim melalui jaringan Tor.
@@ -334,6 +382,27 @@ crontab -e
 - 🔒 Gunakan secret yang kuat dan unik untuk setiap layanan
 - 🌐 Ikat ke `127.0.0.1` (localhost) kecuali akses eksternal diperlukan
 - 📁 Atur `chmod 600 .env` untuk semua file lingkungan
+- 🔥 Konfigurasikan firewall dengan IPC — hanya buka port yang diperlukan
+
+### Firewall Best Practices
+
+```bash
+# 1. Setup persistence
+sudo ipc setup-persistence
+
+# 2. Inisialisasi (default-deny)
+sudo ipc init
+
+# 3. Buka port layanan spesifik
+sudo ipc enable 5000  # Nextcloud
+sudo ipc enable 5353  # Pi-Hole
+
+# 4. Verifikasi status
+sudo ipc status
+
+# 5. Simpan aturan (otomatis, tapi bisa manual)
+sudo ipc persist
+```
 
 ### Pemeliharaan Berkelanjutan
 - 📦 Data disimpan di direktori lokal atau volume Podman (persisten)
@@ -341,8 +410,18 @@ crontab -e
 - 🔍 Pantau log dengan `dipen logs [layanan]` untuk anomali
 - 📊 Aktifkan health check menggunakan Uptime Kuma
 - 💾 Pencadangan rutin dengan `chantik backup`
+- 🔥 Audit aturan firewall secara berkala dengan `ipc status`
 
 ## 📜 Lisensi
 
 ### Repositori
 Lisensi MIT – lihat file [LICENSE](LICENSE) untuk detail.
+
+## 📚 Sumber Daya
+
+| Sumber Daya | Tautan |
+|-------------|--------|
+| Wiki Resmi | [Digital Independence Wiki](https://git.ricalnet.my.id/rical/digital-independence/wiki) |
+| Dokumentasi IPC | [Iptables Port Controller](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall) |
+| Dokumentasi Deployment | [Deployment Guide](https://git.ricalnet.my.id/rical/digital-independence/wiki/Panduan-Penerapan-Digital-Independence) |
+| Chantik | [Encrypted Backup Tool](https://git.ricalnet.my.id/rical/digital-independence/wiki/Chantik+%E2%80%94+ChaCha20-Authenticated+Backup+Protection.-)
