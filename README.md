@@ -2,192 +2,190 @@
 
 # Digital Independence
 
-**Take back control of your digital life, one container at a time.**
+**Kembalikan kendali atas kehidupan digital Anda, satu container pada satu waktu.**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Podman](https://img.shields.io/badge/Podman-5+-2496ED?logo=podman&logoColor=white)](https://podman.io/)
-[![Rootless](https://img.shields.io/badge/Rootless-✅_Supported-8A2BE2?logo=podman&logoColor=white)](https://podman.io/docs/rootless)
-[![Architecture](https://img.shields.io/badge/Architecture-amd64_|_arm64-4EAA25?logo=linux&logoColor=white)](https://hub.docker.com/)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/ricalnet/digital-independence/graphs/commit-activity)
-[![Backup](https://img.shields.io/badge/Backup-ChaCha20--Poly1305-8A2BE2?logo=openssl&logoColor=white)](https://github.com/ricalnet/digital-independence#-chantik-encrypted-backup--restore)
+[![Lisensi: MIT](https://img.shields.io/badge/Lisensi-MIT-kuning.svg)](https://opensource.org/licenses/MIT)
+[![Podman](https://img.shields.io/badge/Podman-5+-2496ED?logo=podman&logoColor=putih)](https://podman.io/)
+[![Rootless](https://img.shields.io/badge/Rootless-✅_Didukung-8A2BE2?logo=podman&logoColor=putih)](https://podman.io/docs/rootless)
+[![Arsitektur](https://img.shields.io/badge/Arsitektur-amd64_|_arm64-4EAA25?logo=linux&logoColor=putih)](https://hub.docker.com/)
+[![Pemeliharaan](https://img.shields.io/badge/Dipelihara%3F-ya-hijau.svg)](https://github.com/ricalnet/digital-independence/graphs/commit-activity)
+[![Cadangan](https://img.shields.io/badge/Cadangan-ChaCha20--Poly1305-8A2BE2?logo=openssl&logoColor=putih)](https://github.com/ricalnet/digital-independence#-chantik-encrypted-backup--restore)
 
 </div>
 
-## 📌 What is Digital Independence?
+## 📌 Apa itu Dipen?
 
-Digital Independence is a complete self-hosting solution that provides `podman-compose` configurations for 23+ popular open-source services. It eliminates dependency on third-party cloud services by giving you full control over your data and infrastructure.
+Dipen adalah solusi self-hosting lengkap yang menyediakan konfigurasi `podman-compose` untuk 24+ layanan open-source populer. Ini menghilangkan ketergantungan pada layanan cloud pihak ketiga dengan memberi Anda kendali penuh atas data dan infrastruktur Anda.
 
-Core Philosophy:
-- 🔒 Total Data Ownership — Your data stays on your hardware, always
-- 💰 Zero Recurring Costs — Pay once for hardware, free forever
-- 🔄 Complete Freedom — Switch, modify, or replace any service anytime
-- 🎯 Practical Learning — Build real DevOps skills through hands-on experience
-- 🚀 Ready to Deploy — Just clone, install, and run
+Filosofi Inti:
+- 🔒 Kepemilikan Data Total — Data Anda tetap di perangkat keras Anda, selamanya
+- 💰 Tanpa Biaya Berulang — Bayar sekali untuk perangkat keras, gratis selamanya
+- 🔄 Kebebasan Penuh — Ganti, modifikasi, atau ganti layanan apa pun kapan saja
+- 🎯 Pembelajaran Praktis — Bangun keterampilan DevOps nyata melalui pengalaman langsung
+- 🚀 Siap Deploy — Clone, instal, dan jalankan
 
-## 🏗️ Architecture Support
+## 🏗️ Dukungan Arsitektur
 
-| Architecture | Platforms | Status |
-|--------------|-----------|--------|
-| `linux/amd64` | Intel/AMD, x86_64 | ✅ Supported |
-| `linux/arm64` | Raspberry Pi 4/5, Apple M1/M2/M3, AWS Graviton | ✅ Supported |
+| Arsitektur | Platform | Status |
+|------------|----------|--------|
+| `linux/amd64` | Intel/AMD, x86_64 | ✅ Didukung |
+| `linux/arm64` | Raspberry Pi 4/5, Apple M1/M2/M3, AWS Graviton | ✅ Didukung |
 
-## 📦 Available Services (23 Services)
+## 📦 Layanan Tersedia (24 Layanan)
 
-### 🔐 Security & Authentication
+### 🔐 Keamanan & Autentikasi
 
-| Service | Directory | Port | Purpose |
-|---------|-----------|------|---------|
-| Wazuh | `wazuh/` | 443 | Security monitoring and threat detection |
-| Pi-hole | `pi-hole/` | 53, 8080 | Network-wide ad blocking and DNS filtering |
-| Vaultwarden | `vaultwarden/` | 8000 | Lightweight Bitwarden-compatible password manager |
-| Authentik | `authentik/` | 9000, 9443 | Complete identity and access management (SSO) |
+| Layanan | Direktori | Port | Tujuan |
+|---------|-----------|------|--------|
+| Wazuh | `wazuh/` | 443 | Pemantauan keamanan dan deteksi ancaman |
+| Pi-hole | `pi-hole/` | 53, 8080 | Pemblokiran iklan seluruh jaringan dan penyaringan DNS |
+| Vaultwarden | `vaultwarden/` | 8000 | Pengelola kata sandi ringan kompatibel Bitwarden |
+| Authentik | `authentik/` | 9000, 9443 | Manajemen identitas dan akses lengkap (SSO) |
 
-### 🤖 AI & Machine Learning
+### 🤖 AI & Pembelajaran Mesin
 
-| Service | Directory | Port | Purpose |
-|---------|-----------|------|---------|
-| Open WebUI | `open-webui/` | 3000 | Chat interface for Ollama LLMs |
+| Layanan | Direktori | Port | Tujuan |
+|---------|-----------|------|--------|
+| Open WebUI | `open-webui/` | 3000 | Antarmuka obrolan untuk LLM Ollama |
 
-> Configure with `OLLAMA_BASE_URL` in `.env`
+> Konfigurasikan dengan `OLLAMA_BASE_URL` di `.env`
 
-### 🖥️ Management & Monitoring
+### 🖥️ Manajemen & Pemantauan
 
-| Service | Directory | Port | Purpose |
-|---------|-----------|------|---------|
-| Dashdot | `dashdot/` | 3001 | Modern server dashboard with system metrics |
-| Homarr | `homarr/` | 7575 | Clean and customizable home page dashboard |
-| ntfy | `ntfy/` | 8010 | Simple pub/sub notification service |
-| Uptime Kuma | `uptime-kuma/` | 9442 | Self-hosted uptime monitoring |
-| Portainer | `portainer/` | 9444 | Container management UI for Podman/Docker |
+| Layanan | Direktori | Port | Tujuan |
+|---------|-----------|------|--------|
+| Dashdot | `dashdot/` | 3001 | Dasbor server modern dengan metrik sistem |
+| Homarr | `homarr/` | 7575 | Dasbor beranda yang bersih dan dapat disesuaikan |
+| ntfy | `ntfy/` | 8010 | Layanan notifikasi pub/sub sederhana |
+| Uptime Kuma | `uptime-kuma/` | 9442 | Pemantauan uptime self-hosted |
+| Portainer | `portainer/` | 9444 | UI manajemen container untuk Podman/Docker |
 
-### 💬 Communication (Matrix Ecosystem)
+### 💬 Komunikasi (Ekosistem Matrix)
 
-| Service | Directory | Port | Purpose |
-|---------|-----------|------|---------|
-| Synapse | `synapse/` | 8008, 8448 | Matrix homeserver for decentralized chat |
-| Element Web | `element-web/` | 8009 | Web client for Matrix |
-| Mautrix Bridges | `synapse/mautrix/` | - | Telegram & WhatsApp bridges (single compose.yaml) |
+| Layanan | Direktori | Port | Tujuan |
+|---------|-----------|------|--------|
+| Synapse | `synapse/` | 8008, 8448 | Homeserver Matrix untuk obrolan terdesentralisasi |
+| Element Web | `element-web/` | 8009 | Klien web untuk Matrix |
+| Jembatan Mautrix | `synapse/mautrix/` | - | Jembatan Telegram & WhatsApp (compose.yaml tunggal) |
 
-### 🌐 Search & Translation
+### 🌐 Pencarian & Penerjemahan
 
-| Service | Directory | Port | Purpose |
-|---------|-----------|------|---------|
-| LibreTranslate | `libretranslate/` | 5001 | Open-source machine translation |
-| SearXNG | `searxng/` | 8888 | Privacy-respecting metasearch engine |
+| Layanan | Direktori | Port | Tujuan |
+|---------|-----------|------|--------|
+| LibreTranslate | `libretranslate/` | 5001 | Penerjemahan mesin open-source |
+| SearXNG | `searxng/` | 8888 | Mesin pencari metasearch yang menghormati privasi |
 
-### 📁 Media & Content Management
+### 📁 Manajemen Media & Konten
 
-| Service | Directory | Port | Purpose |
-|---------|-----------|------|---------|
-| Immich | `immich/` | 2283 | Google Photos alternative (self-hosted) |
-| Navidrome | `navidrome/` | 4533 | Music streaming server (Subsonic-compatible) |
-| Nextcloud | `nextcloud/` | 5000 | Complete productivity suite (files, calendar, contacts) |
-| Jellyfin | `jellyfin/` | 8096, 8920 | Full-featured media server (Plex alternative) |
+| Layanan | Direktori | Port | Tujuan |
+|---------|-----------|------|--------|
+| Immich | `immich/` | 2283 | Alternatif Google Photos (self-hosted) |
+| Navidrome | `navidrome/` | 4533 | Server streaming musik (kompatibel Subsonic) |
+| Nextcloud | `nextcloud/` | 5000 | Suite produktivitas lengkap (file, kalender, kontak) |
+| Jellyfin | `jellyfin/` | 8096, 8920 | Server media lengkap (alternatif Plex) |
 
-### 🔗 Link Management
+### 🔗 Manajemen Tautan
 
-| Service | Directory | Port | Purpose |
-|---------|-----------|------|---------|
-| YOURLS | `yourls/` | 8001 | URL shortener with analytics |
-| LinkStack | `linkstack/` | 8003 | Link-sharing and bookmark manager |
+| Layanan | Direktori | Port | Tujuan |
+|---------|-----------|------|--------|
+| YOURLS | `yourls/` | 8001 | Pengecil URL dengan analitik |
+| LinkStack | `linkstack/` | 8003 | Manajer berbagi tautan dan bookmark |
 
-### 📚 Knowledge Management
+### 📚 Manajemen Pengetahuan
 
-| Service | Directory | Port | Purpose |
-|---------|-----------|------|---------|
-| MediaWiki | `wiki/` | 8002 | Wikipedia-style wiki engine |
+| Layanan | Direktori | Port | Tujuan |
+|---------|-----------|------|--------|
+| MediaWiki | `wiki/` | 8002 | Mesin wiki gaya Wikipedia |
 
-### 🐘 Social Media
+### 🐘 Media Sosial
 
-| Service | Directory | Port | Purpose |
-|---------|-----------|------|---------|
-| Mastodon | `mastodon/` | 4000, 4001 | Federated social network (Twitter alternative) |
+| Layanan | Direktori | Port | Tujuan |
+|---------|-----------|------|--------|
+| Mastodon | `mastodon/` | 4000, 4001 | Jaringan sosial terfederasi (alternatif Twitter) |
 
-> Mastodon requires both `.env` (Podman) and `.env.production` (Mastodon configuration)
+> Mastodon memerlukan `.env` (Podman) dan `.env.production` (konfigurasi Mastodon)
 
-Important Notes:
-- 📖 Full setup guides available in [`docs/`](docs/) directory
-- 🔧 Use `dipen env <service>` to automatically create and edit `.env` files
-- 🏷️ Services use `latest` tag by default — pin versions for stability if needed
-- 🌐 Services bind to `127.0.0.1` (localhost) by default for security
+### 🦊 Manajemen Kode & Repositori
 
-## 📋 Prerequisites
+| Layanan | Direktori | Port | Tujuan |
+|---------|-----------|------|--------|
+| Forgejo | `forgejo/` | 3002 | Layanan Git self-hosted (alternatif Gitea) |
 
-| Requirement | Minimum Version | Notes |
-|-------------|-----------------|-------|
-| Podman | 5.4+ | Rootless container engine |
-| podman-compose | v1.3+ | Compose orchestration for Podman |
-| Git | Latest | Version control |
-| OS | Linux / macOS / WSL2 | Any POSIX-compatible system |
-| Memory | 4GB+ | Depends on services running |
-| Storage | 50GB+ | Based on services and data volume |
+Catatan Penting:
+- 🔧 Gunakan `dipen env <layanan>` untuk membuat dan mengedit file `.env` secara otomatis
+- 🏷️ Layanan menggunakan tag `latest` secara default — sematkan versi untuk stabilitas jika diperlukan
+- 🌐 Layanan terikat ke `127.0.0.1` (localhost) secara default untuk keamanan
+- 📖 Panduan deployment dan penyesuaian lengkap tersedia di [Wiki Resmi](https://git.ricalnet.my.id/rical/digital-independence/wiki)
 
-## 🚀 Quick Start (3 Steps)
+## 📋 Prasyarat
 
-### Step 1: Clone Repository
+| Persyaratan | Versi Minimum | Catatan |
+|-------------|---------------|--------|
+| Podman | 5.4+ | Mesin container rootless |
+| podman-compose | v1.3+ | Orkestrasi Compose untuk Podman |
+| Git | Terbaru | Kontrol versi |
+| OS | Linux / macOS / WSL2 | Sistem kompatibel POSIX |
+| Memori | 4GB+ | Tergantung layanan yang berjalan |
+| Penyimpanan | 50GB+ | Berdasarkan layanan dan volume data |
+
+## 🚀 Mulai Cepat (3 Langkah)
+
+### Langkah 1: Clone Repositori
 ```bash
-git clone https://github.com/ricalnet/digital-independence.git
+git clone https://git.ricalnet.my.id/rical/digital-independence.git
 cd digital-independence
 ```
 
-### Step 2: Install Everything
+### Langkah 2: Instal Podman dan Dependensi
 ```bash
 ./install-podman-on-debian.sh
 ```
 
-What the installer does:
-- Updates and upgrades system
-- Installs Podman and podman-compose
-- Installs supporting packages (uidmap, slirp4netns, dbus-user-session, fuse-overlayfs)
-- Enables linger for user (allows services to run after logout)
-- Configures container registries (Docker Hub, GitHub Container Registry, Matrix)
-- Enables podman.socket for API access
-- Creates `dipen` alias (service orchestration)
-- Creates `chantik` alias (backup tool)
+> **📖 Panduan Instalasi Lengkap:** Untuk petunjuk detail tentang konfigurasi registri, pengaturan environment, dan penyesuaian khusus layanan, silakan merujuk ke [Wiki Deployment](https://git.ricalnet.my.id/rical/digital-independence/wiki).
 
-### Step 3: Start Services
+### Langkah 3: Konfigurasi & Mulai Layanan
 ```bash
-# List available services
+# Lihat daftar layanan yang tersedia
 dipen list
 
-# Configure environment (auto-creates .env from .env.example)
+# Buat dan edit file .env untuk layanan yang diinginkan (contoh: nextcloud)
 dipen env nextcloud
 
-# Start your service
+# Mulai layanan
 dipen up nextcloud
 
-# Start all services
+# Untuk memulai semua layanan
 dipen all up
 ```
 
-## ⚙️ dipen: Service Orchestration
+## ⚙️ dipen: Orkestrasi Layanan
 
-`dipen` is the central command-line tool for managing all services.
+`dipen` adalah alat baris perintah utama untuk mengelola semua layanan.
 
-### Usage Examples
+### Contoh Penggunaan
 
 ```bash
-# Wildcard matching
-dipen env n*              # Edit all services starting with 'n'
-dipen up n*               # Start all services starting with 'n'
+# Pencocokan wildcard
+dipen env n*              # Edit semua layanan yang dimulai dengan 'n'
+dipen up n*               # Mulai semua layanan yang dimulai dengan 'n'
 
-# Multiple services
+# Banyak layanan
 dipen env nextcloud immich authentik
 
-# Custom editor
+# Editor kustom
 EDITOR=vim dipen env immich
 
-# All services
-dipen all up              # Start everything
-dipen all down            # Stop everything
+# Semua layanan
+dipen all up              # Mulai semuanya
+dipen all down            # Hentikan semuanya
 ```
 
 <details>
-<summary>📘 Complete dipen Help</summary>
+<summary>📘 Bantuan Lengkap dipen</summary>
 
 ```
-dipen v1.1 - Podman Orchestration Tool for Digital Independence
-Issues: https://github.com/ricalnet/digital-independence/issues 
+dipen v1.1.1 - Podman Orchestration Tool for Digital Independence
+Issues: https://git.ricalnet.my.id/rical/digital-independence/issues 
 
 USAGE:
     dipen [ACTION] [SERVICE...] [OPTIONS]
@@ -204,6 +202,7 @@ ACTIONS:
     recycle             Pull → Down → Up
     update              Pull → Up
     fresh               Down → Up
+    check-version       Check latest stable image versions
 
 OPTIONS:
     help                Show this help
@@ -229,206 +228,121 @@ EXAMPLES:
     dipen all up
     dipen dry-run up nextcloud
     dipen up n*
+    dipen check-version
+    dipen check-version nextcloud immich
 ```
 </details>
 
+## 🌐 Mengekspos Layanan Secara Eksternal
 
-## 🌐 Exposing Services Externally
-
-### 🧅 Tor Hidden Service
-Provide anonymous access through the Tor network.
-- 📖 [Tor Implementation Guide](https://docs.ricalnet.my.id/posts/panduan-implementasi-hidden-service-tor/)
+### 🧅 Layanan Tersembunyi Tor
+Menyediakan akses anonim melalui jaringan Tor.
+- 📖 [Panduan Implementasi Tor](https://docs.ricalnet.my.id/posts/panduan-implementasi-hidden-service-tor/)
 
 ### ☁️ Cloudflare Tunnel
-Access services without opening firewall ports.
-- 📖 [Cloudflare Tunnel Guide](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
+Mengakses layanan tanpa membuka port firewall.
+- 📖 [Panduan Cloudflare Tunnel](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
 
-## 💾 Chantik: Encrypted Backup & Restore
+## 💾 Chantik: Pencadangan & Pemulihan Terenkripsi
 
-Chantik is a ChaCha20-Authenticated Backup Protection tool included in the repository.
+[Chantik](https://git.ricalnet.my.id/rical/chantik) adalah alat Perlindungan Cadangan ChaCha20-Terautentikasi yang dibuat khusus untuk dipen.
 
-### Key Features
+### ✨ Fitur Utama
 
-| Feature | Description |
-|---------|-------------|
-| 🔐 ChaCha20-Poly1305 | Military-grade encryption via OpenSSL |
-| 📦 Podman Volume Backup | Backup specific volumes or all |
-| 📁 Custom Directory Backup | Backup any directory on your system |
-| ⚡ Incremental Backup | Space-efficient with hardlink support |
-| 🔄 Auto Rotation | Keep only N latest backups (default: 7) |
-| 🔔 NTFY Notifications | Get real-time backup status updates |
-| 🔒 Lock Protection | Prevent concurrent backups |
+| Fitur | Deskripsi |
+|-------|-----------|
+| 🔐 Enkripsi Terautentikasi | ChaCha20-Poly1305 (utama) dengan fallback AES-256-CBC |
+| 🔑 Derivasi Kunci Kuat | PBKDF2 dengan iterasi yang dapat dikonfigurasi (default: 600.000) |
+| 🔗 Deduplikasi | Dukungan nonce tetap untuk enkripsi deterministik |
+| 🗜️ Kompresi | Gzip dengan level yang dapat dikonfigurasi (1-9) |
+| 🐳 Dukungan Docker | Pencadangan dan pemulihan volume Docker yang mulus |
+| 🔄 Cadangan Incremental | Hemat penyimpanan dan percepat pencadangan |
+| 📊 Retensi Cerdas | Kebijakan retensi harian, mingguan, dan bulanan |
+| 🔔 Notifikasi Real-time | Peringatan instan melalui ntfy.sh |
+| ✅ Verifikasi Integritas | Verifikasi checksum SHA256 untuk setiap cadangan |
+| 🔒 Keamanan | Izin yang dapat dikonfigurasi dan penguncian proses |
+| 📝 Pencatatan Log Komprehensif | Log terperinci untuk audit dan pemecahan masalah |
 
-### Quick Setup
+## 🤖 Otomatisasi (Cron Jobs)
 
-```bash
-# Copy example configuration
-cp chantik.example.conf chantik.conf
+> ⚠️ Semua cron job berjalan dalam mode **rootless**. Jangan pernah menggunakan `sudo` dengan perintah podman di cron.
 
-# Edit configuration
-nano chantik.conf
-```
+### Cron Job Pengguna (`crontab -e`)
 
-### Usage Examples
+| Jadwal | Perintah | Tujuan |
+|--------|----------|--------|
+| `*/5 * * * *` | `podman exec -u www-data nextcloud_app php -f /var/www/html/cron.php` | Tugas latar belakang NextCloud |
+| `0 1 * * *` | `podman exec pihole pihole -g && podman exec pihole pihole -f` | Pembaruan gravity Pi-hole |
+| `0 6 * * 0` | `/path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.sh` | Pembaruan layanan mingguan |
+| `0 8 1 * *` | `/path/to/digital-independence/automation-scripts/monthly-recycle/monthly_recycle.sh` | Daur ulang layanan bulanan |
+| `0 11 * * 0` | `/path/to/digital-independence/dipen.sh prune all` | Pembersihan container mingguan |
+| `0 2 * * *` | `/path/to/digital-independence/chantik backup` | Pencadangan terenkripsi harian |
 
-```bash
-# Basic backup
-chantik backup
+### Cron Job Sistem (`sudo crontab -e`)
 
-# Backup with specific config
-chantik -c /etc/chantik/chantik.conf backup
+| Jadwal | Perintah | Tujuan |
+|--------|----------|--------|
+| `0 2 * * 0` | `/path/to/digital-independence/automation-scripts/cleanup-system/cleanup_system.sh` | Pembersihan sistem mingguan |
+| `0 4 * * 0` | `/path/to/digital-independence/automation-scripts/system-update/system_update.sh` | Pembaruan sistem mingguan |
 
-# Restore latest backup
-chantik restore
-
-# Restore specific service
-chantik restore -s nextcloud
-
-# Restore specific backup file
-chantik restore -b /backup/chantik-20260109-120000.tar.gz.enc
-
-# List all backups
-chantik list
-
-# Verify last backup
-chantik verify
-
-# Clean old backups
-chantik clean
-```
-
-<details>
-<summary>📘 Complete chantik Help</summary>
-
-```
-chantik v1.0 - ChaCha20-Authenticated Backup Protection
-
-USAGE:
-    chantik [ACTION] [OPTIONS]
-
-ACTIONS:
-    backup              Perform full backup
-    restore             Restore from backup
-    list                List available backups
-    verify              Verify backup integrity
-    clean               Clean old backups (rotation)
-    status              Show backup status
-
-OPTIONS:
-    -c, --config FILE   Use alternative config file
-    -b, --backup FILE   Restore from specific backup file
-    -s, --service NAME  Restore specific service
-    -p, --password PASS Password for encryption (optional)
-    -h, --help          Show this help
-
-EXAMPLES:
-    chantik backup                          # Backup all
-    chantik restore                         # Restore last backup
-    chantik restore -s nextcloud            # Restore specific service
-    chantik restore -b /backup/file.enc     # Restore specific file
-    chantik list                            # List backups
-    chantik verify                          # Verify last backup
-    chantik clean                           # Clean old backups
-    chantik status                          # Show status
-```
-</details>
-
-## 🤖 Automation (Cron Jobs)
-
-> ⚠️ All cron jobs run in **rootless** mode. Never use `sudo` with podman commands in cron.
-
-### User Cron Jobs (`crontab -e`)
-
-| Schedule | Command | Purpose |
-|----------|---------|---------|
-| `*/5 * * * *` | `podman exec -u www-data nextcloud_app php -f /var/www/html/cron.php` | NextCloud background tasks |
-| `0 1 * * *` | `podman exec pihole pihole -g && podman exec pihole pihole -f` | Pi-hole gravity update |
-| `0 6 * * 0` | `/path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.sh` | Weekly service updates |
-| `0 8 1 * *` | `/path/to/digital-independence/automation-scripts/monthly-recycle/monthly_recycle.sh` | Monthly service recycle |
-| `0 11 * * 0` | `/path/to/digital-independence/dipen.sh prune all` | Weekly container cleanup |
-| `0 2 * * *` | `/path/to/digital-independence/chantik backup` | Daily encrypted backup |
-
-### System Cron Jobs (`sudo crontab -e`)
-
-| Schedule | Command | Purpose |
-|----------|---------|---------|
-| `0 2 * * 0` | `/path/to/digital-independence/automation-scripts/cleanup-system/cleanup_system.sh` | Weekly system cleanup |
-| `0 4 * * 0` | `/path/to/digital-independence/automation-scripts/system-update/system_update.sh` | Weekly system updates |
-
-### Complete Cron Example
+### Contoh Cron Lengkap
 
 ```bash
-# Edit user crontab
+# Edit crontab pengguna
 crontab -e
 
-# Add these lines
+# Tambahkan baris berikut
 # ──────────────────────────────────────────────────────────────
-# Digital Independence Automation
+# Otomatisasi Digital Independence
 # ──────────────────────────────────────────────────────────────
 
-# NextCloud cron - every 5 minutes (background jobs)
+# Cron NextCloud - setiap 5 menit (tugas latar belakang)
 */5 * * * * podman exec -u www-data nextcloud_app php -f /var/www/html/cron.php
 
-# Pi-hole gravity update - daily at 1 AM (update blocklist)
+# Pembaruan gravity Pi-hole - setiap hari jam 1 pagi (perbarui daftar blokir)
 0 1 * * * podman exec pihole pihole -g && podman exec pihole pihole -f
 
-# Daily backup - 2 AM
+# Pencadangan harian - jam 2 pagi
 0 2 * * * /path/to/digital-independence/chantik backup
 
-# Weekly container updates - Sunday 6 AM
+# Pembaruan container mingguan - Minggu jam 6 pagi
 0 6 * * 0 /path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.sh
 
-# Weekly container cleanup - Sunday 11 AM
+# Pembersihan container mingguan - Minggu jam 11 siang
 0 11 * * 0 /path/to/digital-independence/dipen.sh prune all
 
-# Monthly recycle - 1st at 8 AM
+# Daur ulang bulanan - tanggal 1 jam 8 pagi
 0 8 1 * * /path/to/digital-independence/automation-scripts/monthly-recycle/monthly_recycle.sh
 
 # ──────────────────────────────────────────────────────────────
-# System Cron (sudo crontab -e)
+# Cron Sistem (sudo crontab -e)
 # ──────────────────────────────────────────────────────────────
 
-# Weekly system cleanup - Sunday 2 AM
+# Pembersihan sistem mingguan - Minggu jam 2 pagi
 0 2 * * 0 /path/to/digital-independence/automation-scripts/cleanup-system/cleanup_system.sh
 
-# Weekly system updates - Sunday 4 AM
+# Pembaruan sistem mingguan - Minggu jam 4 pagi
 0 4 * * 0 /path/to/digital-independence/automation-scripts/system-update/system_update.sh
 ```
 
-> 📝 Replace `/path/to/digital-independence/` with your actual installation path.
+> 📝 Ganti `/path/to/digital-independence/` dengan jalur instalasi Anda yang sebenarnya.
 
-## 🔒 Security Guidelines
+## 🔒 Panduan Keamanan
 
-### Initial Setup
-- 🔑 Change all default passwords in `.env` files (use `dipen env <service>`)
-- 🔒 Use strong, unique secrets for each service
-- 🌐 Bind to `127.0.0.1` (localhost) unless external access is required
-- 📁 Set `chmod 600 .env` for all environment files
+### Pengaturan Awal
+- 🔑 Ubah semua kata sandi default di file `.env` (gunakan `dipen env <layanan>`)
+- 🔒 Gunakan secret yang kuat dan unik untuk setiap layanan
+- 🌐 Ikat ke `127.0.0.1` (localhost) kecuali akses eksternal diperlukan
+- 📁 Atur `chmod 600 .env` untuk semua file lingkungan
 
-### Ongoing Maintenance
-- 📦 Data stored in local directories or Podman volumes (persistent)
-- ⬆️ Regularly run `dipen pull` or `dipen update` for security patches
-- 🔍 Monitor logs with `dipen logs [service]` for anomalies
-- 📊 Enable health checks using Uptime Kuma
-- 💾 Regular backups with `chantik backup`
+### Pemeliharaan Berkelanjutan
+- 📦 Data disimpan di direktori lokal atau volume Podman (persisten)
+- ⬆️ Jalankan `dipen pull` atau `dipen update` secara teratur untuk tambalan keamanan
+- 🔍 Pantau log dengan `dipen logs [layanan]` untuk anomali
+- 📊 Aktifkan health check menggunakan Uptime Kuma
+- 💾 Pencadangan rutin dengan `chantik backup`
 
-## 🤝 Contributing
+## 📜 Lisensi
 
-Areas for Contribution:
-- Adding new services
-- Bug fixes in `dipen.sh`, `chantik`, or services configuration
-- Documentation improvements
-- Testing on different platforms
-
-How to Contribute:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a Pull Request
-
-Open an [Issue](https://github.com/ricalnet/digital-independence/issues) or [Pull Request](https://github.com/ricalnet/digital-independence/pulls).
-
-## 📜 License
-
-### Repository
-MIT License – see [LICENSE](LICENSE) file for details.
+### Repositori
+Lisensi MIT – lihat file [LICENSE](LICENSE) untuk detail.

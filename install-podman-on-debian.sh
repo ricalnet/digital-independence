@@ -51,12 +51,11 @@ sudo nano /etc/containers/registries.conf
 echo "Step 10: Enabling podman.socket..."
 systemctl --user enable --now podman.socket
 
-# 11. Setup aliases for dipen.sh and chantik
+# 11. Setup aliases for dipen.sh
 echo "Step 11: Setting up aliases..."
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DIPEN_PATH="${SCRIPT_DIR}/dipen.sh"
-CHANTIK_PATH="${SCRIPT_DIR}/chantik.sh"
 
 setup_alias() {
     local alias_name="$1"
@@ -95,20 +94,6 @@ else
     echo "   Skipping dipen alias setup"
 fi
 
-# Setup chantik alias
-if [ -f "$CHANTIK_PATH" ]; then
-    # Bash
-    setup_alias "chantik" "$CHANTIK_PATH" ~/.bashrc
-    
-    # Zsh
-    if [ -f ~/.zshrc ]; then
-        setup_alias "chantik" "$CHANTIK_PATH" ~/.zshrc
-    fi
-else
-    echo "⚠️ chantik not found in current directory"
-    echo "   Skipping chantik alias setup"
-fi
-
 echo ""
 echo "💡 To use the aliases, either:"
 echo "   - Restart your terminal, or"
@@ -118,9 +103,6 @@ echo "📝 Examples after setup:"
 echo "   dipen up portainer"
 echo "   dipen list"
 echo "   dipen env nextcloud"
-echo "   chantik backup"
-echo "   chantik restore -s nextcloud"
-echo "   chantik list"
 
 echo "=========================================="
 echo "Podman installation completed successfully!"
