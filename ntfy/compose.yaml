@@ -86,4 +86,4 @@ networks:
   ntfy-network:
     name: ntfy_network
     driver: bridge
-    internal: ${NTFY_NETWORK_INTERNAL:-false}
+    internal: true

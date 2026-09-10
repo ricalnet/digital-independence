@@ -140,4 +140,4 @@ networks:
   forgejo-network:
     name: forgejo_network
     driver: bridge
-    internal: ${FORGEJO_NETWORK_INTERNAL:-false}
+    internal: false
