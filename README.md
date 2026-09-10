@@ -216,6 +216,11 @@ EDITOR=vim dipen env immich
 # Semua layanan
 dipen all up              # Mulai semuanya
 dipen all down            # Hentikan semuanya
+
+# Navigasi cepat
+dipen cd nextcloud        # Pindah ke direktori layanan Nextcloud
+dipen cd volume           # Pindah ke direktori volume Podman
+dipen cd volume nextcloud # Pindah + filter volume Nextcloud
 ```
 
 <details>
@@ -241,6 +246,8 @@ ACTIONS:
     update              Pull → Up
     fresh               Down → Up
     check-version       Check latest stable image versions
+    cd <service>        Change directory to service directory
+    cd volume           Change directory to podman volume directory
 
 OPTIONS:
     help                Show this help
@@ -268,6 +275,9 @@ EXAMPLES:
     dipen up n*
     dipen check-version
     dipen check-version nextcloud immich
+    dipen cd nextcloud
+    dipen cd volume
+    dipen cd volume nextcloud
 ```
 </details>
 

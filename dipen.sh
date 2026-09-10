@@ -98,6 +98,8 @@ ${BOLD}ACTIONS:${NC}
     update              Pull → Up
     fresh               Down → Up
     check-version       Check latest stable image versions
+    cd <service>        Change directory to service directory
+    cd volume           Change directory to podman volume directory
 
 ${BOLD}OPTIONS:${NC}
     help                Show this help
@@ -125,6 +127,9 @@ ${BOLD}EXAMPLES:${NC}
     dipen up n*
     dipen check-version
     dipen check-version nextcloud immich
+    dipen cd nextcloud
+    dipen cd volume
+    dipen cd volume nextcloud
 
 ${BOLD}ALIAS:${NC}
     Aliases auto-configured by ./install-podman-on-debian.sh
@@ -271,6 +276,37 @@ edit_env() {
     fi
 }
 
+cd_to_service() {
+    local name=$1
+    local path="${SERVICES[$name]}"
+    local target="$BASE_DIR/$path"
+    
+    if [[ ! -d "$target" ]]; then
+        echo "${RED}Error:${NC} Directory not found: $target"
+        return 1
+    fi
+    
+    echo "${GREEN}✓${NC} Service directory: $target"
+    echo "${YELLOW}Info:${NC} Run the following command to navigate:"
+    echo "  cd $target"
+    return 0
+}
+
+cd_to_volume() {
+    local volume_base="$HOME/.local/share/containers/storage/volumes"
+    
+    if [[ ! -d "$volume_base" ]]; then
+        echo "${RED}Error:${NC} Volume directory not found: $volume_base"
+        return 1
+    fi
+    
+    echo "${GREEN}✓${NC} Volume directory: $volume_base"
+    echo
+    echo "${BOLD}${BLUE}Contents:${NC}"
+    ls -lh "$volume_base"
+    return 0
+}
+
 compose_file() {
     local path="$BASE_DIR/$1"
     for f in "docker-compose.yml" "docker-compose.yaml" "compose.yml" "compose.yaml"; do
@@ -403,8 +439,16 @@ main() {
             dry-run)  dry_run=true; shift ;;
             check-version)
                 action="$1"; shift ;;
-            up|down|restart|pull|logs|ps|prune|recycle|update|fresh|env)
+            up|down|restart|pull|logs|ps|prune|recycle|update|fresh|env|cd)
                 action="$1"; shift ;;
+            volume)
+                if [[ "$action" == "cd" ]]; then
+                    action="cd-volume"
+                    shift
+                else
+                    services+=("$1"); shift
+                fi
+                ;;
             *)  services+=("$1"); shift ;;
         esac
     done
@@ -422,7 +466,44 @@ main() {
         check_version "${services[@]}"
         exit $?
     fi
-    
+
+    if [[ "$action" == "cd-volume" ]]; then
+        cd_to_volume
+        exit 0
+    fi
+
+    if [[ "$action" == "cd" ]]; then
+        if [[ ${#services[@]} -eq 0 ]]; then
+            echo "${RED}Error:${NC} Please specify at least one service"
+            echo "${YELLOW}Info:${NC} Usage: dipen cd <service>"
+            exit 1
+        fi
+        
+        local expanded_cd=()
+        for s in "${services[@]}"; do
+            for item in $(expand "$s"); do
+                local exists=false
+                for e in "${expanded_cd[@]}"; do
+                    [[ "$e" == "$item" ]] && exists=true && break
+                done
+                [[ "$exists" == false ]] && expanded_cd+=("$item")
+            done
+        done
+        
+        local cd_ok=() cd_fail=()
+        for s in "${expanded_cd[@]}"; do
+            if [[ -z "${SERVICES[$s]}" ]]; then
+                echo "${RED}Error:${NC} Unknown service: $s"
+                cd_fail+=("$s")
+                continue
+            fi
+            cd_to_service "$s" && cd_ok+=("$s") || cd_fail+=("$s")
+        done
+        
+        [[ ${#cd_fail[@]} -gt 0 ]] && exit 1
+        exit 0
+    fi
+
     check || exit 1
     
     if [[ "$action" == "env" ]]; then
