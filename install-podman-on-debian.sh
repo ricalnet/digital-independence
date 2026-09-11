@@ -168,9 +168,9 @@ echo "📝 Examples after setup:"
 echo "   dipen list"
 echo "   dipen up portainer"
 echo "   dipen env nextcloud"
-echo "   dipen cd nextcloud
-echo "   dipen cd volume
-echo "   dipen cd volume nextcloud
+echo "   dipen cd nextcloud"
+echo "   dipen cd volume"
+echo "   dipen cd volume nextcloud"
 echo ""
 
 echo "=========================================="

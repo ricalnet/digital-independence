@@ -97,6 +97,9 @@ nextcloud/directory.sh
 ntfy/ntfy/
 ntfy/.env
 
+# Obfs4 bridge (TOR)
+obfs4-bridge/.env
+
 # Open WebUI
 open-webui/.env
 

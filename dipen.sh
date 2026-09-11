@@ -34,6 +34,7 @@ declare -A SERVICES=(
     ["navidrome"]="navidrome"
     ["nextcloud"]="nextcloud"
     ["ntfy"]="ntfy"
+    ["obfs4-bridge"]="obfs4-bridge"
     ["open-webui"]="open-webui"
     ["pi-hole"]="pi-hole"
     ["portainer"]="portainer"
@@ -61,6 +62,7 @@ declare -A IMAGE_REGISTRY=(
     ["navidrome"]="ghcr.io/navidrome/navidrome"
     ["nextcloud"]="docker.io/nextcloud"
     ["ntfy"]="docker.io/binwiederhier/ntfy"
+    ["obfs4-bridge"]="docker.io/thetorproject/obfs4-bridge"
     ["open-webui"]="ghcr.io/open-webui/open-webui"
     ["pi-hole"]="docker.io/pihole/pihole"
     ["portainer"]="docker.io/portainer/portainer-ce"
@@ -130,10 +132,6 @@ ${BOLD}EXAMPLES:${NC}
     dipen cd nextcloud
     dipen cd volume
     dipen cd volume nextcloud
-
-${BOLD}ALIAS:${NC}
-    Aliases auto-configured by ./install-podman-on-debian.sh
-    Manual: alias dipen='/path/to/digital-independence/dipen.sh'
 EOF
 }
 

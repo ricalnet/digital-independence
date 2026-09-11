@@ -33,7 +33,7 @@ Filosofi Inti:
 | `linux/amd64` | Intel/AMD, x86_64 | ✅ Didukung |
 | `linux/arm64` | Raspberry Pi 4/5, Apple M1/M2/M3, AWS Graviton | ✅ Didukung |
 
-## 📦 Layanan Tersedia (24 Layanan)
+## 📦 Layanan Tersedia (25 Layanan)
 
 ### 🔐 Keamanan & Autentikasi
 
@@ -43,6 +43,12 @@ Filosofi Inti:
 | Pi-hole | `pi-hole/` | 53, 8080 | Pemblokiran iklan seluruh jaringan dan penyaringan DNS |
 | Vaultwarden | `vaultwarden/` | 8000 | Pengelola kata sandi ringan kompatibel Bitwarden |
 | Authentik | `authentik/` | 9000, 9443 | Manajemen identitas dan akses lengkap (SSO) |
+
+### 🛡️ Privasi & Anonimitas
+
+| Layanan | Direktori | Port | Tujuan |
+|---------|-----------|------|--------|
+| obfs4 Bridge | `obfs4-bridge/` | 8443, 9443 | Tor bridge obfs4 untuk membantu akses Tor di jaringan tersensor |
 
 ### 🤖 AI & Pembelajaran Mesin
 
@@ -297,6 +303,51 @@ sudo ipc enable 443   # HTTPS
 Menyediakan akses anonim melalui jaringan Tor.
 - 📖 [Panduan Implementasi Tor](https://docs.ricalnet.my.id/posts/panduan-implementasi-hidden-service-tor/)
 
+### 🛡️ obfs4 Bridge (Tor Bridge)
+Menjalankan **obfs4 bridge** pribadi untuk membantu pengguna Tor di wilayah dengan sensor jaringan ketat. Bridge ini membuat lalu lintas Tor Anda terlihat seperti trafik acak, sehingga lebih sulit diblokir oleh firewall atau DPI (Deep Packet Inspection).
+
+Fitur:
+- 🔐 Berjalan di Podman rootless — tanpa perlu hak akses root
+- 🌐 Menggunakan port 8443 (OR) dan 9443 (PT) agar aman di rootless Podman
+- 📦 Terintegrasi dengan IPC untuk membuka port secara otomatis
+- 🔄 Auto-restart via `podman-compose` (`restart: unless-stopped`)
+- 📝 Menyimpan log instalasi dan bridge line ke `logs/obfs4_installation.log`
+
+Instalasi otomatis:
+```bash
+./auto-install-obfs4.sh
+```
+
+Script akan:
+1. Menginstal `ipc` dan Podman
+2. Membuat `.env` secara interaktif (EMAIL & NICKNAME)
+3. Membuat network `obfs4_bridge_external_network`
+4. Menjalankan container `obfs4-bridge`
+5. Menunggu bootstrap Tor selesai (3 menit)
+6. Mengekstrak fingerprint dan menyusun bridge line
+7. Menyimpan hasil ke `logs/obfs4_installation.log`
+
+Contoh bridge line yang dihasilkan:
+```
+obfs4 111.122.133.144:9443 9F394AE597C053CC566FB204F0FB7F3D078FDDC1 cert=dZhB1rJ7QOK/tRFHRnd5o28tONVCp/R/0x7rDLmcNb59qoR/ERS5xlYMOOqDBA9KTk46ag iat-mode=0
+```
+
+Cara pakai di Tor Browser:
+1. Buka Tor Browser → Settings → Connection → Bridges
+2. Pilih "Use a bridge" → "Provide a bridge I know"
+3. Paste bridge line di atas
+4. Klik Connect
+
+Port yang perlu dibuka (via IPC):
+```bash
+sudo ipc enable 8443 both tcp   # OR Port
+sudo ipc enable 9443 both tcp   # PT Port (obfs4)
+```
+
+> ⚠️ File `obfs4_bridgeline.txt` di dalam container berisi template dengan placeholder `<IP ADDRESS>`, `<PORT>`, dan `<FINGERPRINT>`. Script `auto-install-obfs4.sh` akan menggantinya secara otomatis dengan nilai asli.
+>
+> 📌 Bridge yang baru pertama kali jalan butuh beberapa jam–24 jam untuk terdaftar di BridgeDB Tor Project. Untuk penggunaan pribadi, bridge line bisa langsung dipakai via "Provide a bridge I know".
+
 ### ☁️ Cloudflare Tunnel
 Mengakses layanan tanpa membuka port firewall.
 - 📖 [Panduan Cloudflare Tunnel](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
@@ -406,6 +457,8 @@ sudo ipc init
 # 3. Buka port layanan spesifik
 sudo ipc enable 5000  # Nextcloud
 sudo ipc enable 5353  # Pi-Hole
+sudo ipc enable 8443  # obfs4 OR Port
+sudo ipc enable 9443  # obfs4 PT Port
 
 # 4. Verifikasi status
 sudo ipc status
@@ -421,6 +474,7 @@ sudo ipc persist
 - 📊 Aktifkan health check menggunakan Uptime Kuma
 - 💾 Pencadangan rutin dengan `chantik backup`
 - 🔥 Audit aturan firewall secara berkala dengan `ipc status`
+- 🛡️ Jangan bagikan bridge line obfs4 ke publik — bridge pribadi lebih aman dan stabil
 
 ## 📜 Lisensi
 
@@ -434,4 +488,4 @@ Lisensi MIT – lihat file [LICENSE](LICENSE) untuk detail.
 | Wiki Resmi | [Digital Independence Wiki](https://git.ricalnet.my.id/rical/digital-independence/wiki) |
 | Dokumentasi IPC | [Iptables Port Controller](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall) |
 | Dokumentasi Deployment | [Deployment Guide](https://git.ricalnet.my.id/rical/digital-independence/wiki/Panduan-Penerapan-Digital-Independence) |
-| Chantik | [Encrypted Backup Tool](https://git.ricalnet.my.id/rical/digital-independence/wiki/Chantik+%E2%80%94+ChaCha20-Authenticated+Backup+Protection.-)
+| Chantik | [Encrypted Backup Tool](https://git.ricalnet.my.id/rical/digital-independence/wiki/Chantik+%E2%80%94+ChaCha20-Authenticated+Backup+Protection.-) |

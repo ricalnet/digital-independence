@@ -1,0 +1,65 @@
+services:
+  obfs4-bridge:
+    image: ${OBFS4_BRIDGE_IMAGE:-thetorproject/obfs4-bridge:latest}
+    container_name: obfs4-bridge
+    restart: unless-stopped
+    networks:
+      - obfs4_bridge_external_network
+    environment:
+      - OR_PORT=${OR_PORT:?Env var OR_PORT is not set.}
+      - PT_PORT=${PT_PORT:?Env var PT_PORT is not set.}
+      - EMAIL=${EMAIL:?Env var EMAIL is not set.}
+      - NICKNAME=${NICKNAME:-DockerObfs4Bridge}
+    env_file:
+      - .env
+    volumes:
+      - data:/var/lib/tor
+    ports:
+      - "${OBFS4_BIND_ADDRESS:-0.0.0.0}:${OR_PORT}:${OR_PORT}"
+      - "${OBFS4_BIND_ADDRESS:-0.0.0.0}:${PT_PORT}:${PT_PORT}"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          memory: 256M
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    pids_limit: 200
+    mem_swappiness: 10
+    oom_score_adj: -100
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - FOWNER
+    read_only: false
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128M
+      - /run:rw,noexec,nosuid,size=64M
+      - /var/run:rw,noexec,nosuid,size=64M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+
+volumes:
+  data:
+    name: tor-datadir-${OR_PORT}-${PT_PORT}
+
+networks:
+  obfs4_bridge_external_network:
+    external: true
+    name: obfs4_bridge_external_network
