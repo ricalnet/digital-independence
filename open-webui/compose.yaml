@@ -43,11 +43,11 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - ENABLE_DEBUG_LOGS=${ENABLE_DEBUG_LOGS:-false}
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 60s
+      start_period: 90s
     mem_limit: 2g
     mem_reservation: 512m
     cpus: 1.5

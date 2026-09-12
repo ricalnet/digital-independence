@@ -17,11 +17,11 @@ services:
       database:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:2283/server-info/health || exit 1"]
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:2283/server-info/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\""]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s
+      start_period: 120s
     mem_limit: 2g
     mem_reservation: 512m
     cpus: 2.0
@@ -78,11 +78,11 @@ services:
     environment:
       - MPLCONFIGDIR=/tmp/matplotlib
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:8000/health"]
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:2283/ping')\" || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s
+      start_period: 300s
     mem_limit: 4g
     mem_reservation: 1g
     cpus: 2.0

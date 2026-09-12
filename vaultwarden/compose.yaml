@@ -1,6 +1,6 @@
 services:
   vaultwarden:
-    image: ${VAULTWARDEN_IMAGE:-docker.io/vaultwarden/server:alpine}
+    image: ${VAULTWARDEN_IMAGE:-ghcr.io/dani-garcia/vaultwarden:latest}
     container_name: vaultwarden
     restart: unless-stopped
     env_file:
@@ -10,7 +10,7 @@ services:
     ports:
       - "${VAULTWARDEN_BIND_ADDRESS:-127.0.0.1}:${VAULTWARDEN_PORT:-8000}:80"
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:80/alive || exit 1"]
+      test: ["CMD", "./healthcheck.sh"]
       interval: 30s
       timeout: 10s
       retries: 3
