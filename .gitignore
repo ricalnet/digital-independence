@@ -83,6 +83,9 @@ mastodon/redis/
 mastodon/.env
 mastodon/.env.production
 
+# MQTT Broker
+mqtt-broker/.env
+
 # Navidrome
 navidrome/data/
 navidrome/music/

@@ -1,0 +1,21 @@
+# Admin User 1
+user admin
+topic readwrite #
+topic read $SYS/#
+
+# Admin User 2 (Health Check)
+user mqtt_user
+topic readwrite #
+topic read $SYS/#
+
+# Regular User
+user user
+topic read sensors/#
+topic read devices/#
+topic readwrite notifications/#
+topic write commands/#
+topic read status/#
+
+# Pattern-based ACL
+pattern readwrite home/%u/#
+pattern readwrite user/%u/#

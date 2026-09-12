@@ -1,0 +1,57 @@
+services:
+  mqtt-broker:
+    image: ${MOSQUITTO_IMAGE:-docker.io/eclipse-mosquitto:latest}
+    container_name: mosquitto-local
+    restart: unless-stopped
+    ports:
+      - "${MQTT_BIND_ADDRESS:-127.0.0.1}:${MQTT_PORT:-1883}:1883"
+      - "${MQTT_BIND_ADDRESS:-127.0.0.1}:${MQTT_WS_PORT:-9001}:9001"
+    volumes:
+      - mosquitto_config:/mosquitto/config:rw
+      - mosquitto_data:/mosquitto/data:rw
+      - mosquitto_log:/mosquitto/log:rw
+    mem_limit: 128m
+    mem_reservation: 32m
+    cpus: 0.3
+    pids_limit: 100
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - FOWNER
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32M
+      - /run:rw,noexec,nosuid,size=32M
+      - /var/run:rw,noexec,nosuid,size=32M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_pub -h localhost -i healthcheck-pub -t healthcheck/ping -m ok || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    stop_grace_period: 30s
+
+volumes:
+  mosquitto_config:
+    name: mosquitto_config
+  mosquitto_data:
+    name: mosquitto_data
+  mosquitto_log:
+    name: mosquitto_log
+
+networks:
+  mqtt-network:
+    name: mqtt_network
+    driver: bridge

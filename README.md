@@ -11,12 +11,13 @@
 [![Pemeliharaan](https://img.shields.io/badge/Dipelihara%3F-ya-hijau.svg)](https://github.com/ricalnet/digital-independence/graphs/commit-activity)
 [![Cadangan](https://img.shields.io/badge/Cadangan-ChaCha20--Poly1305-8A2BE2?logo=openssl&logoColor=putih)](https://github.com/ricalnet/digital-independence#-chantik-encrypted-backup--restore)
 [![Firewall](https://img.shields.io/badge/Firewall-IPC_(Iptables)-FF6B6B?logo=linux&logoColor=putih)](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller)
+[![Hardening](https://img.shields.io/badge/Hardening-✅_Aktif-success?logo=shield&logoColor=putih)](#-hardening--resource-limits)
 
 </div>
 
 ## 📌 Apa itu Dipen?
 
-Dipen adalah solusi self-hosting lengkap yang menyediakan konfigurasi `podman-compose` untuk 24+ layanan open-source populer. Ini menghilangkan ketergantungan pada layanan cloud pihak ketiga dengan memberi Anda kendali penuh atas data dan infrastruktur Anda.
+Dipen adalah solusi self-hosting lengkap yang menyediakan konfigurasi `podman-compose` untuk 25+ layanan open-source populer. Ini menghilangkan ketergantungan pada layanan cloud pihak ketiga dengan memberi Anda kendali penuh atas data dan infrastruktur Anda.
 
 Filosofi Inti:
 - 🔒 Kepemilikan Data Total — Data Anda tetap di perangkat keras Anda, selamanya
@@ -25,6 +26,7 @@ Filosofi Inti:
 - 🎯 Pembelajaran Praktis — Bangun keterampilan DevOps nyata melalui pengalaman langsung
 - 🚀 Siap Deploy — Clone, instal, dan jalankan
 - 🔥 Keamanan Terintegrasi — Firewall bawaan dengan IPC (Iptables Controller)
+- 🛡️ Hardening Default — Semua layanan sudah di-hardening dengan resource limits
 
 ## 🏗️ Dukungan Arsitektur
 
@@ -33,7 +35,7 @@ Filosofi Inti:
 | `linux/amd64` | Intel/AMD, x86_64 | ✅ Didukung |
 | `linux/arm64` | Raspberry Pi 4/5, Apple M1/M2/M3, AWS Graviton | ✅ Didukung |
 
-## 📦 Layanan Tersedia (25 Layanan)
+## 📦 Layanan Tersedia (25+ Layanan)
 
 ### 🔐 Keamanan & Autentikasi
 
@@ -56,7 +58,8 @@ Filosofi Inti:
 |---------|-----------|------|--------|
 | Open WebUI | `open-webui/` | 3000 | Antarmuka obrolan untuk LLM Ollama |
 
-> Konfigurasikan dengan `OLLAMA_BASE_URL` di `.env`
+> [!TIP]
+> Konfigurasikan Open WebUI dengan `OLLAMA_BASE_URL` di `.env`
 
 ### 🖥️ Manajemen & Pemantauan
 
@@ -111,6 +114,7 @@ Filosofi Inti:
 |---------|-----------|------|--------|
 | Mastodon | `mastodon/` | 4000, 4001 | Jaringan sosial terfederasi (alternatif Twitter) |
 
+> [!IMPORTANT]
 > Mastodon memerlukan `.env` (Podman) dan `.env.production` (konfigurasi Mastodon)
 
 ### 🦊 Manajemen Kode & Repositori
@@ -119,10 +123,17 @@ Filosofi Inti:
 |---------|-----------|------|--------|
 | Forgejo | `forgejo/` | 3002 | Layanan Git self-hosted (alternatif Gitea) |
 
+### 📡 IoT & Messaging
+
+| Layanan | Direktori | Port | Tujuan |
+|---------|-----------|------|--------|
+| Mosquitto | `mqtt-broker/` | 1883, 9001 | MQTT broker untuk IoT dan messaging |
+
 Catatan Penting:
 - 🔧 Gunakan `dipen env <layanan>` untuk membuat dan mengedit file `.env` secara otomatis
 - 🏷️ Layanan menggunakan tag `latest` secara default — sematkan versi untuk stabilitas jika diperlukan
 - 🌐 Layanan terikat ke `127.0.0.1` (localhost) secara default untuk keamanan
+- 🛡️ Semua layanan sudah di-hardening dengan resource limits, security opt, dan cap drop
 - 📖 Panduan deployment dan penyesuaian lengkap tersedia di [Wiki Resmi](https://git.ricalnet.my.id/rical/digital-independence/wiki)
 
 ## 🔥 IPC: Iptables Port Controller
@@ -176,7 +187,8 @@ cd digital-independence
 ./install-podman-on-debian.sh
 ```
 
-> **📖 Panduan Instalasi Lengkap:** Untuk petunjuk detail tentang konfigurasi registri, pengaturan environment, dan penyesuaian khusus layanan, silakan merujuk ke [Wiki Deployment](https://git.ricalnet.my.id/rical/digital-independence/wiki).
+> [!TIP]
+> Untuk petunjuk detail tentang konfigurasi registri, pengaturan environment, dan penyesuaian khusus layanan, silakan merujuk ke [Wiki Deployment](https://git.ricalnet.my.id/rical/digital-independence/wiki/Mulai-Cepat).
 
 ### Langkah 3: Konfigurasi & Mulai Layanan
 ```bash
@@ -344,9 +356,10 @@ sudo ipc enable 8443 both tcp   # OR Port
 sudo ipc enable 9443 both tcp   # PT Port (obfs4)
 ```
 
-> ⚠️ File `obfs4_bridgeline.txt` di dalam container berisi template dengan placeholder `<IP ADDRESS>`, `<PORT>`, dan `<FINGERPRINT>`. Script `auto-install-obfs4.sh` akan menggantinya secara otomatis dengan nilai asli.
+> [!NOTE]
+> File `obfs4_bridgeline.txt` di dalam container berisi template dengan placeholder `<IP ADDRESS>`, `<PORT>`, dan `<FINGERPRINT>`. Script `auto-install-obfs4.sh` akan menggantinya secara otomatis dengan nilai asli.
 >
-> 📌 Bridge yang baru pertama kali jalan butuh beberapa jam–24 jam untuk terdaftar di BridgeDB Tor Project. Untuk penggunaan pribadi, bridge line bisa langsung dipakai via "Provide a bridge I know".
+> Bridge yang baru pertama kali jalan butuh beberapa jam–24 jam untuk terdaftar di BridgeDB Tor Project. Untuk penggunaan pribadi, bridge line bisa langsung dipakai via "Provide a bridge I know".
 
 ### ☁️ Cloudflare Tunnel
 Mengakses layanan tanpa membuka port firewall.
@@ -374,7 +387,8 @@ Mengakses layanan tanpa membuka port firewall.
 
 ## 🤖 Otomatisasi (Cron Jobs)
 
-> ⚠️ Semua cron job berjalan dalam mode **rootless**. Jangan pernah menggunakan `sudo` dengan perintah podman di cron.
+> [!WARNING]
+> Semua cron job berjalan dalam mode **rootless**. Jangan pernah menggunakan `sudo` dengan perintah podman di cron.
 
 ### Cron Job Pengguna (`crontab -e`)
 
@@ -434,7 +448,8 @@ crontab -e
 0 4 * * 0 /path/to/digital-independence/automation-scripts/system-update/system_update.sh
 ```
 
-> 📝 Ganti `/path/to/digital-independence/` dengan jalur instalasi Anda yang sebenarnya.
+> [!TIP]
+> Ganti `/path/to/digital-independence/` dengan jalur instalasi Anda yang sebenarnya.
 
 ## 🔒 Panduan Keamanan
 
@@ -444,6 +459,7 @@ crontab -e
 - 🌐 Ikat ke `127.0.0.1` (localhost) kecuali akses eksternal diperlukan
 - 📁 Atur `chmod 600 .env` untuk semua file lingkungan
 - 🔥 Konfigurasikan firewall dengan IPC — hanya buka port yang diperlukan
+- 🛡️ Verifikasi hardening dengan `podman inspect <container>`
 
 ### Firewall Best Practices
 
@@ -475,6 +491,7 @@ sudo ipc persist
 - 💾 Pencadangan rutin dengan `chantik backup`
 - 🔥 Audit aturan firewall secara berkala dengan `ipc status`
 - 🛡️ Jangan bagikan bridge line obfs4 ke publik — bridge pribadi lebih aman dan stabil
+- 🔐 Audit resource limits secara berkala dengan `podman stats`
 
 ## 📜 Lisensi
 
