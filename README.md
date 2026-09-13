@@ -17,7 +17,7 @@
 
 ## 📌 Apa itu Dipen?
 
-Dipen adalah solusi self-hosting lengkap yang menyediakan konfigurasi `podman-compose` untuk 25+ layanan open-source populer. Ini menghilangkan ketergantungan pada layanan cloud pihak ketiga dengan memberi Anda kendali penuh atas data dan infrastruktur Anda.
+Dipen adalah solusi self-hosting yang menyediakan konfigurasi `podman-compose` untuk 25+ layanan open-source populer. Ini menghilangkan ketergantungan pada layanan cloud pihak ketiga dengan memberi Anda kendali penuh atas data dan infrastruktur Anda.
 
 Filosofi Inti:
 - 🔒 Kepemilikan Data Total — Data Anda tetap di perangkat keras Anda, selamanya
@@ -27,6 +27,23 @@ Filosofi Inti:
 - 🚀 Siap Deploy — Clone, instal, dan jalankan
 - 🔥 Keamanan Terintegrasi — Firewall bawaan dengan IPC (Iptables Controller)
 - 🛡️ Hardening Default — Semua layanan sudah di-hardening dengan resource limits
+
+## 🆚 Perbandingan dengan Proyek Serupa
+
+| Aspek | Dipen | YunoHost | Cloudron | Umbrel | Coolify |
+|-------|-----------|----------|----------|--------|---------|
+| Model | Kumpulan Compose terkurasi | App store + integrasi sistem | App store terkelola | OS cloud pribadi | PaaS self-hosted |
+| Runtime | Podman (rootless) | Docker | Docker | Docker | Docker |
+| Rootless native (tanpa daemon root) | ✅ Ya | ❌ Tidak | ❌ Tidak | ❌ Tidak | ❌ Tidak |
+| Firewall bawaan (default-deny) | ✅ IPC (Iptables) | ⚠️ Manual | ⚠️ Terbatas | ⚠️ Terbatas | ⚠️ Manual |
+| Backup terenkripsi ChaCha20 | ✅ Chantik | ⚠️ Umum | ✅ (fitur berbayar) | ⚠️ Umum | ⚠️ Umum |
+| Lisensi | MIT | Open source | Proprietary (Freemium) | Open source | Open source |
+| Layanan | 25+ terkurasi | 500+ | 100+ | 120+ | Tak terbatas |
+| Kesulitan | Menengah | Rendah | Rendah | Sangat rendah | Menengah–Tinggi |
+| Cocok untuk | Pengguna CLI yang ingin kontrol penuh | Pemula yang ingin serba instan | Tim kecil yang ingin produk jadi | Pengguna non-teknis | Developer yang deploy aplikasi sendiri |
+
+> [!TIP]
+> Ingin langsung pakai gunakan YunoHost/Cloudron. Ingin kontrol penuh + keamanan bawaan + belajar DevOps gunakan Dipen.
 
 ## 🏗️ Dukungan Arsitektur
 
@@ -45,6 +62,9 @@ Filosofi Inti:
 | Pi-hole | `pi-hole/` | 53, 8080 | Pemblokiran iklan seluruh jaringan dan penyaringan DNS |
 | Vaultwarden | `vaultwarden/` | 8000 | Pengelola kata sandi ringan kompatibel Bitwarden |
 | Authentik | `authentik/` | 9000, 9443 | Manajemen identitas dan akses lengkap (SSO) |
+
+> [!WARNING]
+> Wazuh belum diuji di Podman semenjak migrasi dari Docker. Konfigurasi Wazuh sebelumnya telah diuji dan berjalan dengan baik di Docker, namun belum diverifikasi ulang setelah migrasi ke Podman. Gunakan dengan hati-hati dan laporkan jika menemukan masalah.
 
 ### 🛡️ Privasi & Anonimitas
 
@@ -113,6 +133,9 @@ Filosofi Inti:
 | Layanan | Direktori | Port | Tujuan |
 |---------|-----------|------|--------|
 | Mastodon | `mastodon/` | 4000, 4001 | Jaringan sosial terfederasi (alternatif Twitter) |
+
+> [!WARNING]
+> Mastodon belum diuji di Podman semenjak migrasi dari Docker. Konfigurasi Mastodon sebelumnya telah diuji dan berjalan dengan baik di Docker, namun belum diverifikasi ulang setelah migrasi ke Podman. Gunakan dengan hati-hati dan laporkan jika menemukan masalah.
 
 > [!IMPORTANT]
 > Mastodon memerlukan `.env` (Podman) dan `.env.production` (konfigurasi Mastodon)
