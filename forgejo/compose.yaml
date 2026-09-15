@@ -44,11 +44,11 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
-    mem_limit: 768m
-    mem_reservation: 256m
-    cpus: 0.8
+    mem_limit: 512m
+    mem_reservation: 192m
+    memswap_limit: 640m
+    cpus: 0.5
     pids_limit: 300
-    mem_swappiness: 10
     oom_score_adj: -100
     security_opt:
       - no-new-privileges=true
@@ -84,9 +84,9 @@ services:
       POSTGRES_PASSWORD: ${FORGEJO_DB_PASS}
       POSTGRES_DB: ${FORGEJO_DB_NAME:-forgejo}
       POSTGRES_INITDB_ARGS: "--data-checksums"
-      POSTGRES_SHARED_BUFFERS: ${POSTGRES_SHARED_BUFFERS:-128MB}
-      POSTGRES_EFFECTIVE_CACHE_SIZE: ${POSTGRES_EFFECTIVE_CACHE_SIZE:-256MB}
-      POSTGRES_MAINTENANCE_WORK_MEM: ${POSTGRES_MAINTENANCE_WORK_MEM:-64MB}
+      POSTGRES_SHARED_BUFFERS: ${POSTGRES_SHARED_BUFFERS:-96MB}
+      POSTGRES_EFFECTIVE_CACHE_SIZE: ${POSTGRES_EFFECTIVE_CACHE_SIZE:-192MB}
+      POSTGRES_MAINTENANCE_WORK_MEM: ${POSTGRES_MAINTENANCE_WORK_MEM:-48MB}
       POSTGRES_WORK_MEM: ${POSTGRES_WORK_MEM:-8MB}
       POSTGRES_MAX_CONNECTIONS: ${POSTGRES_MAX_CONNECTIONS:-50}
     volumes:
@@ -101,9 +101,9 @@ services:
       start_period: 60s
     mem_limit: 384m
     mem_reservation: 128m
+    memswap_limit: 448m
     cpus: 0.4
     pids_limit: 150
-    mem_swappiness: 10
     oom_score_adj: -500
     security_opt:
       - no-new-privileges=true

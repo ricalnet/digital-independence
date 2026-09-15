@@ -16,22 +16,14 @@ services:
       timeout: 10s
       retries: 3
       start_period: 20s
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.5'
-        reservations:
-          memory: 64M
-          cpus: '0.1'
-    mem_limit: 256m
+    mem_limit: 192m
     mem_reservation: 64m
-    cpus: 0.5
+    memswap_limit: 192m
+    cpus: 0.3
     pids_limit: 100
-    mem_swappiness: 10
     oom_score_adj: -100
     cpu_period: 100000
-    cpu_quota: 50000
+    cpu_quota: 30000
     security_opt:
       - no-new-privileges=true
     cap_drop:

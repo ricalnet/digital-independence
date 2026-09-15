@@ -17,18 +17,11 @@ services:
     ports:
       - "${OBFS4_BIND_ADDRESS:-0.0.0.0}:${OR_PORT}:${OR_PORT}"
       - "${OBFS4_BIND_ADDRESS:-0.0.0.0}:${PT_PORT}:${PT_PORT}"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          memory: 256M
-    mem_limit: 512m
-    mem_reservation: 256m
-    cpus: 0.5
+    mem_limit: 384m
+    mem_reservation: 192m
+    memswap_limit: 448m
+    cpus: 0.3
     pids_limit: 200
-    mem_swappiness: 10
     oom_score_adj: -100
     security_opt:
       - no-new-privileges=true

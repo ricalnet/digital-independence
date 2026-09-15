@@ -39,11 +39,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-    mem_limit: 768m
-    mem_reservation: 256m
-    cpus: 1.0
+    mem_limit: 640m
+    mem_reservation: 192m
+    memswap_limit: 768m
+    cpus: 0.5
     pids_limit: 200
-    mem_swappiness: 10
     oom_score_adj: -100
     tmpfs:
       - /tmp:rw,noexec,nosuid,size=128M
@@ -68,13 +68,13 @@ services:
     image: ${REDIS_IMAGE:-docker.io/redis:alpine}
     restart: unless-stopped
     command: >
-      redis-server 
-      --appendonly yes 
-      --appendfsync everysec 
-      --save 60 1 
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --save 60 1
       --requirepass ${REDIS_PASSWORD}
       --dir /data
-      --maxmemory 256mb
+      --maxmemory 128mb
       --maxmemory-policy allkeys-lru
       --rename-command FLUSHALL ""
       --rename-command FLUSHDB ""
@@ -89,11 +89,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
-    mem_limit: 256m
-    mem_reservation: 64m
-    cpus: 0.5
+    mem_limit: 192m
+    mem_reservation: 48m
+    memswap_limit: 192m
+    cpus: 0.3
     pids_limit: 50
-    mem_swappiness: 0
     oom_score_adj: -800
     security_opt:
       - no-new-privileges=true

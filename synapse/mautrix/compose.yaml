@@ -7,6 +7,7 @@ services:
       POSTGRES_DB: ${MAUTRIX_POSTGRES_DB:-mautrix}
       POSTGRES_USER: ${MAUTRIX_POSTGRES_USER:-mautrix}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--data-checksums"
       POSTGRES_SHARED_BUFFERS: ${POSTGRES_SHARED_BUFFERS:-128MB}
       POSTGRES_EFFECTIVE_CACHE_SIZE: ${POSTGRES_EFFECTIVE_CACHE_SIZE:-256MB}
       POSTGRES_MAINTENANCE_WORK_MEM: ${POSTGRES_MAINTENANCE_WORK_MEM:-64MB}
@@ -22,10 +23,12 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
-    mem_limit: 512m
-    mem_reservation: 128m
-    cpus: 0.5
+    mem_limit: 384m
+    mem_reservation: 96m
+    memswap_limit: 448m
+    cpus: 0.4
     pids_limit: 200
+    oom_score_adj: -500
     security_opt:
       - no-new-privileges=true
     cap_drop:
@@ -49,6 +52,7 @@ services:
         max-file: "5"
         compress: "true"
     stop_grace_period: 60s
+    stop_signal: SIGTERM
 
   mautrix-telegram:
     container_name: mautrix-telegram
@@ -84,8 +88,10 @@ services:
       start_period: 30s
     mem_limit: 256m
     mem_reservation: 64m
+    memswap_limit: 320m
     cpus: 0.3
     pids_limit: 100
+    oom_score_adj: -100
     logging:
       driver: "json-file"
       options:
@@ -93,6 +99,7 @@ services:
         max-file: "5"
         compress: "true"
     stop_grace_period: 30s
+    stop_signal: SIGTERM
     environment:
       - TZ=${TZ:-Asia/Jakarta}
 
@@ -130,8 +137,10 @@ services:
       start_period: 30s
     mem_limit: 256m
     mem_reservation: 64m
+    memswap_limit: 320m
     cpus: 0.3
     pids_limit: 100
+    oom_score_adj: -100
     logging:
       driver: "json-file"
       options:
@@ -139,6 +148,7 @@ services:
         max-file: "5"
         compress: "true"
     stop_grace_period: 30s
+    stop_signal: SIGTERM
     environment:
       - TZ=${TZ:-Asia/Jakarta}
 

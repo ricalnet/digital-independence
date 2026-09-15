@@ -14,7 +14,7 @@ services:
       - UPTIME_KUMA_PORT=3001
       - UPTIME_KUMA_HOST=0.0.0.0
       - DEBUG=${DEBUG:-false}
-      - NODE_OPTIONS=--max-old-space-size=350
+      - NODE_OPTIONS=--max-old-space-size=256
       - SKIP_CHOWN=true
     healthcheck:
       test: ["CMD-SHELL", "node extra/healthcheck.js"]
@@ -22,11 +22,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 180s
-    mem_limit: 512m
+    mem_limit: 448m
     mem_reservation: 128m
-    cpus: 0.6
+    memswap_limit: 512m
+    cpus: 0.4
     pids_limit: 200
-    mem_swappiness: 10
     oom_score_adj: -100
     logging:
       driver: "json-file"

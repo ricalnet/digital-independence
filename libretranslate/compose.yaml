@@ -15,10 +15,10 @@ services:
     environment:
       - LT_LOAD_ONLY=${LT_LOAD_ONLY:-en,id,ja,zh,es,fr,de}
       - LT_DEBUG=${LT_DEBUG:-false}
-      - LT_THREADS=${LT_THREADS:-4}
+      - LT_THREADS=${LT_THREADS:-2}
       - LT_UPDATE_MODELS=${LT_UPDATE_MODELS:-false}
       - LT_REQ_LIMIT=${LT_REQ_LIMIT:-60}
-      - LT_SERVER_WORKERS=${LT_SERVER_WORKERS:-4}
+      - LT_SERVER_WORKERS=${LT_SERVER_WORKERS:-2}
       - LT_SSL=${LT_SSL:-false}
       - LT_API_KEYS=${LT_API_KEYS:-false}
       - LT_DISABLE_WEB_UI=${LT_DISABLE_WEB_UI:-false}
@@ -29,11 +29,11 @@ services:
       - LT_FRONTEND_LANGUAGE_TARGET=${LT_FRONTEND_LANGUAGE_TARGET:-id}
     volumes:
       - libretranslate_models:/home/libretranslate/.local:rw
-    mem_limit: 1g
+    mem_limit: 896m
     mem_reservation: 256m
-    cpus: 1.0
+    memswap_limit: 1g
+    cpus: 0.8
     pids_limit: 200
-    mem_swappiness: 10
     oom_score_adj: -100
     security_opt:
       - no-new-privileges=true

@@ -31,7 +31,8 @@ services:
       start_period: 60s
     mem_limit: 256m
     mem_reservation: 64m
-    cpus: 0.5
+    memswap_limit: 320m
+    cpus: 0.4
     pids_limit: 100
     security_opt:
       - no-new-privileges=true
@@ -66,6 +67,10 @@ services:
       MYSQL_DATABASE: ${YOURLS_DB_NAME:-yourls}
       MYSQL_USER: ${YOURLS_DB_USER:-yourls}
       MYSQL_PASSWORD: ${YOURLS_DB_PASS}
+    command: >
+      --innodb-buffer-pool-size=64M
+      --performance-schema=OFF
+      --max-connections=50
     volumes:
       - yourls_mysql_data:/var/lib/mysql
     healthcheck:
@@ -74,8 +79,9 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
-    mem_limit: 256m
-    mem_reservation: 64m
+    mem_limit: 320m
+    mem_reservation: 96m
+    memswap_limit: 384m
     cpus: 0.3
     pids_limit: 100
     security_opt:

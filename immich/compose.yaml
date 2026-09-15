@@ -24,9 +24,9 @@ services:
       start_period: 120s
     mem_limit: 2g
     mem_reservation: 512m
-    cpus: 2.0
+    memswap_limit: 2.5g
+    cpus: 1.5
     pids_limit: 500
-    mem_swappiness: 10
     oom_score_adj: -100
     security_opt:
       - no-new-privileges=true
@@ -83,11 +83,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 300s
-    mem_limit: 4g
-    mem_reservation: 1g
-    cpus: 2.0
+    mem_limit: 3g
+    mem_reservation: 768m
+    memswap_limit: 3.5g
+    cpus: 1.5
     pids_limit: 300
-    mem_swappiness: 10
     oom_score_adj: -50
     security_opt:
       - no-new-privileges=true
@@ -125,7 +125,7 @@ services:
       --bind 0.0.0.0
       --port 6379
       --requirepass ${REDIS_PASSWORD}
-      --maxmemory 256mb
+      --maxmemory 384mb
       --maxmemory-policy noeviction
       --save 900 1
       --save 300 10
@@ -143,9 +143,9 @@ services:
       start_period: 10s
     mem_limit: 512m
     mem_reservation: 128m
+    memswap_limit: 512m
     cpus: 0.5
     pids_limit: 100
-    mem_swappiness: 0
     oom_score_adj: -800
     security_opt:
       - no-new-privileges=true
@@ -185,7 +185,7 @@ services:
       POSTGRES_SHARED_BUFFERS: ${DB_SHARED_BUFFERS:-512MB}
       POSTGRES_EFFECTIVE_CACHE_SIZE: ${DB_EFFECTIVE_CACHE_SIZE:-1GB}
       POSTGRES_MAINTENANCE_WORK_MEM: ${DB_MAINTENANCE_WORK_MEM:-128MB}
-      POSTGRES_WORK_MEM: ${DB_WORK_MEM:-32MB}
+      POSTGRES_WORK_MEM: ${DB_WORK_MEM:-64MB}
       POSTGRES_MAX_CONNECTIONS: ${DB_MAX_CONNECTIONS:-100}
     volumes:
       - immich-postgres:/var/lib/postgresql/data:rw
@@ -198,9 +198,9 @@ services:
       start_period: 60s
     mem_limit: 2g
     mem_reservation: 512m
+    memswap_limit: 2.5g
     cpus: 1.5
     pids_limit: 300
-    mem_swappiness: 10
     oom_score_adj: -500
     security_opt:
       - no-new-privileges=true

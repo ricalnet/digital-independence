@@ -22,9 +22,10 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-    mem_limit: ${MEMORY_LIMIT:-2g}
-    mem_reservation: ${MEMORY_RESERVATION:-512m}
-    cpus: ${CPU_LIMIT:-2.0}
+    mem_limit: ${MEMORY_LIMIT:-1536m}
+    mem_reservation: ${MEMORY_RESERVATION:-384m}
+    memswap_limit: ${MEMSWAP_LIMIT:-1792m}
+    cpus: ${CPU_LIMIT:-1.5}
     pids_limit: 500
     security_opt:
       - no-new-privileges=true

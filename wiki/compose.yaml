@@ -22,8 +22,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-    mem_limit: 384m
-    cpus: 0.5
+    mem_limit: 320m
+    mem_reservation: 96m
+    memswap_limit: 384m
+    cpus: 0.4
+    pids_limit: 200
     security_opt:
       - no-new-privileges=true
     cap_drop:
@@ -52,6 +55,9 @@ services:
       MYSQL_DATABASE: mediawiki
       MYSQL_USER: mediawiki
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    command: >
+      --innodb-buffer-pool-size=64M
+      --performance-schema=OFF
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
@@ -60,8 +66,11 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
-    mem_limit: 384m
+    mem_limit: 320m
+    mem_reservation: 96m
+    memswap_limit: 384m
     cpus: 0.3
+    pids_limit: 100
     security_opt:
       - no-new-privileges=true
     cap_drop:

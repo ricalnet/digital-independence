@@ -18,11 +18,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
-    mem_limit: 512m
-    mem_reservation: 128m
-    cpus: 0.8
+    mem_limit: 384m
+    mem_reservation: 96m
+    memswap_limit: 448m
+    cpus: 0.4
     pids_limit: 200
-    mem_swappiness: 10
     oom_score_adj: -100
     security_opt:
       - no-new-privileges=true

@@ -15,9 +15,10 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-    mem_limit: 512m
-    mem_reservation: 128m
-    cpus: 0.8
+    mem_limit: 384m
+    mem_reservation: 96m
+    memswap_limit: 448m
+    cpus: 0.4
     pids_limit: 200
     security_opt:
       - no-new-privileges=true
@@ -55,7 +56,7 @@ services:
       - SIGNUPS_VERIFY=${SIGNUPS_VERIFY:-true}
       - ADMIN_TOKEN=${ADMIN_TOKEN:-}
       - ROCKET_PORT=80
-      - ROCKET_WORKERS=${ROCKET_WORKERS:-4}
+      - ROCKET_WORKERS=${ROCKET_WORKERS:-2}
       - ROCKET_KEEP_ALIVE=${ROCKET_KEEP_ALIVE:-30}
       - ROCKET_LIMITS={json=10485760, forms=10485760}
       - DATABASE_MAX_CONNECTIONS=${DATABASE_MAX_CONNECTIONS:-10}
@@ -76,7 +77,7 @@ services:
       --save 60 1
       --appendonly no
       --requirepass ${REDIS_PASSWORD}
-      --maxmemory 128mb
+      --maxmemory 96mb
       --maxmemory-policy allkeys-lru
       --rename-command FLUSHALL ""
       --rename-command FLUSHDB ""
@@ -109,7 +110,8 @@ services:
       start_period: 10s
     mem_limit: 128m
     mem_reservation: 32m
-    cpus: 0.3
+    memswap_limit: 128m
+    cpus: 0.2
     pids_limit: 50
     oom_score_adj: -800
     stop_grace_period: 30s

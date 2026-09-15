@@ -7,7 +7,7 @@ services:
       valkey-server
       --save 30 1
       --loglevel warning
-      --maxmemory 200mb
+      --maxmemory 128mb
       --maxmemory-policy allkeys-lru
       --appendonly no
       --protected-mode yes
@@ -29,11 +29,11 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-    mem_limit: 256m
-    mem_reservation: 64m
-    cpus: 0.3
+    mem_limit: 192m
+    mem_reservation: 48m
+    memswap_limit: 192m
+    cpus: 0.2
     pids_limit: 100
-    mem_swappiness: 0
     oom_score_adj: -800
     security_opt:
       - no-new-privileges=true
@@ -83,11 +83,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
-    mem_limit: 768m
-    mem_reservation: 256m
-    cpus: 1.0
+    mem_limit: 640m
+    mem_reservation: 192m
+    memswap_limit: 768m
+    cpus: 0.6
     pids_limit: 300
-    mem_swappiness: 10
     oom_score_adj: -100
     security_opt:
       - no-new-privileges=true

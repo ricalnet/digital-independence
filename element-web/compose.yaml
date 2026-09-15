@@ -13,8 +13,8 @@ services:
     environment:
       - ELEMENT_WEB_PORT=80
       - NODE_ENV=production
-      - NGINX_WORKER_PROCESSES=${NGINX_WORKER_PROCESSES:-auto}
-      - NGINX_WORKER_CONNECTIONS=${NGINX_WORKER_CONNECTIONS:-1024}
+      - NGINX_WORKER_PROCESSES=${NGINX_WORKER_PROCESSES:-2}
+      - NGINX_WORKER_CONNECTIONS=${NGINX_WORKER_CONNECTIONS:-512}
       - NGINX_KEEPALIVE_TIMEOUT=${NGINX_KEEPALIVE_TIMEOUT:-65}
       - NGINX_CLIENT_MAX_BODY_SIZE=${NGINX_CLIENT_MAX_BODY_SIZE:-10M}
       - ELEMENT_WEB_SECURITY_HEADERS=${ELEMENT_WEB_SECURITY_HEADERS:-1}
@@ -24,8 +24,10 @@ services:
       timeout: 10s
       retries: 3
       start_period: 15s
-    mem_limit: 512m
-    cpus: 0.8
+    mem_limit: 384m
+    mem_reservation: 96m
+    memswap_limit: 448m
+    cpus: 0.4
     pids_limit: 100
     security_opt:
       - no-new-privileges=true
