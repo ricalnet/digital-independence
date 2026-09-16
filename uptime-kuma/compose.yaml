@@ -16,6 +16,7 @@ services:
       - DEBUG=${DEBUG:-false}
       - NODE_OPTIONS=--max-old-space-size=256
       - SKIP_CHOWN=true
+      - NODE_OPTIONS=--dns-result-order=ipv4first
     healthcheck:
       test: ["CMD-SHELL", "node extra/healthcheck.js"]
       interval: 60s
