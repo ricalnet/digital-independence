@@ -1,0 +1,41 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 12h
+  receiver: 'default'
+  routes:
+    - matchers:
+        - severity = "critical"
+      receiver: 'critical'
+      continue: true
+    - matchers:
+        - severity = "warning"
+      receiver: 'warning'
+      continue: true
+
+receivers:
+  - name: 'default'
+    webhook_configs:
+      - url: 'http://ntfy-server:80/alertmanager'
+        send_resolved: true
+
+  - name: 'critical'
+    webhook_configs:
+      - url: 'http://ntfy-server:80/critical-alerts'
+        send_resolved: true
+
+  - name: 'warning'
+    webhook_configs:
+      - url: 'http://ntfy-server:80/warning-alerts'
+        send_resolved: true
+
+inhibit_rules:
+  - source_matchers:
+      - severity = "critical"
+    target_matchers:
+      - severity = "warning"
+    equal: ['alertname', 'instance']

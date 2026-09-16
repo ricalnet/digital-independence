@@ -2,270 +2,288 @@
 
 # Digital Independence
 
-**Kembalikan kendali atas kehidupan digital Anda, satu container pada satu waktu.**
+**Take back control of your digital life, one container at a time.**
 
-[![Lisensi: MIT](https://img.shields.io/badge/Lisensi-MIT-kuning.svg)](https://opensource.org/licenses/MIT)
-[![Podman](https://img.shields.io/badge/Podman-5+-2496ED?logo=podman&logoColor=putih)](https://podman.io/)
-[![Rootless](https://img.shields.io/badge/Rootless-✅_Didukung-8A2BE2?logo=podman&logoColor=putih)](https://podman.io/docs/rootless)
-[![Arsitektur](https://img.shields.io/badge/Arsitektur-amd64_|_arm64-4EAA25?logo=linux&logoColor=putih)](https://hub.docker.com/)
-[![Pemeliharaan](https://img.shields.io/badge/Dipelihara%3F-ya-hijau.svg)](https://github.com/ricalnet/digital-independence/graphs/commit-activity)
-[![Cadangan](https://img.shields.io/badge/Cadangan-ChaCha20--Poly1305-8A2BE2?logo=openssl&logoColor=putih)](https://github.com/ricalnet/digital-independence#-chantik-encrypted-backup--restore)
-[![Firewall](https://img.shields.io/badge/Firewall-IPC_(Iptables)-FF6B6B?logo=linux&logoColor=putih)](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller)
-[![Hardening](https://img.shields.io/badge/Hardening-✅_Aktif-success?logo=shield&logoColor=putih)](#-hardening--resource-limits)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Podman](https://img.shields.io/badge/Podman-5+-2496ED?logo=podman&logoColor=white)](https://podman.io/)
+[![Rootless](https://img.shields.io/badge/Rootless-✅_Supported-8A2BE2?logo=podman&logoColor=white)](https://podman.io/docs/rootless)
+[![Architecture](https://img.shields.io/badge/Architecture-amd64_|_arm64-4EAA25?logo=linux&logoColor=white)](https://hub.docker.com/)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/ricalnet/digital-independence/graphs/commit-activity)
+[![Backup](https://img.shields.io/badge/Backup-ChaCha20--Poly1305-8A2BE2?logo=openssl&logoColor=white)](https://github.com/ricalnet/digital-independence#-chantik-encrypted-backup--restore)
+[![Firewall](https://img.shields.io/badge/Firewall-IPC_(Iptables)-FF6B6B?logo=linux&logoColor=white)](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller)
+[![Hardening](https://img.shields.io/badge/Hardening-✅_Active-success?logo=shield&logoColor=white)](#-hardening--resource-limits)
 
 </div>
 
-## 📌 Apa itu Dipen?
+## 📌 What is Dipen?
 
-Dipen adalah solusi self-hosting yang menyediakan konfigurasi `podman-compose` untuk 25+ layanan open-source populer. Ini menghilangkan ketergantungan pada layanan cloud pihak ketiga dengan memberi Anda kendali penuh atas data dan infrastruktur Anda.
+Dipen is a self-hosting solution that provides `podman-compose` configurations for 25+ popular open-source services. It eliminates dependency on third-party cloud services by giving you full control over your data and infrastructure.
 
-Filosofi Inti:
-- 🔒 Kepemilikan Data Total — Data Anda tetap di perangkat keras Anda, selamanya
-- 💰 Tanpa Biaya Berulang — Bayar sekali untuk perangkat keras, gratis selamanya
-- 🔄 Kebebasan Penuh — Ganti, modifikasi, atau ganti layanan apa pun kapan saja
-- 🎯 Pembelajaran Praktis — Bangun keterampilan DevOps nyata melalui pengalaman langsung
-- 🚀 Siap Deploy — Clone, instal, dan jalankan
-- 🔥 Keamanan Terintegrasi — Firewall bawaan dengan IPC (Iptables Controller)
-- 🛡️ Hardening Default — Semua layanan sudah di-hardening dengan resource limits
+Core Philosophy:
+- 🔒 Total Data Ownership — Your data stays on your hardware, forever
+- 💰 No Recurring Costs — Pay once for hardware, free forever
+- 🔄 Complete Freedom — Swap, modify, or replace any service anytime
+- 🎯 Hands-On Learning — Build real DevOps skills through direct experience
+- 🚀 Ready to Deploy — Clone, install, and run
+- 🔥 Integrated Security — Built-in firewall with IPC (Iptables Controller)
+- 🛡️ Default Hardening — All services are hardened with resource limits
 
-## 🆚 Perbandingan dengan Proyek Serupa
+## 🆚 Comparison with Similar Projects
 
-| Aspek | Dipen | YunoHost | Cloudron | Umbrel | Coolify |
+| Aspect | Dipen | YunoHost | Cloudron | Umbrel | Coolify |
 |-------|-----------|----------|----------|--------|---------|
-| Model | Kumpulan Compose terkurasi | App store + integrasi sistem | App store terkelola | OS cloud pribadi | PaaS self-hosted |
+| Model | Curated Compose collection | App store + system integration | Managed app store | Personal cloud OS | Self-hosted PaaS |
 | Runtime | Podman (rootless) | Docker | Docker | Docker | Docker |
-| Rootless native (tanpa daemon root) | ✅ Ya | ❌ Tidak | ❌ Tidak | ❌ Tidak | ❌ Tidak |
-| Firewall bawaan (default-deny) | ✅ IPC (Iptables) | ⚠️ Manual | ⚠️ Terbatas | ⚠️ Terbatas | ⚠️ Manual |
-| Backup terenkripsi ChaCha20 | ✅ Chantik | ⚠️ Umum | ✅ (fitur berbayar) | ⚠️ Umum | ⚠️ Umum |
-| Lisensi | MIT | Open source | Proprietary (Freemium) | Open source | Open source |
-| Layanan | 25+ terkurasi | 500+ | 100+ | 120+ | Tak terbatas |
-| Kesulitan | Menengah | Rendah | Rendah | Sangat rendah | Menengah–Tinggi |
-| Cocok untuk | Pengguna CLI yang ingin kontrol penuh | Pemula yang ingin serba instan | Tim kecil yang ingin produk jadi | Pengguna non-teknis | Developer yang deploy aplikasi sendiri |
+| Native rootless (no root daemon) | ✅ Yes | ❌ No | ❌ No | ❌ No | ❌ No |
+| Built-in firewall (default-deny) | ✅ IPC (Iptables) | ⚠️ Manual | ⚠️ Limited | ⚠️ Limited | ⚠️ Manual |
+| ChaCha20 encrypted backup | ✅ Chantik | ⚠️ Generic | ✅ (paid feature) | ⚠️ Generic | ⚠️ Generic |
+| License | MIT | Open source | Proprietary (Freemium) | Open source | Open source |
+| Services | 25+ curated | 500+ | 100+ | 120+ | Unlimited |
+| Difficulty | Intermediate | Low | Low | Very low | Intermediate–High |
+| Best for | CLI users who want full control | Beginners who want instant everything | Small teams who want a finished product | Non-technical users | Developers deploying their own apps |
 
 > [!TIP]
-> Ingin langsung pakai gunakan YunoHost/Cloudron. Ingin kontrol penuh + keamanan bawaan + belajar DevOps gunakan Dipen.
+> Want instant usability? Use YunoHost/Cloudron. Want full control + built-in security + learning DevOps? Use Dipen.
 
-## 🏗️ Dukungan Arsitektur
+## 🏗️ Architecture Support
 
-| Arsitektur | Platform | Status |
+| Architecture | Platform | Status |
 |------------|----------|--------|
-| `linux/amd64` | Intel/AMD, x86_64 | ✅ Didukung |
-| `linux/arm64` | Raspberry Pi 4/5, Apple M1/M2/M3, AWS Graviton | ✅ Didukung |
+| `linux/amd64` | Intel/AMD, x86_64 | ✅ Supported |
+| `linux/arm64` | Raspberry Pi 4/5, Apple M1/M2/M3, AWS Graviton | ✅ Supported |
 
-## 📦 Layanan Tersedia (25+ Layanan)
+## 📦 Available Services (25+ Services)
 
-### 🔐 Keamanan & Autentikasi
+### 🔐 Security & Authentication
 
-| Layanan | Direktori | Port | Tujuan |
+| Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Wazuh | `wazuh/` | 443 | Pemantauan keamanan dan deteksi ancaman |
-| Pi-hole | `pi-hole/` | 53, 8080 | Pemblokiran iklan seluruh jaringan dan penyaringan DNS |
-| Vaultwarden | `vaultwarden/` | 8000 | Pengelola kata sandi ringan kompatibel Bitwarden |
-| Authentik | `authentik/` | 9000, 9443 | Manajemen identitas dan akses lengkap (SSO) |
+| Wazuh | `wazuh/` | 443 | Security monitoring and threat detection |
+| Pi-hole | `pi-hole/` | 53, 8080 | Network-wide ad blocking and DNS filtering |
+| Vaultwarden | `vaultwarden/` | 8000 | Lightweight Bitwarden-compatible password manager |
+| Authentik | `authentik/` | 9000, 9443 | Full identity and access management (SSO) |
 
 > [!WARNING]
-> Wazuh belum diuji di Podman semenjak migrasi dari Docker. Konfigurasi Wazuh sebelumnya telah diuji dan berjalan dengan baik di Docker, namun belum diverifikasi ulang setelah migrasi ke Podman. Gunakan dengan hati-hati dan laporkan jika menemukan masalah.
+> Wazuh has not been tested on Podman since the migration from Docker. The previous Wazuh configuration was tested and worked well on Docker, but has not been re-verified after migrating to Podman. Use with caution and report any issues.
 
-### 🛡️ Privasi & Anonimitas
+### 🛡️ Privacy & Anonymity
 
-| Layanan | Direktori | Port | Tujuan |
+| Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| obfs4 Bridge | `obfs4-bridge/` | 8443, 9443 | Tor bridge obfs4 untuk membantu akses Tor di jaringan tersensor |
+| obfs4 Bridge | `obfs4-bridge/` | 8443, 9443 | obfs4 Tor bridge to help access Tor on censored networks |
 
-### 🤖 AI & Pembelajaran Mesin
+### 🤖 AI & Machine Learning
 
-| Layanan | Direktori | Port | Tujuan |
+| Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Open WebUI | `open-webui/` | 3000 | Antarmuka obrolan untuk LLM Ollama |
+| Open WebUI | `open-webui/` | 3000 | Chat interface for Ollama LLM |
 
 > [!TIP]
-> Konfigurasikan Open WebUI dengan `OLLAMA_BASE_URL` di `.env`
+> Configure Open WebUI with `OLLAMA_BASE_URL` in `.env`
 
-### 🖥️ Manajemen & Pemantauan
+### 🖥️ Management & Monitoring
 
-| Layanan | Direktori | Port | Tujuan |
+| Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Dashdot | `dashdot/` | 3001 | Dasbor server modern dengan metrik sistem |
-| Homarr | `homarr/` | 7575 | Dasbor beranda yang bersih dan dapat disesuaikan |
-| ntfy | `ntfy/` | 8010 | Layanan notifikasi pub/sub sederhana |
-| Uptime Kuma | `uptime-kuma/` | 9442 | Pemantauan uptime self-hosted |
-| Portainer | `portainer/` | 9444 | UI manajemen container untuk Podman/Docker |
+| Dashdot | `dashdot/` | 3001 | Modern server dashboard with system metrics |
+| Homarr | `homarr/` | 7575 | Clean and customizable homepage dashboard |
+| ntfy | `ntfy/` | 8010 | Simple pub/sub notification service |
+| Uptime Kuma | `uptime-kuma/` | 9442 | Self-hosted uptime monitoring |
+| Portainer | `portainer/` | 9444 | Container management UI for Podman/Docker |
 
-### 💬 Komunikasi (Ekosistem Matrix)
+### 💬 Communication (Matrix Ecosystem)
 
-| Layanan | Direktori | Port | Tujuan |
+| Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Synapse | `synapse/` | 8008, 8448 | Homeserver Matrix untuk obrolan terdesentralisasi |
-| Element Web | `element-web/` | 8009 | Klien web untuk Matrix |
-| Jembatan Mautrix | `synapse/mautrix/` | - | Jembatan Telegram & WhatsApp (compose.yaml tunggal) |
+| Synapse | `synapse/` | 8008, 8448 | Matrix homeserver for decentralized chat |
+| Element Web | `element-web/` | 8009 | Web client for Matrix |
+| Mautrix Bridges | `synapse/mautrix/` | - | Telegram & WhatsApp bridges (single compose.yaml) |
 
-### 🌐 Pencarian & Penerjemahan
+### 🌐 Search & Translation
 
-| Layanan | Direktori | Port | Tujuan |
+| Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| LibreTranslate | `libretranslate/` | 5001 | Penerjemahan mesin open-source |
-| SearXNG | `searxng/` | 8888 | Mesin pencari metasearch yang menghormati privasi |
+| LibreTranslate | `libretranslate/` | 5001 | Open-source machine translation |
+| SearXNG | `searxng/` | 8888 | Privacy-respecting metasearch engine |
 
-### 📁 Manajemen Media & Konten
+### 📁 Media & Content Management
 
-| Layanan | Direktori | Port | Tujuan |
+| Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Immich | `immich/` | 2283 | Alternatif Google Photos (self-hosted) |
-| Navidrome | `navidrome/` | 4533 | Server streaming musik (kompatibel Subsonic) |
-| Nextcloud | `nextcloud/` | 5000 | Suite produktivitas lengkap (file, kalender, kontak) |
-| Jellyfin | `jellyfin/` | 8096, 8920 | Server media lengkap (alternatif Plex) |
+| Immich | `immich/` | 2283 | Google Photos alternative (self-hosted) |
+| Navidrome | `navidrome/` | 4533 | Music streaming server (Subsonic-compatible) |
+| Nextcloud | `nextcloud/` | 5000 | Complete productivity suite (files, calendar, contacts) |
+| Jellyfin | `jellyfin/` | 8096, 8920 | Full media server (Plex alternative) |
 
-### 🔗 Manajemen Tautan
+### 🔗 Link Management
 
-| Layanan | Direktori | Port | Tujuan |
+| Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| YOURLS | `yourls/` | 8001 | Pengecil URL dengan analitik |
-| LinkStack | `linkstack/` | 8003 | Manajer berbagi tautan dan bookmark |
+| YOURLS | `yourls/` | 8001 | URL shortener with analytics |
+| LinkStack | `linkstack/` | 8003 | Link sharing and bookmark manager |
 
-### 📚 Manajemen Pengetahuan
+### 📚 Knowledge Management
 
-| Layanan | Direktori | Port | Tujuan |
+| Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| MediaWiki | `wiki/` | 8002 | Mesin wiki gaya Wikipedia |
+| MediaWiki | `wiki/` | 8002 | Wikipedia-style wiki engine |
 
-### 🐘 Media Sosial
+### 🐘 Social Media
 
-| Layanan | Direktori | Port | Tujuan |
+| Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Mastodon | `mastodon/` | 4000, 4001 | Jaringan sosial terfederasi (alternatif Twitter) |
+| Mastodon | `mastodon/` | 4000, 4001 | Federated social network (Twitter alternative) |
 
 > [!WARNING]
-> Mastodon belum diuji di Podman semenjak migrasi dari Docker. Konfigurasi Mastodon sebelumnya telah diuji dan berjalan dengan baik di Docker, namun belum diverifikasi ulang setelah migrasi ke Podman. Gunakan dengan hati-hati dan laporkan jika menemukan masalah.
+> Mastodon has not been tested on Podman since the migration from Docker. The previous Mastodon configuration was tested and worked well on Docker, but has not been re-verified after migrating to Podman. Use with caution and report any issues.
 
 > [!IMPORTANT]
-> Mastodon memerlukan `.env` (Podman) dan `.env.production` (konfigurasi Mastodon)
+> Mastodon requires `.env` (Podman) and `.env.production` (Mastodon configuration)
 
-### 🦊 Manajemen Kode & Repositori
+### 🦊 Code & Repository Management
 
-| Layanan | Direktori | Port | Tujuan |
+| Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Forgejo | `forgejo/` | 3002 | Layanan Git self-hosted (alternatif Gitea) |
+| Forgejo | `forgejo/` | 3002 | Self-hosted Git service (Gitea alternative) |
 
 ### 📡 IoT & Messaging
 
-| Layanan | Direktori | Port | Tujuan |
+| Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Mosquitto | `mqtt-broker/` | 1883, 9001 | MQTT broker untuk IoT dan messaging |
+| Mosquitto | `mqtt-broker/` | 1883, 9001 | MQTT broker for IoT and messaging |
+### 📈 Monitoring & Observability
 
-Catatan Penting:
-- 🔧 Gunakan `dipen env <layanan>` untuk membuat dan mengedit file `.env` secara otomatis
-- 🏷️ Layanan menggunakan tag `latest` secara default — sematkan versi untuk stabilitas jika diperlukan
-- 🌐 Layanan terikat ke `127.0.0.1` (localhost) secara default untuk keamanan
-- 🛡️ Semua layanan sudah di-hardening dengan resource limits, security opt, dan cap drop
-- 📖 Panduan deployment dan penyesuaian lengkap tersedia di [Wiki Resmi](https://git.ricalnet.my.id/rical/digital-independence/wiki)
+| Service | Directory | Port | Purpose |
+|---------|-----------|------|--------|
+| Prometheus | `monitoring/` | 9090 | Metric collection and time-series storage |
+| Grafana | `monitoring/` | 3000 | Metric visualization and dashboards |
+| Node Exporter | `monitoring/` | 9100 | Host system metrics (CPU, memory, disk, network) |
+| Podman Exporter | `monitoring/` | 9882 | Podman container metrics |
+| Alertmanager | `monitoring/` | 9093 | Alert management and routing |
+
+> [!NOTE]
+> The monitoring stack consists of 5 containers in a single `compose.yaml` in the `monitoring/` directory. All services bind to `127.0.0.1` by default and are hardened with resource limits, `no-new-privileges`, and `cap_drop: ALL`.
+
+> [!TIP]
+> Configure Prometheus via `monitoring/prometheus/prometheus.yml`, alert rules in `monitoring/prometheus/rules/`, and Alertmanager in `monitoring/alertmanager/alertmanager.yml`. All configuration files are mounted as read-only.
+
+> [!IMPORTANT]
+> `podman-exporter` requires access to the Podman socket. Make sure `PODMAN_SOCKET_PATH` in `.env` matches your Podman socket path (default: `/run/user/1000/podman/podman.sock`). For rootless users, the socket is usually located at `$XDG_RUNTIME_DIR/podman/podman.sock`.
+
+Important Notes:
+- 🔧 Use `dipen env <service>` to automatically create and edit `.env` files
+- 🏷️ Services use the `latest` tag by default — pin versions for stability if needed
+- 🌐 Services bind to `127.0.0.1` (localhost) by default for security
+- 🛡️ All services are hardened with resource limits, security opt, and cap drop
+- 📖 Complete deployment and customization guides are available in the [Official Wiki](https://git.ricalnet.my.id/rical/digital-independence/wiki)
 
 ## 🔥 IPC: Iptables Port Controller
 
-IPC adalah alat manajemen firewall bawaan untuk mengontrol akses jaringan ke layanan self-hosted Anda.
+IPC is the built-in firewall management tool for controlling network access to your self-hosted services.
 
-### Filosofi Keamanan
+### Security Philosophy
 
-IPC menerapkan kebijakan **default-deny** untuk lalu lintas masuk:
-- 🚫 **INPUT DROP** — Semua koneksi masuk ditolak secara default
-- ✅ **OUTPUT ACCEPT** — Koneksi keluar diizinkan (server dapat mengakses internet)
-- 🚫 **FORWARD DROP** — Routing antar antarmuka dinonaktifkan
+IPC enforces a **default-deny** policy for incoming traffic:
+- 🚫 **INPUT DROP** — All incoming connections are denied by default
+- ✅ **OUTPUT ACCEPT** — Outgoing connections are allowed (server can access the internet)
+- 🚫 **FORWARD DROP** — Routing between interfaces is disabled
 
-### Fitur Utama
+### Key Features
 
-| Fitur | Deskripsi |
+| Feature | Description |
 |-------|-----------|
-| 🔌 Manajemen Port | Aktifkan/nonaktifkan port dengan mudah |
-| 🌐 Dual-stack | Dukungan penuh IPv4 dan IPv6 |
-| 📦 Persistence | Aturan tetap berlaku setelah reboot |
-| 🔄 Auto-restore | Aturan dipulihkan saat boot |
-| 📊 Status Monitoring | Lihat aturan yang aktif |
-| 🧹 Reset | Kembali ke kebijakan default |
+| 🔌 Port Management | Easily enable/disable ports |
+| 🌐 Dual-stack | Full IPv4 and IPv6 support |
+| 📦 Persistence | Rules persist after reboot |
+| 🔄 Auto-restore | Rules are restored on boot |
+| 📊 Status Monitoring | View active rules |
+| 🧹 Reset | Return to default policy |
 
-### 📖 Dokumentasi Lengkap
+### 📖 Complete Documentation
 
-Untuk panduan mendetail tentang konfigurasi firewall, contoh deployment, dan troubleshooting:
+For detailed guides on firewall configuration, deployment examples, and troubleshooting:
 - 📚 [Wiki: Iptables Port Controller](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall)
 
-## 📋 Prasyarat
+## 📋 Prerequisites
 
-| Persyaratan | Versi Minimum | Catatan |
+| Requirement | Minimum Version | Notes |
 |-------------|---------------|--------|
-| Podman | 5.4+ | Mesin container rootless |
-| podman-compose | v1.3+ | Orkestrasi Compose untuk Podman |
-| Git | Terbaru | Kontrol versi |
-| OS | Linux / macOS / WSL2 | Sistem kompatibel POSIX |
-| Memori | 4GB+ | Tergantung layanan yang berjalan |
-| Penyimpanan | 50GB+ | Berdasarkan layanan dan volume data |
+| Podman | 5.4+ | Rootless container engine |
+| podman-compose | v1.3+ | Compose orchestration for Podman |
+| Git | Latest | Version control |
+| OS | Linux / macOS / WSL2 | POSIX-compatible systems |
+| Memory | 4GB+ | Depends on running services |
+| Storage | 50GB+ | Based on services and data volumes |
 
-## 🚀 Mulai Cepat (4 Langkah)
+## 🚀 Quick Start (4 Steps)
 
-### Langkah 1: Clone Repositori
+### Step 1: Clone the Repository
 ```bash
 git clone https://git.ricalnet.my.id/rical/digital-independence.git
 cd digital-independence
 ```
 
-### Langkah 2: Instal Podman dan Dependensi
+### Step 2: Install Podman and Dependencies
 ```bash
 ./install-podman-on-debian.sh
 ```
 
 > [!TIP]
-> Untuk petunjuk detail tentang konfigurasi registri, pengaturan environment, dan penyesuaian khusus layanan, silakan merujuk ke [Wiki Deployment](https://git.ricalnet.my.id/rical/digital-independence/wiki/Mulai-Cepat).
+> For detailed instructions on registry configuration, environment setup, and service-specific customization, please refer to the [Deployment Wiki](https://git.ricalnet.my.id/rical/digital-independence/wiki/Mulai-Cepat).
 
-### Langkah 3: Konfigurasi & Mulai Layanan
+### Step 3: Configure & Start Services
 ```bash
-# Lihat daftar layanan yang tersedia
+# View the list of available services
 dipen list
 
-# Buat dan edit file .env untuk layanan yang diinginkan (contoh: nextcloud)
+# Create and edit the .env file for the desired service (example: nextcloud)
 dipen env nextcloud
 
-# Mulai layanan
+# Start the service
 dipen up nextcloud
 
-# Untuk memulai semua layanan
+# To start all services
 dipen all up
 ```
 
-### Langkah 4: Konfigurasi Firewall
+### Step 4: Configure Firewall
 ```bash
-# Setup persistence dan aktifkan port yang diperlukan
+# Setup persistence and enable required ports
 sudo ipc setup-persistence
 sudo ipc init
 sudo ipc enable 22     # SSH
 sudo ipc enable 5353   # DNS
 ```
 
-## ⚙️ dipen: Orkestrasi Layanan
+## ⚙️ dipen: Service Orchestration
 
-`dipen` adalah alat baris perintah utama untuk mengelola semua layanan.
+`dipen` is the main command-line tool for managing all services.
 
-### Contoh Penggunaan
+### Usage Examples
 
 ```bash
-# Pencocokan wildcard
-dipen env n*              # Edit semua layanan yang dimulai dengan 'n'
-dipen up n*               # Mulai semua layanan yang dimulai dengan 'n'
+# Wildcard matching
+dipen env n*              # Edit all services starting with 'n'
+dipen up n*               # Start all services starting with 'n'
 
-# Banyak layanan
+# Multiple services
 dipen env nextcloud immich authentik
 
-# Editor kustom
+# Custom editor
 EDITOR=vim dipen env immich
 
-# Semua layanan
-dipen all up              # Mulai semuanya
-dipen all down            # Hentikan semuanya
+# All services
+dipen all up              # Start everything
+dipen all down            # Stop everything
 
-# Navigasi cepat
-dipen cd nextcloud        # Pindah ke direktori layanan Nextcloud
-dipen cd volume           # Pindah ke direktori volume Podman
-dipen cd volume nextcloud # Pindah + filter volume Nextcloud
+# Quick navigation
+dipen cd nextcloud        # Change to Nextcloud service directory
+dipen cd volume           # Change to Podman volume directory
+dipen cd volume nextcloud # Change + filter Nextcloud volumes
 ```
 
 <details>
-<summary>📘 Bantuan Lengkap dipen</summary>
+<summary>📘 Full dipen Help</summary>
 
 ```
 dipen v1.1.1 - Podman Orchestration Tool for Digital Independence
@@ -322,167 +340,167 @@ EXAMPLES:
 ```
 </details>
 
-## 🌐 Mengekspos Layanan Secara Eksternal
+## 🌐 Exposing Services Externally
 
-### 🔥 Firewall Terintegrasi (IPC)
-Gunakan IPC untuk mengatur port yang terbuka ke publik:
+### 🔥 Integrated Firewall (IPC)
+Use IPC to manage ports exposed to the public:
 ```bash
-# Tampilkan status firewall
+# Show firewall status
 sudo ipc status
 
-# Aktifkan port untuk layanan eksternal
+# Enable port for external services
 sudo ipc enable 443   # HTTPS
 ```
 
-### 🧅 Layanan Tersembunyi Tor
-Menyediakan akses anonim melalui jaringan Tor.
-- 📖 [Panduan Implementasi Tor](https://docs.ricalnet.my.id/posts/panduan-implementasi-hidden-service-tor/)
+### 🧅 Tor Hidden Services
+Provides anonymous access through the Tor network.
+- 📖 [Tor Implementation Guide](https://docs.ricalnet.my.id/posts/panduan-implementasi-hidden-service-tor/)
 
 ### 🛡️ obfs4 Bridge (Tor Bridge)
-Menjalankan **obfs4 bridge** pribadi untuk membantu pengguna Tor di wilayah dengan sensor jaringan ketat. Bridge ini membuat lalu lintas Tor Anda terlihat seperti trafik acak, sehingga lebih sulit diblokir oleh firewall atau DPI (Deep Packet Inspection).
+Run a private **obfs4 bridge** to help Tor users in regions with strict network censorship. This bridge makes your Tor traffic look like random traffic, making it harder to block by firewalls or DPI (Deep Packet Inspection).
 
-Fitur:
-- 🔐 Berjalan di Podman rootless — tanpa perlu hak akses root
-- 🌐 Menggunakan port 8443 (OR) dan 9443 (PT) agar aman di rootless Podman
-- 📦 Terintegrasi dengan IPC untuk membuka port secara otomatis
+Features:
+- 🔐 Runs on rootless Podman — no root privileges needed
+- 🌐 Uses ports 8443 (OR) and 9443 (PT) to be safe on rootless Podman
+- 📦 Integrated with IPC to open ports automatically
 - 🔄 Auto-restart via `podman-compose` (`restart: unless-stopped`)
-- 📝 Menyimpan log instalasi dan bridge line ke `logs/obfs4_installation.log`
+- 📝 Saves installation logs and bridge line to `logs/obfs4_installation.log`
 
-Instalasi otomatis:
+Automated installation:
 ```bash
 ./auto-install-obfs4.sh
 ```
 
-Script akan:
-1. Menginstal `ipc` dan Podman
-2. Membuat `.env` secara interaktif (EMAIL & NICKNAME)
-3. Membuat network `obfs4_bridge_external_network`
-4. Menjalankan container `obfs4-bridge`
-5. Menunggu bootstrap Tor selesai (3 menit)
-6. Mengekstrak fingerprint dan menyusun bridge line
-7. Menyimpan hasil ke `logs/obfs4_installation.log`
+The script will:
+1. Install `ipc` and Podman
+2. Create `.env` interactively (EMAIL & NICKNAME)
+3. Create the `obfs4_bridge_external_network` network
+4. Run the `obfs4-bridge` container
+5. Wait for Tor bootstrap to complete (3 minutes)
+6. Extract the fingerprint and assemble the bridge line
+7. Save the result to `logs/obfs4_installation.log`
 
-Contoh bridge line yang dihasilkan:
+Example generated bridge line:
 ```
 obfs4 111.122.133.144:9443 9F394AE597C053CC566FB204F0FB7F3D078FDDC1 cert=dZhB1rJ7QOK/tRFHRnd5o28tONVCp/R/0x7rDLmcNb59qoR/ERS5xlYMOOqDBA9KTk46ag iat-mode=0
 ```
 
-Cara pakai di Tor Browser:
-1. Buka Tor Browser → Settings → Connection → Bridges
-2. Pilih "Use a bridge" → "Provide a bridge I know"
-3. Paste bridge line di atas
-4. Klik Connect
+How to use in Tor Browser:
+1. Open Tor Browser → Settings → Connection → Bridges
+2. Select "Use a bridge" → "Provide a bridge I know"
+3. Paste the bridge line above
+4. Click Connect
 
-Port yang perlu dibuka (via IPC):
+Ports to open (via IPC):
 ```bash
 sudo ipc enable 8443 both tcp   # OR Port
 sudo ipc enable 9443 both tcp   # PT Port (obfs4)
 ```
 
 > [!NOTE]
-> File `obfs4_bridgeline.txt` di dalam container berisi template dengan placeholder `<IP ADDRESS>`, `<PORT>`, dan `<FINGERPRINT>`. Script `auto-install-obfs4.sh` akan menggantinya secara otomatis dengan nilai asli.
+> The `obfs4_bridgeline.txt` file inside the container contains a template with `<IP ADDRESS>`, `<PORT>`, and `<FINGERPRINT>` placeholders. The `auto-install-obfs4.sh` script will replace them automatically with the actual values.
 >
-> Bridge yang baru pertama kali jalan butuh beberapa jam–24 jam untuk terdaftar di BridgeDB Tor Project. Untuk penggunaan pribadi, bridge line bisa langsung dipakai via "Provide a bridge I know".
+> A newly started bridge takes several hours–24 hours to be registered in the Tor Project's BridgeDB. For personal use, the bridge line can be used directly via "Provide a bridge I know".
 
 ### ☁️ Cloudflare Tunnel
-Mengakses layanan tanpa membuka port firewall.
-- 📖 [Panduan Cloudflare Tunnel](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
+Access services without opening firewall ports.
+- 📖 [Cloudflare Tunnel Guide](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
 
-## 💾 Chantik: Pencadangan & Pemulihan Terenkripsi
+## 💾 Chantik: Encrypted Backup & Restore
 
-[Chantik](https://git.ricalnet.my.id/rical/chantik) adalah alat Perlindungan Cadangan ChaCha20-Terautentikasi yang dibuat khusus untuk dipen.
+[Chantik](https://git.ricalnet.my.id/rical/chantik) is a ChaCha20-Authenticated Backup Protection tool built specifically for dipen.
 
-### ✨ Fitur Utama
+### ✨ Key Features
 
-| Fitur | Deskripsi |
+| Feature | Description |
 |-------|-----------|
-| 🔐 Enkripsi Terautentikasi | ChaCha20-Poly1305 (utama) dengan fallback AES-256-CBC |
-| 🔑 Derivasi Kunci Kuat | PBKDF2 dengan iterasi yang dapat dikonfigurasi (default: 600.000) |
-| 🔗 Deduplikasi | Dukungan nonce tetap untuk enkripsi deterministik |
-| 🗜️ Kompresi | Gzip dengan level yang dapat dikonfigurasi (1-9) |
-| 🐳 Dukungan Docker | Pencadangan dan pemulihan volume Docker yang mulus |
-| 🔄 Cadangan Incremental | Hemat penyimpanan dan percepat pencadangan |
-| 📊 Retensi Cerdas | Kebijakan retensi harian, mingguan, dan bulanan |
-| 🔔 Notifikasi Real-time | Peringatan instan melalui ntfy.sh |
-| ✅ Verifikasi Integritas | Verifikasi checksum SHA256 untuk setiap cadangan |
-| 🔒 Keamanan | Izin yang dapat dikonfigurasi dan penguncian proses |
-| 📝 Pencatatan Log Komprehensif | Log terperinci untuk audit dan pemecahan masalah |
+| 🔐 Authenticated Encryption | ChaCha20-Poly1305 (primary) with AES-256-CBC fallback |
+| 🔑 Strong Key Derivation | PBKDF2 with configurable iterations (default: 600,000) |
+| 🔗 Deduplication | Fixed nonce support for deterministic encryption |
+| 🗜️ Compression | Gzip with configurable level (1-9) |
+| 🐳 Docker Support | Seamless Docker volume backup and restore |
+| 🔄 Incremental Backup | Storage-efficient and faster backups |
+| 📊 Smart Retention | Daily, weekly, and monthly retention policies |
+| 🔔 Real-time Notifications | Instant alerts via ntfy.sh |
+| ✅ Integrity Verification | SHA256 checksum verification for every backup |
+| 🔒 Security | Configurable permissions and process locking |
+| 📝 Comprehensive Logging | Detailed logs for auditing and troubleshooting |
 
-## 🤖 Otomatisasi (Cron Jobs)
+## 🤖 Automation (Cron Jobs)
 
 > [!WARNING]
-> Semua cron job berjalan dalam mode **rootless**. Jangan pernah menggunakan `sudo` dengan perintah podman di cron.
+> All cron jobs run in **rootless** mode. Never use `sudo` with podman commands in cron.
 
-### Cron Job Pengguna (`crontab -e`)
+### User Cron Jobs (`crontab -e`)
 
-| Jadwal | Perintah | Tujuan |
+| Schedule | Command | Purpose |
 |--------|----------|--------|
-| `*/5 * * * *` | `podman exec -u www-data nextcloud_app php -f /var/www/html/cron.php` | Tugas latar belakang NextCloud |
-| `0 1 * * *` | `podman exec pihole pihole -g && podman exec pihole pihole -f` | Pembaruan gravity Pi-hole |
-| `0 6 * * 0` | `/path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.sh` | Pembaruan layanan mingguan |
-| `0 8 1 * *` | `/path/to/digital-independence/automation-scripts/monthly-recycle/monthly_recycle.sh` | Daur ulang layanan bulanan |
-| `0 11 * * 0` | `/path/to/digital-independence/dipen.sh prune all` | Pembersihan container mingguan |
-| `0 2 * * *` | `/path/to/digital-independence/chantik backup` | Pencadangan terenkripsi harian |
+| `*/5 * * * *` | `podman exec -u www-data nextcloud_app php -f /var/www/html/cron.php` | NextCloud background tasks |
+| `0 1 * * *` | `podman exec pihole pihole -g && podman exec pihole pihole -f` | Pi-hole gravity update |
+| `0 6 * * 0` | `/path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.sh` | Weekly service updates |
+| `0 8 1 * *` | `/path/to/digital-independence/automation-scripts/monthly-recycle/monthly_recycle.sh` | Monthly service recycle |
+| `0 11 * * 0` | `/path/to/digital-independence/dipen.sh prune all` | Weekly container cleanup |
+| `0 2 * * *` | `/path/to/digital-independence/chantik backup` | Daily encrypted backup |
 
-### Cron Job Sistem (`sudo crontab -e`)
+### System Cron Jobs (`sudo crontab -e`)
 
-| Jadwal | Perintah | Tujuan |
+| Schedule | Command | Purpose |
 |--------|----------|--------|
-| `0 2 * * 0` | `/path/to/digital-independence/automation-scripts/cleanup-system/cleanup_system.sh` | Pembersihan sistem mingguan |
-| `0 4 * * 0` | `/path/to/digital-independence/automation-scripts/system-update/system_update.sh` | Pembaruan sistem mingguan |
+| `0 2 * * 0` | `/path/to/digital-independence/automation-scripts/cleanup-system/cleanup_system.sh` | Weekly system cleanup |
+| `0 4 * * 0` | `/path/to/digital-independence/automation-scripts/system-update/system_update.sh` | Weekly system update |
 
-### Contoh Cron Lengkap
+### Complete Cron Example
 
 ```bash
-# Edit crontab pengguna
+# Edit user crontab
 crontab -e
 
-# Tambahkan baris berikut
+# Add the following lines
 # ──────────────────────────────────────────────────────────────
-# Otomatisasi Digital Independence
+# Digital Independence Automation
 # ──────────────────────────────────────────────────────────────
 
-# Cron NextCloud - setiap 5 menit (tugas latar belakang)
+# NextCloud Cron - every 5 minutes (background tasks)
 */5 * * * * podman exec -u www-data nextcloud_app php -f /var/www/html/cron.php
 
-# Pembaruan gravity Pi-hole - setiap hari jam 1 pagi (perbarui daftar blokir)
+# Pi-hole gravity update - daily at 1 AM (update blocklists)
 0 1 * * * podman exec pihole pihole -g && podman exec pihole pihole -f
 
-# Pencadangan harian - jam 2 pagi
+# Daily backup - at 2 AM
 0 2 * * * /path/to/digital-independence/chantik backup
 
-# Pembaruan container mingguan - Minggu jam 6 pagi
+# Weekly container updates - Sunday at 6 AM
 0 6 * * 0 /path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.sh
 
-# Pembersihan container mingguan - Minggu jam 11 siang
+# Weekly container cleanup - Sunday at 11 AM
 0 11 * * 0 /path/to/digital-independence/dipen.sh prune all
 
-# Daur ulang bulanan - tanggal 1 jam 8 pagi
+# Monthly recycle - 1st of the month at 8 AM
 0 8 1 * * /path/to/digital-independence/automation-scripts/monthly-recycle/monthly_recycle.sh
 
 # ──────────────────────────────────────────────────────────────
-# Cron Sistem (sudo crontab -e)
+# System Cron (sudo crontab -e)
 # ──────────────────────────────────────────────────────────────
 
-# Pembersihan sistem mingguan - Minggu jam 2 pagi
+# Weekly system cleanup - Sunday at 2 AM
 0 2 * * 0 /path/to/digital-independence/automation-scripts/cleanup-system/cleanup_system.sh
 
-# Pembaruan sistem mingguan - Minggu jam 4 pagi
+# Weekly system update - Sunday at 4 AM
 0 4 * * 0 /path/to/digital-independence/automation-scripts/system-update/system_update.sh
 ```
 
 > [!TIP]
-> Ganti `/path/to/digital-independence/` dengan jalur instalasi Anda yang sebenarnya.
+> Replace `/path/to/digital-independence/` with your actual installation path.
 
-## 🔒 Panduan Keamanan
+## 🔒 Security Guide
 
-### Pengaturan Awal
-- 🔑 Ubah semua kata sandi default di file `.env` (gunakan `dipen env <layanan>`)
-- 🔒 Gunakan secret yang kuat dan unik untuk setiap layanan
-- 🌐 Ikat ke `127.0.0.1` (localhost) kecuali akses eksternal diperlukan
-- 📁 Atur `chmod 600 .env` untuk semua file lingkungan
-- 🔥 Konfigurasikan firewall dengan IPC — hanya buka port yang diperlukan
-- 🛡️ Verifikasi hardening dengan `podman inspect <container>`
+### Initial Setup
+- 🔑 Change all default passwords in `.env` files (use `dipen env <service>`)
+- 🔒 Use strong and unique secrets for each service
+- 🌐 Bind to `127.0.0.1` (localhost) unless external access is needed
+- 📁 Set `chmod 600 .env` for all environment files
+- 🔥 Configure the firewall with IPC — only open necessary ports
+- 🛡️ Verify hardening with `podman inspect <container>`
 
 ### Firewall Best Practices
 
@@ -490,42 +508,41 @@ crontab -e
 # 1. Setup persistence
 sudo ipc setup-persistence
 
-# 2. Inisialisasi (default-deny)
+# 2. Initialize (default-deny)
 sudo ipc init
 
-# 3. Buka port layanan spesifik
+# 3. Open specific service ports
 sudo ipc enable 5000  # Nextcloud
 sudo ipc enable 5353  # Pi-Hole
 sudo ipc enable 8443  # obfs4 OR Port
 sudo ipc enable 9443  # obfs4 PT Port
 
-# 4. Verifikasi status
+# 4. Verify status
 sudo ipc status
 
-# 5. Simpan aturan (otomatis, tapi bisa manual)
+# 5. Save rules (automatic, but can be manual)
 sudo ipc persist
 ```
 
-### Pemeliharaan Berkelanjutan
-- 📦 Data disimpan di direktori lokal atau volume Podman (persisten)
-- ⬆️ Jalankan `dipen pull` atau `dipen update` secara teratur untuk tambalan keamanan
-- 🔍 Pantau log dengan `dipen logs [layanan]` untuk anomali
-- 📊 Aktifkan health check menggunakan Uptime Kuma
-- 💾 Pencadangan rutin dengan `chantik backup`
-- 🔥 Audit aturan firewall secara berkala dengan `ipc status`
-- 🛡️ Jangan bagikan bridge line obfs4 ke publik — bridge pribadi lebih aman dan stabil
-- 🔐 Audit resource limits secara berkala dengan `podman stats`
+### Ongoing Maintenance
+- 📦 Data is stored in local directories or Podman volumes (persistent)
+- ⬆️ Run `dipen pull` or `dipen update` regularly for security patches
+- 🔍 Monitor logs with `dipen logs [service]` for anomalies
+- 📊 Enable health checks using Uptime Kuma
+- 💾 Regular backups with `chantik backup`
+- 🔥 Audit firewall rules periodically with `ipc status`
+- 🛡️ Do not share obfs4 bridge lines publicly — private bridges are safer and more stable
+- 🔐 Audit resource limits periodically with `podman stats`
 
-## 📜 Lisensi
+## 📜 License
 
-### Repositori
-Lisensi MIT – lihat file [LICENSE](LICENSE) untuk detail.
+### Repository
+MIT License – see the [LICENSE](LICENSE) file for details.
 
-## 📚 Sumber Daya
+## 📚 Resources
 
-| Sumber Daya | Tautan |
+| Resource | Link |
 |-------------|--------|
-| Wiki Resmi | [Digital Independence Wiki](https://git.ricalnet.my.id/rical/digital-independence/wiki) |
-| Dokumentasi IPC | [Iptables Port Controller](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall) |
-| Dokumentasi Deployment | [Deployment Guide](https://git.ricalnet.my.id/rical/digital-independence/wiki/Panduan-Penerapan-Digital-Independence) |
+| Official Wiki | [Digital Independence Wiki](https://git.ricalnet.my.id/rical/digital-independence/wiki) |
+| IPC Documentation | [Iptables Port Controller](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall) |
 | Chantik | [Encrypted Backup Tool](https://git.ricalnet.my.id/rical/digital-independence/wiki/Chantik+%E2%80%94+ChaCha20-Authenticated+Backup+Protection.-) |

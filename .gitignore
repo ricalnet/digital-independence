@@ -83,6 +83,12 @@ mastodon/redis/
 mastodon/.env
 mastodon/.env.production
 
+# Monitoring
+monitoring/.env
+monitoring/grafana/provisioning/alerting
+monitoring/grafana/provisioning/plugins
+monitoring/grafana/provisioning/dashboards/json/.gitkeep
+
 # MQTT Broker
 mqtt-broker/.env
 

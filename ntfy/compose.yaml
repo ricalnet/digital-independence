@@ -10,6 +10,7 @@ services:
     restart: unless-stopped
     networks:
       - ntfy-network
+      - monitoring
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/v1/health"]
       interval: 30s
@@ -79,3 +80,6 @@ networks:
     name: ntfy_network
     driver: bridge
     internal: true
+  monitoring:       # ← tambahkan ini
+    external: true
+    name: monitoring_network

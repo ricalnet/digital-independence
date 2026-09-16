@@ -31,6 +31,7 @@ declare -A SERVICES=(
     ["linkstack"]="linkstack"
     ["mastodon"]="mastodon"
     ["mediawiki"]="wiki"
+    ["monitoring"]="monitoring"
     ["mqtt"]="mqtt-broker"
     ["navidrome"]="navidrome"
     ["nextcloud"]="nextcloud"
@@ -75,6 +76,11 @@ declare -A IMAGE_REGISTRY=(
     ["vaultwarden"]="ghcr.io/dani-garcia/vaultwarden"
     ["wazuh"]="docker.io/wazuh/wazuh-manager"
     ["yourls"]="docker.io/yourls"
+    ["prometheus"]="docker.io/prom/prometheus"
+    ["grafana"]="docker.io/grafana/grafana-oss"
+    ["node-exporter"]="docker.io/prom/node-exporter"
+    ["prometheus-podman-exporter"]="quay.io/navidys/prometheus-podman-exporter"
+    ["alertmanager"]="docker.io/prom/alertmanager"
 )
 
 declare -A CONTAINER_PATTERNS=(

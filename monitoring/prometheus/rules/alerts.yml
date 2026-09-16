@@ -1,0 +1,193 @@
+groups:
+  - name: host_alerts
+    interval: 30s
+    rules:
+      - alert: HostHighCpuLoad
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 85
+        for: 10m
+        labels:
+          severity: warning
+          category: host
+        annotations:
+          summary: "High CPU load on {{ $labels.instance }}"
+          description: "CPU load is {{ $value | humanize }}% on {{ $labels.instance }}"
+
+      - alert: HostHighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 90
+        for: 10m
+        labels:
+          severity: warning
+          category: host
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value | humanize }}% on {{ $labels.instance }}"
+
+      - alert: HostDiskSpaceLow
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 15
+        for: 5m
+        labels:
+          severity: critical
+          category: host
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }}"
+          description: "Disk space is {{ $value | humanize }}% on {{ $labels.mountpoint }}"
+
+      - alert: HostDiskWillFillIn24Hours
+        expr: |
+          (node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs|vfat"} / node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs|vfat"}) * 100 < 15
+          and
+          predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs|squashfs|vfat"}[6h], 24*3600) < 0
+        for: 1h
+        labels:
+          severity: critical
+          category: host
+        annotations:
+          summary: "Disk will fill in 24h on {{ $labels.instance }}"
+          description: "Disk {{ $labels.mountpoint }} will fill in 24h"
+
+      - alert: HostOutOfMemory
+        expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
+        for: 2m
+        labels:
+          severity: warning
+          category: host
+        annotations:
+          summary: "Host out of memory"
+          description: "Host memory is critically low on {{ $labels.instance }}"
+
+      - alert: HostOomKillDetected
+        expr: increase(node_vmstat_oom_kill[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          category: host
+        annotations:
+          summary: "OOM kill detected on {{ $labels.instance }}"
+          description: "OOM kill detected on {{ $labels.instance }}"
+
+      - alert: HostUnusualNetworkThroughputIn
+        expr: sum by (instance) (rate(node_network_receive_bytes_total[2m])) / 1024 / 1024 > 100
+        for: 5m
+        labels:
+          severity: warning
+          category: network
+        annotations:
+          summary: "Unusual network throughput in"
+          description: "Network throughput is {{ $value }} MB/s on {{ $labels.instance }}"
+
+      - alert: HostUnusualNetworkThroughputOut
+        expr: sum by (instance) (rate(node_network_transmit_bytes_total[2m])) / 1024 / 1024 > 100
+        for: 5m
+        labels:
+          severity: warning
+          category: network
+        annotations:
+          summary: "Unusual network throughput out"
+          description: "Network throughput is {{ $value }} MB/s on {{ $labels.instance }}"
+
+  - name: container_alerts
+    interval: 30s
+    rules:
+      - alert: ContainerHighCpuUsage
+        expr: |
+          sum(rate(podman_container_cpu_seconds_total[5m])) by (name)
+          * 100 > 80
+        for: 10m
+        labels:
+          severity: warning
+          category: container
+        annotations:
+          summary: "Container high CPU usage: {{ $labels.name }}"
+          description: "Container {{ $labels.name }} CPU usage is {{ $value | humanize }}%"
+
+      - alert: ContainerHighMemoryUsage
+        expr: |
+          (podman_container_memory_usage_bytes / podman_container_memory_limit_bytes * 100) > 90
+          and
+          (podman_container_memory_limit_bytes > 0)
+        for: 10m
+        labels:
+          severity: warning
+          category: container
+        annotations:
+          summary: "Container high memory usage: {{ $labels.name }}"
+          description: "Container {{ $labels.name }} memory usage is {{ $value | humanize }}%"
+
+      - alert: ContainerMemoryNearLimit
+        expr: |
+          (podman_container_memory_usage_bytes / podman_container_memory_limit_bytes * 100) > 80
+          and
+          (podman_container_memory_limit_bytes > 0)
+        for: 15m
+        labels:
+          severity: info
+          category: container
+        annotations:
+          summary: "Container memory near limit: {{ $labels.name }}"
+          description: "Container {{ $labels.name }} memory usage is {{ $value | humanize }}%"
+
+  - name: database_alerts
+    interval: 30s
+    rules:
+      - alert: PostgresDown
+        expr: pg_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          category: database
+        annotations:
+          summary: "PostgreSQL down: {{ $labels.instance }}"
+          description: "PostgreSQL instance {{ $labels.instance }} is down"
+
+      - alert: PostgresTooManyConnections
+        expr: sum by (instance) (pg_stat_activity_count) > 80
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "PostgreSQL too many connections"
+          description: "PostgreSQL {{ $labels.instance }} has {{ $value }} connections"
+
+      - alert: RedisDown
+        expr: redis_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          category: database
+        annotations:
+          summary: "Redis down: {{ $labels.instance }}"
+          description: "Redis instance {{ $labels.instance }} is down"
+
+      - alert: RedisHighMemoryUsage
+        expr: (redis_memory_used_bytes / redis_memory_max_bytes) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "Redis high memory usage"
+          description: "Redis {{ $labels.instance }} memory usage is {{ $value | humanize }}%"
+
+      - alert: RedisEvictionRate
+        expr: rate(redis_evicted_keys_total[5m]) > 10
+        for: 15m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "Redis evicting keys at high rate"
+          description: "Redis {{ $labels.instance }} is evicting {{ $value }} keys/s"
+
+  - name: service_alerts
+    interval: 30s
+    rules:
+      - alert: TargetDown
+        expr: up == 0
+        for: 5m
+        labels:
+          severity: critical
+          category: service
+        annotations:
+          summary: "Target down: {{ $labels.job }}"
+          description: "Target {{ $labels.instance }} (job: {{ $labels.job }}) is down"

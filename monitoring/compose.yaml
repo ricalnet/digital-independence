@@ -1,0 +1,304 @@
+name: monitoring
+
+services:
+  prometheus:
+    image: ${PROMETHEUS_IMAGE:-docker.io/prom/prometheus:latest}
+    container_name: prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=${PROMETHEUS_RETENTION:-15d}'
+      - '--storage.tsdb.retention.size=${PROMETHEUS_RETENTION_SIZE:-10GB}'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+      - '--log.level=${PROMETHEUS_LOG_LEVEL:-info}'
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/rules:/etc/prometheus/rules:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "${PROMETHEUS_BIND_ADDRESS:-127.0.0.1}:${PROMETHEUS_PORT:-9090}:9090"
+    networks:
+      - monitoring
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    mem_limit: ${PROMETHEUS_MEM_LIMIT:-1g}
+    mem_reservation: ${PROMETHEUS_MEM_RESERVATION:-256m}
+    memswap_limit: ${PROMETHEUS_MEMSWAP_LIMIT:-1.2g}
+    cpus: ${PROMETHEUS_CPUS:-0.8}
+    pids_limit: 300
+    oom_score_adj: -200
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - FOWNER
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128M
+      - /run:rw,noexec,nosuid,size=64M
+      - /var/run:rw,noexec,nosuid,size=64M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+        compress: "true"
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+
+  grafana:
+    image: ${GRAFANA_IMAGE:-docker.io/grafana/grafana-oss:latest}
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+      - GF_SECURITY_SECRET_KEY=${GRAFANA_SECRET_KEY}
+      - GF_USERS_ALLOW_SIGN_UP=${GRAFANA_ALLOW_SIGNUP:-false}
+      - GF_USERS_ALLOW_ORG_CREATE=${GRAFANA_ALLOW_ORG_CREATE:-false}
+      - GF_AUTH_ANONYMOUS_ENABLED=${GRAFANA_ANONYMOUS_ENABLED:-false}
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=${GRAFANA_ANONYMOUS_ORG_ROLE:-Viewer}
+      - GF_AUTH_BASIC_ENABLED=${GRAFANA_BASIC_ENABLED:-true}
+      - GF_AUTH_DISABLE_LOGIN_FORM=${GRAFANA_DISABLE_LOGIN_FORM:-false}
+      - GF_SERVER_ROOT_URL=${GRAFANA_ROOT_URL:-http://localhost:3000}
+      - GF_SERVER_DOMAIN=${GRAFANA_DOMAIN:-localhost}
+      - GF_SERVER_PROTOCOL=${GRAFANA_PROTOCOL:-http}
+      - GF_SERVER_HTTP_PORT=3000
+      - GF_ANALYTICS_REPORTING_ENABLED=false
+      - GF_ANALYTICS_CHECK_FOR_UPDATES=false
+      - GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES=false
+      - GF_LOG_MODE=console
+      - GF_LOG_LEVEL=${GRAFANA_LOG_LEVEL:-info}
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_PATHS_DATA=/var/lib/grafana
+      - GF_PATHS_LOGS=/var/log/grafana
+      - GF_PATHS_PLUGINS=/var/lib/grafana/plugins
+      - GF_INSTALL_PLUGINS=${GRAFANA_INSTALL_PLUGINS:-}
+      - GF_DATABASE_TYPE=sqlite3
+      - GF_DATABASE_PATH=/var/lib/grafana/grafana.db
+      - GF_SESSION_PROVIDER=memory
+      - GF_SESSION_PROVIDER_CONFIG=memory
+      - GF_PLUGINS_PREINSTALL_DISABLED=true
+      - GF_PLUGINS_PREINSTALL_SYNC=false
+      - GF_PLUGINS_PREINSTALL_AS_FRONTEND_ONLY=true
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - grafana_logs:/var/log/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    ports:
+      - "${GRAFANA_BIND_ADDRESS:-127.0.0.1}:${GRAFANA_PORT:-3000}:3000"
+    networks:
+      - monitoring
+    depends_on:
+      prometheus:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    mem_limit: ${GRAFANA_MEM_LIMIT:-512m}
+    mem_reservation: ${GRAFANA_MEM_RESERVATION:-128m}
+    memswap_limit: ${GRAFANA_MEMSWAP_LIMIT:-640m}
+    cpus: ${GRAFANA_CPUS:-0.5}
+    pids_limit: 200
+    oom_score_adj: -100
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - FOWNER
+    read_only: false
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128M
+      - /run:rw,noexec,nosuid,size=64M
+      - /var/run:rw,noexec,nosuid,size=64M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+        compress: "true"
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+
+  node-exporter:
+    image: ${NODE_EXPORTER_IMAGE:-docker.io/prom/node-exporter:latest}
+    container_name: node-exporter
+    restart: unless-stopped
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/host/root'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+      - '--no-collector.ipvs'
+    pid: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host/root:ro,rslave
+      - /run/udev:/run/udev:ro
+    ports:
+      - "${NODE_EXPORTER_BIND_ADDRESS:-127.0.0.1}:${NODE_EXPORTER_PORT:-9100}:9100"
+    networks:
+      - monitoring
+    healthcheck:
+      test: ["CMD", "/bin/node_exporter", "--version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    mem_limit: ${NODE_EXPORTER_MEM_LIMIT:-128m}
+    mem_reservation: ${NODE_EXPORTER_MEM_RESERVATION:-32m}
+    memswap_limit: ${NODE_EXPORTER_MEMSWAP_LIMIT:-128m}
+    cpus: ${NODE_EXPORTER_CPUS:-0.2}
+    pids_limit: 100
+    oom_score_adj: -100
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - SYS_TIME
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+
+  podman-exporter:
+    image: ${PODMAN_EXPORTER_IMAGE:-quay.io/navidys/prometheus-podman-exporter:latest}
+    container_name: podman-exporter
+    restart: unless-stopped
+    user: "0:0"
+    command:
+      - "--collector.enable-all"
+      - "--collector.store-labels"
+      - "--collector.enhance-metrics"
+    environment:
+      - CONTAINER_HOST=unix:///run/podman/podman.sock
+      - HOME=/home/exporter
+    volumes:
+      - ${PODMAN_SOCKET_PATH:-/run/user/1000/podman/podman.sock}:/run/podman/podman.sock:ro
+    tmpfs:
+      - /home/exporter:rw,noexec,nosuid,size=64M,mode=1777
+    ports:
+      - "${PODMAN_EXPORTER_BIND_ADDRESS:-127.0.0.1}:${PODMAN_EXPORTER_PORT:-9882}:9882"
+    networks:
+      - monitoring
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9882/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    mem_limit: ${PODMAN_EXPORTER_MEM_LIMIT:-128m}
+    mem_reservation: ${PODMAN_EXPORTER_MEM_RESERVATION:-32m}
+    memswap_limit: ${PODMAN_EXPORTER_MEMSWAP_LIMIT:-128m}
+    cpus: ${PODMAN_EXPORTER_CPUS:-0.2}
+    pids_limit: 100
+    oom_score_adj: -100
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    read_only: true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+
+  alertmanager:
+    image: ${ALERTMANAGER_IMAGE:-docker.io/prom/alertmanager:latest}
+    container_name: alertmanager
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=${ALERTMANAGER_EXTERNAL_URL:-http://localhost:9093}'
+      - '--log.level=${ALERTMANAGER_LOG_LEVEL:-info}'
+    volumes:
+      - ./alertmanager:/etc/alertmanager:ro
+      - alertmanager_data:/alertmanager
+    ports:
+      - "${ALERTMANAGER_BIND_ADDRESS:-127.0.0.1}:${ALERTMANAGER_PORT:-9093}:9093"
+    networks:
+      - monitoring
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9093/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    mem_limit: ${ALERTMANAGER_MEM_LIMIT:-256m}
+    mem_reservation: ${ALERTMANAGER_MEM_RESERVATION:-64m}
+    memswap_limit: ${ALERTMANAGER_MEMSWAP_LIMIT:-320m}
+    cpus: ${ALERTMANAGER_CPUS:-0.3}
+    pids_limit: 100
+    oom_score_adj: -100
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - FOWNER
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64M
+      - /run:rw,noexec,nosuid,size=32M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+
+networks:
+  monitoring:
+    name: monitoring_network
+    driver: bridge
+
+volumes:
+  prometheus_data:
+    name: prometheus_data
+  grafana_data:
+    name: grafana_data
+  grafana_logs:
+    name: grafana_logs
+  alertmanager_data:
+    name: alertmanager_data

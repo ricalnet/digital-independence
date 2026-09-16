@@ -1,0 +1,135 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'ricalnet-monitoring'
+    environment: 'production'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+      timeout: 10s
+      api_version: v2
+
+rule_files:
+  - /etc/prometheus/rules/*.yml
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+          instance: 'prometheus'
+
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+        labels:
+          service: 'grafana'
+          instance: 'grafana'
+
+  - job_name: 'alertmanager'
+    static_configs:
+      - targets: ['alertmanager:9093']
+        labels:
+          service: 'alertmanager'
+          instance: 'alertmanager'
+
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          service: 'node'
+          instance: 'raspberrypi'
+
+  - job_name: 'podman'
+    static_configs:
+      - targets: ['podman-exporter:9882']
+        labels:
+          service: 'podman'
+          instance: 'raspberrypi'
+
+  # Activate after the exporter has been added to each stack
+  # - job_name: 'postgres-authentik'
+  #   static_configs:
+  #     - targets: ['authentik-postgres-exporter:9187']
+  #       labels:
+  #         service: 'postgresql'
+  #         instance: 'authentik'
+  #         stack: 'authentik'
+  #
+  # - job_name: 'redis-authentik'
+  #   static_configs:
+  #     - targets: ['authentik-redis-exporter:9121']
+  #       labels:
+  #         service: 'redis'
+  #         instance: 'authentik'
+  #         stack: 'authentik'
+  #
+  # - job_name: 'postgres-forgejo'
+  #   static_configs:
+  #     - targets: ['forgejo-postgres-exporter:9187']
+  #       labels:
+  #         service: 'postgresql'
+  #         instance: 'forgejo'
+  #         stack: 'forgejo'
+  #
+  # - job_name: 'postgres-immich'
+  #   static_configs:
+  #     - targets: ['immich-postgres-exporter:9187']
+  #       labels:
+  #         service: 'postgresql'
+  #         instance: 'immich'
+  #         stack: 'immich'
+  #
+  # - job_name: 'redis-immich'
+  #   static_configs:
+  #     - targets: ['immich-redis-exporter:9121']
+  #       labels:
+  #         service: 'redis'
+  #         instance: 'immich'
+  #         stack: 'immich'
+  #
+  # - job_name: 'postgres-synapse'
+  #   static_configs:
+  #     - targets: ['synapse-postgres-exporter:9187']
+  #       labels:
+  #         service: 'postgresql'
+  #         instance: 'synapse'
+  #         stack: 'synapse'
+  #
+  # - job_name: 'redis-synapse'
+  #   static_configs:
+  #     - targets: ['synapse-redis-exporter:9121']
+  #       labels:
+  #         service: 'redis'
+  #         instance: 'synapse'
+  #         stack: 'synapse'
+  #
+  # - job_name: 'postgres-nextcloud'
+  #   static_configs:
+  #     - targets: ['nextcloud-mysql-exporter:9104']
+  #       labels:
+  #         service: 'mysql'
+  #         instance: 'nextcloud'
+  #         stack: 'nextcloud'
+  #
+  # - job_name: 'redis-nextcloud'
+  #   static_configs:
+  #     - targets: ['nextcloud-redis-exporter:9121']
+  #       labels:
+  #         service: 'redis'
+  #         instance: 'nextcloud'
+  #         stack: 'nextcloud'
+
+  # - job_name: 'synapse'
+  #   metrics_path: '/_synapse/metrics'
+  #   static_configs:
+  #     - targets: ['synapse:8008']
+  #       labels:
+  #         service: 'synapse'
+  #         instance: 'matrix'
