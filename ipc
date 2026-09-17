@@ -1,5 +1,5 @@
 #!/bin/bash
-# ipc - Iptables Controller
+# ipc - Iptables Controller - KISS
 # Firewall management script for iptables
 
 RED='\033[0;31m'
@@ -50,56 +50,56 @@ show_help() {
     echo "  FORWARD : DROP  (routing disabled)"
     echo ""
     echo -e "${YELLOW}Commands:${NC}"
-    echo "  setup-persistence           Setup persistence otomatis (install package)"
-    echo "  check-persist               Mengecek metode persistence yang digunakan"
-    echo "  init                        Inisialisasi firewall pertama kali"
-    echo "  enable PORT [IPVERSION] [PROTOCOL]   Mengaktifkan port (allow incoming)"
-    echo "                              IPVERSION: 4 (default), 6, atau both"
-    echo "                              PROTOCOL: tcp (default), udp, atau both"
-    echo "  disable PORT [IPVERSION] [PROTOCOL]  Menonaktifkan port (block incoming)"
-    echo "                              IPVERSION: 4 (default), 6, atau both"
-    echo "                              PROTOCOL: tcp (default), udp, atau both"
-    echo "  status                      Menampilkan status semua aturan"
-    echo "  reset                       Mereset ke default (semua port ditutup)"
-    echo "  list                        Menampilkan aturan yang aktif"
-    echo "  persist                     Menyimpan aturan secara manual"
-    echo "  help                        Menampilkan bantuan ini"
-    echo "  version                     Menampilkan versi IPC"
+    echo "  setup-persistence           Setup persistence automatically (install package)"
+    echo "  check-persist               Check the persistence method being used"
+    echo "  init                        Initialize firewall for the first time"
+    echo "  enable PORT [IPVERSION] [PROTOCOL]   Enable port (allow incoming)"
+    echo "                              IPVERSION: 4 (default), 6, or both"
+    echo "                              PROTOCOL: tcp (default), udp, or both"
+    echo "  disable PORT [IPVERSION] [PROTOCOL]  Disable port (block incoming)"
+    echo "                              IPVERSION: 4 (default), 6, or both"
+    echo "                              PROTOCOL: tcp (default), udp, or both"
+    echo "  status                      Show status of all rules"
+    echo "  reset                       Reset to default (all ports closed)"
+    echo "  list                        Show active rules"
+    echo "  persist                     Save rules manually"
+    echo "  help                        Show this help"
+    echo "  version                     Show IPC version"
     echo ""
     echo -e "${YELLOW}Examples:${NC}"
-    echo "  ipc setup-persistence        # Setup persistence otomatis"
-    echo "  ipc check-persist            # Cek metode persistence"
-    echo "  ipc init                     # Inisialisasi firewall pertama kali"
-    echo "  ipc enable 80                # Mengaktifkan port 80 TCP (IPv4)"
-    echo "  ipc enable 80 4 udp          # Mengaktifkan port 80 UDP (IPv4)"
-    echo "  ipc enable 443 6 tcp         # Mengaktifkan port 443 TCP (IPv6)"
-    echo "  ipc enable 22 both both      # Mengaktifkan port 22 TCP & UDP (IPv4 & IPv6)"
-    echo "  ipc enable 8080              # Menambah port 8080 tanpa menghapus aturan lain"
-    echo "  ipc disable 22               # Menonaktifkan port 22 TCP (IPv4)"
-    echo "  ipc disable 53 both udp      # Menonaktifkan port 53 UDP (IPv4 & IPv6)"
-    echo "  ipc status                   # Melihat status semua aturan"
-    echo "  ipc reset                    # Mereset semua aturan"
-    echo "  ipc list                     # Melihat aturan lengkap"
-    echo "  ipc persist                  # Menyimpan aturan secara permanent"
-    echo "  ipc version                  # Menampilkan versi IPC"
+    echo "  ipc setup-persistence        # Setup persistence automatically"
+    echo "  ipc check-persist            # Check persistence method"
+    echo "  ipc init                     # Initialize firewall for the first time"
+    echo "  ipc enable 80                # Enable port 80 TCP (IPv4)"
+    echo "  ipc enable 80 4 udp          # Enable port 80 UDP (IPv4)"
+    echo "  ipc enable 443 6 tcp         # Enable port 443 TCP (IPv6)"
+    echo "  ipc enable 22 both both      # Enable port 22 TCP & UDP (IPv4 & IPv6)"
+    echo "  ipc enable 8080              # Add port 8080 without removing other rules"
+    echo "  ipc disable 22               # Disable port 22 TCP (IPv4)"
+    echo "  ipc disable 53 both udp      # Disable port 53 UDP (IPv4 & IPv6)"
+    echo "  ipc status                   # View status of all rules"
+    echo "  ipc reset                    # Reset all rules"
+    echo "  ipc list                     # View full rules"
+    echo "  ipc persist                  # Save rules permanently"
+    echo "  ipc version                  # Show IPC version"
 }
 
 initialize_firewall() {
-    echo -e "${YELLOW}Inisialisasi firewall...${NC}"
+    echo -e "${YELLOW}Initializing firewall...${NC}"
     
     if iptables -L INPUT -n | grep -q "ACCEPT.*dpt:"; then
-        echo -e "${YELLOW}Firewall sudah memiliki aturan port. Lewati inisialisasi.${NC}"
-        echo -e "${YELLOW}Gunakan 'ipc reset' jika ingin mereset semua aturan.${NC}"
+        echo -e "${YELLOW}Firewall already has port rules. Skipping initialization.${NC}"
+        echo -e "${YELLOW}Use 'ipc reset' if you want to reset all rules.${NC}"
         return 0
     fi
     
     set_default_policies
-    echo -e "${GREEN}Firewall berhasil diinisialisasi.${NC}"
-    echo -e "${GREEN}Sekarang Anda bisa menambah port dengan 'ipc enable'${NC}"
+    echo -e "${GREEN}Firewall initialized successfully.${NC}"
+    echo -e "${GREEN}You can now add ports with 'ipc enable'${NC}"
 }
 
 set_default_policies_ipv4() {
-    echo -e "${YELLOW}Mengatur default policies IPv4...${NC}"
+    echo -e "${YELLOW}Setting IPv4 default policies...${NC}"
     echo -e "${BLUE}  INPUT   : DROP (deny incoming)${NC}"
     echo -e "${BLUE}  OUTPUT  : ACCEPT (allow outgoing)${NC}"
     echo -e "${BLUE}  FORWARD : DROP (routing disabled)${NC}"
@@ -116,14 +116,14 @@ set_default_policies_ipv4() {
     iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
     iptables -A INPUT -i lo -j ACCEPT
     
-    echo -e "${GREEN}Default policies IPv4 telah diset${NC}"
+    echo -e "${GREEN}IPv4 default policies have been set${NC}"
     echo -e "${GREEN}  ✓ INPUT DROP (deny incoming)${NC}"
     echo -e "${GREEN}  ✓ OUTPUT ACCEPT (allow outgoing)${NC}"
     echo -e "${GREEN}  ✓ FORWARD DROP (routing disabled)${NC}"
 }
 
 set_default_policies_ipv6() {
-    echo -e "${YELLOW}Mengatur default policies IPv6...${NC}"
+    echo -e "${YELLOW}Setting IPv6 default policies...${NC}"
     
     if command -v ip6tables &> /dev/null; then
         echo -e "${BLUE}  INPUT   : DROP (deny incoming)${NC}"
@@ -142,12 +142,12 @@ set_default_policies_ipv6() {
         ip6tables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
         ip6tables -A INPUT -i lo -j ACCEPT
         
-        echo -e "${GREEN}Default policies IPv6 telah diset${NC}"
+        echo -e "${GREEN}IPv6 default policies have been set${NC}"
         echo -e "${GREEN}  ✓ INPUT DROP (deny incoming)${NC}"
         echo -e "${GREEN}  ✓ OUTPUT ACCEPT (allow outgoing)${NC}"
         echo -e "${GREEN}  ✓ FORWARD DROP (routing disabled)${NC}"
     else
-        echo -e "${YELLOW}ip6tables tidak ditemukan, lewati IPv6${NC}"
+        echo -e "${YELLOW}ip6tables not found, skipping IPv6${NC}"
     fi
 }
 
@@ -155,7 +155,7 @@ set_default_policies() {
     set_default_policies_ipv4
     set_default_policies_ipv6
     echo -e "${GREEN}========================================${NC}"
-    echo -e "${GREEN}Default policies telah diset:${NC}"
+    echo -e "${GREEN}Default policies have been set:${NC}"
     echo -e "${GREEN}  INPUT   : DROP (deny incoming)${NC}"
     echo -e "${GREEN}  OUTPUT  : ACCEPT (allow outgoing)${NC}"
     echo -e "${GREEN}  FORWARD : DROP (routing disabled)${NC}"
@@ -167,37 +167,37 @@ enable_port_ipv4() {
     local PROTOCOL=${2:-tcp}
     
     if ! [[ "$PORT" =~ ^[0-9]+$ ]] || [ "$PORT" -lt 1 ] || [ "$PORT" -gt 65535 ]; then
-        echo -e "${RED}Error: Port harus berupa angka antara 1-65535${NC}"
+        echo -e "${RED}Error: Port must be a number between 1-65535${NC}"
         return 1
     fi
     
     if [ "$PROTOCOL" == "both" ]; then
         if iptables -C INPUT -p tcp --dport $PORT -j ACCEPT 2>/dev/null; then
-            echo -e "${YELLOW}Port $PORT sudah aktif (IPv4/TCP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already active (IPv4/TCP)${NC}"
         else
             iptables -A INPUT -p tcp --dport $PORT -j ACCEPT
-            echo -e "${GREEN}Port $PORT diaktifkan (IPv4/TCP)${NC}"
+            echo -e "${GREEN}Port $PORT enabled (IPv4/TCP)${NC}"
         fi
         
         if iptables -C INPUT -p udp --dport $PORT -j ACCEPT 2>/dev/null; then
-            echo -e "${YELLOW}Port $PORT sudah aktif (IPv4/UDP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already active (IPv4/UDP)${NC}"
         else
             iptables -A INPUT -p udp --dport $PORT -j ACCEPT
-            echo -e "${GREEN}Port $PORT diaktifkan (IPv4/UDP)${NC}"
+            echo -e "${GREEN}Port $PORT enabled (IPv4/UDP)${NC}"
         fi
     elif [ "$PROTOCOL" == "tcp" ]; then
         if iptables -C INPUT -p tcp --dport $PORT -j ACCEPT 2>/dev/null; then
-            echo -e "${YELLOW}Port $PORT sudah aktif (IPv4/TCP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already active (IPv4/TCP)${NC}"
         else
             iptables -A INPUT -p tcp --dport $PORT -j ACCEPT
-            echo -e "${GREEN}Port $PORT diaktifkan (IPv4/TCP)${NC}"
+            echo -e "${GREEN}Port $PORT enabled (IPv4/TCP)${NC}"
         fi
     elif [ "$PROTOCOL" == "udp" ]; then
         if iptables -C INPUT -p udp --dport $PORT -j ACCEPT 2>/dev/null; then
-            echo -e "${YELLOW}Port $PORT sudah aktif (IPv4/UDP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already active (IPv4/UDP)${NC}"
         else
             iptables -A INPUT -p udp --dport $PORT -j ACCEPT
-            echo -e "${GREEN}Port $PORT diaktifkan (IPv4/UDP)${NC}"
+            echo -e "${GREEN}Port $PORT enabled (IPv4/UDP)${NC}"
         fi
     fi
 }
@@ -207,42 +207,42 @@ enable_port_ipv6() {
     local PROTOCOL=${2:-tcp}
     
     if ! command -v ip6tables &> /dev/null; then
-        echo -e "${YELLOW}ip6tables tidak ditemukan, lewati IPv6${NC}"
+        echo -e "${YELLOW}ip6tables not found, skipping IPv6${NC}"
         return 1
     fi
     
     if ! [[ "$PORT" =~ ^[0-9]+$ ]] || [ "$PORT" -lt 1 ] || [ "$PORT" -gt 65535 ]; then
-        echo -e "${RED}Error: Port harus berupa angka antara 1-65535${NC}"
+        echo -e "${RED}Error: Port must be a number between 1-65535${NC}"
         return 1
     fi
     
     if [ "$PROTOCOL" == "both" ]; then
         if ip6tables -C INPUT -p tcp --dport $PORT -j ACCEPT 2>/dev/null; then
-            echo -e "${YELLOW}Port $PORT sudah aktif (IPv6/TCP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already active (IPv6/TCP)${NC}"
         else
             ip6tables -A INPUT -p tcp --dport $PORT -j ACCEPT
-            echo -e "${GREEN}Port $PORT diaktifkan (IPv6/TCP)${NC}"
+            echo -e "${GREEN}Port $PORT enabled (IPv6/TCP)${NC}"
         fi
         
         if ip6tables -C INPUT -p udp --dport $PORT -j ACCEPT 2>/dev/null; then
-            echo -e "${YELLOW}Port $PORT sudah aktif (IPv6/UDP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already active (IPv6/UDP)${NC}"
         else
             ip6tables -A INPUT -p udp --dport $PORT -j ACCEPT
-            echo -e "${GREEN}Port $PORT diaktifkan (IPv6/UDP)${NC}"
+            echo -e "${GREEN}Port $PORT enabled (IPv6/UDP)${NC}"
         fi
     elif [ "$PROTOCOL" == "tcp" ]; then
         if ip6tables -C INPUT -p tcp --dport $PORT -j ACCEPT 2>/dev/null; then
-            echo -e "${YELLOW}Port $PORT sudah aktif (IPv6/TCP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already active (IPv6/TCP)${NC}"
         else
             ip6tables -A INPUT -p tcp --dport $PORT -j ACCEPT
-            echo -e "${GREEN}Port $PORT diaktifkan (IPv6/TCP)${NC}"
+            echo -e "${GREEN}Port $PORT enabled (IPv6/TCP)${NC}"
         fi
     elif [ "$PROTOCOL" == "udp" ]; then
         if ip6tables -C INPUT -p udp --dport $PORT -j ACCEPT 2>/dev/null; then
-            echo -e "${YELLOW}Port $PORT sudah aktif (IPv6/UDP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already active (IPv6/UDP)${NC}"
         else
             ip6tables -A INPUT -p udp --dport $PORT -j ACCEPT
-            echo -e "${GREEN}Port $PORT diaktifkan (IPv6/UDP)${NC}"
+            echo -e "${GREEN}Port $PORT enabled (IPv6/UDP)${NC}"
         fi
     fi
 }
@@ -263,7 +263,7 @@ enable_port() {
             PROTOCOL="both"
             ;;
         *)
-            echo -e "${RED}Error: Protocol harus tcp, udp, atau both${NC}"
+            echo -e "${RED}Error: Protocol must be tcp, udp, or both${NC}"
             return 1
             ;;
     esac
@@ -280,7 +280,7 @@ enable_port() {
             enable_port_ipv6 "$PORT" "$PROTOCOL"
             ;;
         *)
-            echo -e "${RED}Error: IP version harus 4, 6, atau both${NC}"
+            echo -e "${RED}Error: IP version must be 4, 6, or both${NC}"
             return 1
             ;;
     esac
@@ -291,37 +291,37 @@ disable_port_ipv4() {
     local PROTOCOL=${2:-tcp}
     
     if ! [[ "$PORT" =~ ^[0-9]+$ ]] || [ "$PORT" -lt 1 ] || [ "$PORT" -gt 65535 ]; then
-        echo -e "${RED}Error: Port harus berupa angka antara 1-65535${NC}"
+        echo -e "${RED}Error: Port must be a number between 1-65535${NC}"
         return 1
     fi
     
     if [ "$PROTOCOL" == "both" ]; then
         if iptables -C INPUT -p tcp --dport $PORT -j ACCEPT 2>/dev/null; then
             iptables -D INPUT -p tcp --dport $PORT -j ACCEPT
-            echo -e "${RED}Port $PORT dinonaktifkan (IPv4/TCP)${NC}"
+            echo -e "${RED}Port $PORT disabled (IPv4/TCP)${NC}"
         else
-            echo -e "${YELLOW}Port $PORT sudah tidak aktif (IPv4/TCP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already inactive (IPv4/TCP)${NC}"
         fi
         
         if iptables -C INPUT -p udp --dport $PORT -j ACCEPT 2>/dev/null; then
             iptables -D INPUT -p udp --dport $PORT -j ACCEPT
-            echo -e "${RED}Port $PORT dinonaktifkan (IPv4/UDP)${NC}"
+            echo -e "${RED}Port $PORT disabled (IPv4/UDP)${NC}"
         else
-            echo -e "${YELLOW}Port $PORT sudah tidak aktif (IPv4/UDP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already inactive (IPv4/UDP)${NC}"
         fi
     elif [ "$PROTOCOL" == "tcp" ]; then
         if iptables -C INPUT -p tcp --dport $PORT -j ACCEPT 2>/dev/null; then
             iptables -D INPUT -p tcp --dport $PORT -j ACCEPT
-            echo -e "${RED}Port $PORT dinonaktifkan (IPv4/TCP)${NC}"
+            echo -e "${RED}Port $PORT disabled (IPv4/TCP)${NC}"
         else
-            echo -e "${YELLOW}Port $PORT sudah tidak aktif (IPv4/TCP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already inactive (IPv4/TCP)${NC}"
         fi
     elif [ "$PROTOCOL" == "udp" ]; then
         if iptables -C INPUT -p udp --dport $PORT -j ACCEPT 2>/dev/null; then
             iptables -D INPUT -p udp --dport $PORT -j ACCEPT
-            echo -e "${RED}Port $PORT dinonaktifkan (IPv4/UDP)${NC}"
+            echo -e "${RED}Port $PORT disabled (IPv4/UDP)${NC}"
         else
-            echo -e "${YELLOW}Port $PORT sudah tidak aktif (IPv4/UDP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already inactive (IPv4/UDP)${NC}"
         fi
     fi
 }
@@ -331,42 +331,42 @@ disable_port_ipv6() {
     local PROTOCOL=${2:-tcp}
     
     if ! command -v ip6tables &> /dev/null; then
-        echo -e "${YELLOW}ip6tables tidak ditemukan, lewati IPv6${NC}"
+        echo -e "${YELLOW}ip6tables not found, skipping IPv6${NC}"
         return 1
     fi
     
     if ! [[ "$PORT" =~ ^[0-9]+$ ]] || [ "$PORT" -lt 1 ] || [ "$PORT" -gt 65535 ]; then
-        echo -e "${RED}Error: Port harus berupa angka antara 1-65535${NC}"
+        echo -e "${RED}Error: Port must be a number between 1-65535${NC}"
         return 1
     fi
     
     if [ "$PROTOCOL" == "both" ]; then
         if ip6tables -C INPUT -p tcp --dport $PORT -j ACCEPT 2>/dev/null; then
             ip6tables -D INPUT -p tcp --dport $PORT -j ACCEPT
-            echo -e "${RED}Port $PORT dinonaktifkan (IPv6/TCP)${NC}"
+            echo -e "${RED}Port $PORT disabled (IPv6/TCP)${NC}"
         else
-            echo -e "${YELLOW}Port $PORT sudah tidak aktif (IPv6/TCP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already inactive (IPv6/TCP)${NC}"
         fi
         
         if ip6tables -C INPUT -p udp --dport $PORT -j ACCEPT 2>/dev/null; then
             ip6tables -D INPUT -p udp --dport $PORT -j ACCEPT
-            echo -e "${RED}Port $PORT dinonaktifkan (IPv6/UDP)${NC}"
+            echo -e "${RED}Port $PORT disabled (IPv6/UDP)${NC}"
         else
-            echo -e "${YELLOW}Port $PORT sudah tidak aktif (IPv6/UDP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already inactive (IPv6/UDP)${NC}"
         fi
     elif [ "$PROTOCOL" == "tcp" ]; then
         if ip6tables -C INPUT -p tcp --dport $PORT -j ACCEPT 2>/dev/null; then
             ip6tables -D INPUT -p tcp --dport $PORT -j ACCEPT
-            echo -e "${RED}Port $PORT dinonaktifkan (IPv6/TCP)${NC}"
+            echo -e "${RED}Port $PORT disabled (IPv6/TCP)${NC}"
         else
-            echo -e "${YELLOW}Port $PORT sudah tidak aktif (IPv6/TCP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already inactive (IPv6/TCP)${NC}"
         fi
     elif [ "$PROTOCOL" == "udp" ]; then
         if ip6tables -C INPUT -p udp --dport $PORT -j ACCEPT 2>/dev/null; then
             ip6tables -D INPUT -p udp --dport $PORT -j ACCEPT
-            echo -e "${RED}Port $PORT dinonaktifkan (IPv6/UDP)${NC}"
+            echo -e "${RED}Port $PORT disabled (IPv6/UDP)${NC}"
         else
-            echo -e "${YELLOW}Port $PORT sudah tidak aktif (IPv6/UDP)${NC}"
+            echo -e "${YELLOW}Port $PORT is already inactive (IPv6/UDP)${NC}"
         fi
     fi
 }
@@ -387,7 +387,7 @@ disable_port() {
             PROTOCOL="both"
             ;;
         *)
-            echo -e "${RED}Error: Protocol harus tcp, udp, atau both${NC}"
+            echo -e "${RED}Error: Protocol must be tcp, udp, or both${NC}"
             return 1
             ;;
     esac
@@ -404,7 +404,7 @@ disable_port() {
             disable_port_ipv6 "$PORT" "$PROTOCOL"
             ;;
         *)
-            echo -e "${RED}Error: IP version harus 4, 6, atau both${NC}"
+            echo -e "${RED}Error: IP version must be 4, 6, or both${NC}"
             return 1
             ;;
     esac
@@ -412,7 +412,7 @@ disable_port() {
 
 show_status() {
     echo -e "${GREEN}========================================${NC}"
-    echo -e "${GREEN}       STATUS FIREWALL                 ${NC}"
+    echo -e "${GREEN}       FIREWALL STATUS                 ${NC}"
     echo -e "${GREEN}========================================${NC}"
     
     echo -e "\n${YELLOW}=== DEFAULT POLICIES ===${NC}"
@@ -443,10 +443,10 @@ show_status() {
             fi
         done
     else
-        echo "  ip6tables tidak tersedia"
+        echo "  ip6tables not available"
     fi
     
-    echo -e "\n${YELLOW}=== ATURAN INPUT (Port yang diizinkan) ===${NC}"
+    echo -e "\n${YELLOW}=== INPUT RULES (Allowed Ports) ===${NC}"
     echo -e "\n${BLUE}IPv4:${NC}"
     local ipv4_ports=$(iptables -L INPUT -n | grep -E "ACCEPT.*dpt:")
     if [ -n "$ipv4_ports" ]; then
@@ -454,7 +454,7 @@ show_status() {
             echo "  $line"
         done
     else
-        echo -e "  ${RED}(Tidak ada port IPv4 yang diizinkan - semua incoming ditolak)${NC}"
+        echo -e "  ${RED}(No IPv4 ports allowed - all incoming denied)${NC}"
     fi
     
     echo -e "\n${BLUE}IPv6:${NC}"
@@ -465,46 +465,46 @@ show_status() {
                 echo "  $line"
             done
         else
-            echo -e "  ${RED}(Tidak ada port IPv6 yang diizinkan - semua incoming ditolak)${NC}"
+            echo -e "  ${RED}(No IPv6 ports allowed - all incoming denied)${NC}"
         fi
     fi
     
-    echo -e "\n${YELLOW}=== METODE PERSISTENCE ===${NC}"
+    echo -e "\n${YELLOW}=== PERSISTENCE METHOD ===${NC}"
     detect_persistence_method
     if [ -n "$PERSISTENCE_METHOD" ] && [ "$PERSISTENCE_METHOD" != "none" ]; then
-        echo "  Metode: $PERSISTENCE_METHOD"
+        echo "  Method: $PERSISTENCE_METHOD"
         if [ "$PERSISTENCE_METHOD" == "netfilter-persistent" ] || [ "$PERSISTENCE_METHOD" == "iptables-persistent" ]; then
             local service_name="netfilter-persistent"
             [ "$PERSISTENCE_METHOD" == "iptables-persistent" ] && service_name="iptables-persistent"
             echo "  Status: $(systemctl is-active $service_name 2>/dev/null || echo 'inactive')"
         fi
     else
-        echo "  ${RED}Metode persistence tidak terdeteksi!${NC}"
-        echo "  Aturan akan hilang setelah reboot."
+        echo "  ${RED}Persistence method not detected!${NC}"
+        echo "  Rules will be lost after reboot."
     fi
     echo -e "${GREEN}========================================${NC}"
 }
 
 reset_firewall() {
     echo -e "${RED}========================================${NC}"
-    echo -e "${RED}PERINGATAN: Ini akan menghapus SEMUA aturan!${NC}"
+    echo -e "${RED}WARNING: This will remove ALL rules!${NC}"
     echo -e "${RED}========================================${NC}"
-    echo -e "${YELLOW}Default policies setelah reset:${NC}"
+    echo -e "${YELLOW}Default policies after reset:${NC}"
     echo "  INPUT   : DROP (deny incoming)"
     echo "  OUTPUT  : ACCEPT (allow outgoing)"
     echo "  FORWARD : DROP (routing disabled)"
     echo ""
-    read -p "Lanjutkan? (y/N): " -n 1 -r
+    read -p "Continue? (y/N): " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "${YELLOW}Dibatalkan.${NC}"
+        echo -e "${YELLOW}Cancelled.${NC}"
         return 1
     fi
     
-    echo -e "${RED}Mereset firewall ke default...${NC}"
+    echo -e "${RED}Resetting firewall to default...${NC}"
     set_default_policies
     echo -e "${GREEN}========================================${NC}"
-    echo -e "${GREEN}Firewall telah direset!${NC}"
+    echo -e "${GREEN}Firewall has been reset!${NC}"
     echo -e "${GREEN}  ✓ INPUT DROP (deny incoming)${NC}"
     echo -e "${GREEN}  ✓ OUTPUT ACCEPT (allow outgoing)${NC}"
     echo -e "${GREEN}  ✓ FORWARD DROP (routing disabled)${NC}"
@@ -513,7 +513,7 @@ reset_firewall() {
 
 list_rules() {
     echo -e "${GREEN}========================================${NC}"
-    echo -e "${GREEN}       ATURAN IPTABLES LENGKAP         ${NC}"
+    echo -e "${GREEN}       FULL IPTABLES RULES             ${NC}"
     echo -e "${GREEN}========================================${NC}"
     
     echo -e "\n${YELLOW}=== DEFAULT POLICIES ===${NC}"
@@ -531,74 +531,74 @@ list_rules() {
 }
 
 save_rules_persistent() {
-    echo -e "${YELLOW}Menyimpan aturan secara persisten...${NC}"
+    echo -e "${YELLOW}Saving rules persistently...${NC}"
     
     detect_persistence_method
     
     case "$PERSISTENCE_METHOD" in
         "netfilter-persistent")
-            echo -e "${GREEN}Menggunakan netfilter-persistent...${NC}"
+            echo -e "${GREEN}Using netfilter-persistent...${NC}"
             mkdir -p /etc/iptables
             
             if command -v iptables-save &> /dev/null; then
                 iptables-save > /etc/iptables/rules.v4
-                echo -e "${GREEN}Aturan IPv4 disimpan di /etc/iptables/rules.v4${NC}"
+                echo -e "${GREEN}IPv4 rules saved to /etc/iptables/rules.v4${NC}"
             fi
             
             if command -v ip6tables-save &> /dev/null; then
                 ip6tables-save > /etc/iptables/rules.v6
-                echo -e "${GREEN}Aturan IPv6 disimpan di /etc/iptables/rules.v6${NC}"
+                echo -e "${GREEN}IPv6 rules saved to /etc/iptables/rules.v6${NC}"
             fi
             
             if systemctl restart netfilter-persistent 2>/dev/null; then
-                echo -e "${GREEN}Service netfilter-persistent direstart${NC}"
+                echo -e "${GREEN}netfilter-persistent service restarted${NC}"
             elif service netfilter-persistent restart 2>/dev/null; then
-                echo -e "${GREEN}Service netfilter-persistent direstart${NC}"
+                echo -e "${GREEN}netfilter-persistent service restarted${NC}"
             else
-                echo -e "${YELLOW}Service tidak bisa direstart, tapi aturan sudah disimpan${NC}"
+                echo -e "${YELLOW}Service could not be restarted, but rules have been saved${NC}"
             fi
             ;;
             
         "iptables-persistent")
-            echo -e "${GREEN}Menggunakan iptables-persistent...${NC}"
+            echo -e "${GREEN}Using iptables-persistent...${NC}"
             mkdir -p /etc/iptables
             
             if command -v iptables-save &> /dev/null; then
                 iptables-save > /etc/iptables/rules.v4
-                echo -e "${GREEN}Aturan IPv4 disimpan di /etc/iptables/rules.v4${NC}"
+                echo -e "${GREEN}IPv4 rules saved to /etc/iptables/rules.v4${NC}"
             fi
             
             if command -v ip6tables-save &> /dev/null; then
                 ip6tables-save > /etc/iptables/rules.v6
-                echo -e "${GREEN}Aturan IPv6 disimpan di /etc/iptables/rules.v6${NC}"
+                echo -e "${GREEN}IPv6 rules saved to /etc/iptables/rules.v6${NC}"
             fi
             
             if systemctl restart iptables-persistent 2>/dev/null; then
-                echo -e "${GREEN}Service iptables-persistent direstart${NC}"
+                echo -e "${GREEN}iptables-persistent service restarted${NC}"
             else
                 service iptables-persistent restart 2>/dev/null
             fi
             ;;
             
         "service-save")
-            echo -e "${GREEN}Menggunakan service iptables save...${NC}"
+            echo -e "${GREEN}Using service iptables save...${NC}"
             service iptables save
             if [ $? -eq 0 ]; then
-                echo -e "${GREEN}Aturan berhasil disimpan${NC}"
+                echo -e "${GREEN}Rules saved successfully${NC}"
             else
-                echo -e "${RED}Gagal menyimpan aturan${NC}"
+                echo -e "${RED}Failed to save rules${NC}"
             fi
             ;;
             
         "if-pre-up")
-            echo -e "${GREEN}Menggunakan if-pre-up method...${NC}"
+            echo -e "${GREEN}Using if-pre-up method...${NC}"
             mkdir -p /etc/iptables
             iptables-save > /etc/iptables/rules.v4
-            echo -e "${GREEN}Aturan IPv4 disimpan di /etc/iptables/rules.v4${NC}"
+            echo -e "${GREEN}IPv4 rules saved to /etc/iptables/rules.v4${NC}"
             
             if command -v ip6tables-save &> /dev/null; then
                 ip6tables-save > /etc/iptables/rules.v6
-                echo -e "${GREEN}Aturan IPv6 disimpan di /etc/iptables/rules.v6${NC}"
+                echo -e "${GREEN}IPv6 rules saved to /etc/iptables/rules.v6${NC}"
             fi
             
             cat > /etc/network/if-pre-up.d/iptables << 'EOF'
@@ -609,48 +609,48 @@ if [ -f /etc/iptables/rules.v6 ] && command -v ip6tables-restore &> /dev/null; t
 fi
 EOF
             chmod +x /etc/network/if-pre-up.d/iptables
-            echo -e "${GREEN}Restore script dibuat di /etc/network/if-pre-up.d/iptables${NC}"
+            echo -e "${GREEN}Restore script created at /etc/network/if-pre-up.d/iptables${NC}"
             ;;
             
         "manual-save")
-            echo -e "${YELLOW}Menggunakan metode manual...${NC}"
+            echo -e "${YELLOW}Using manual method...${NC}"
             mkdir -p /etc/iptables
             iptables-save > /etc/iptables/rules.v4
-            echo -e "${GREEN}Aturan IPv4 disimpan di /etc/iptables/rules.v4${NC}"
+            echo -e "${GREEN}IPv4 rules saved to /etc/iptables/rules.v4${NC}"
             
             if command -v ip6tables-save &> /dev/null; then
                 ip6tables-save > /etc/iptables/rules.v6
-                echo -e "${GREEN}Aturan IPv6 disimpan di /etc/iptables/rules.v6${NC}"
+                echo -e "${GREEN}IPv6 rules saved to /etc/iptables/rules.v6${NC}"
             fi
             
-            echo -e "${YELLOW}Untuk persistence yang lebih baik, install:${NC}"
+            echo -e "${YELLOW}For better persistence, install:${NC}"
             echo "  Debian/Ubuntu: apt install iptables-persistent"
             echo "  RHEL/CentOS: yum install iptables-services"
             ;;
             
         "none"|*)
-            echo -e "${RED}ERROR: Tidak ada metode persistence yang ditemukan!${NC}"
-            echo -e "${YELLOW}Install salah satu package berikut:${NC}"
+            echo -e "${RED}ERROR: No persistence method found!${NC}"
+            echo -e "${YELLOW}Install one of the following packages:${NC}"
             echo "  Debian/Ubuntu: apt install iptables-persistent"
             echo "  RHEL/CentOS: yum install iptables-services"
-            echo "  Atau gunakan: ipc setup-persistence"
+            echo "  Or use: ipc setup-persistence"
             return 1
             ;;
     esac
     
-    echo -e "${GREEN}Aturan berhasil disimpan secara persisten!${NC}"
+    echo -e "${GREEN}Rules saved persistently!${NC}"
 }
 
 setup_persistence() {
-    echo -e "${YELLOW}Setup persistence otomatis...${NC}"
+    echo -e "${YELLOW}Setting up persistence automatically...${NC}"
     
     if [ -f /etc/debian_version ]; then
-        echo -e "${GREEN}Mendeteksi sistem Debian/Ubuntu${NC}"
+        echo -e "${GREEN}Detected Debian/Ubuntu system${NC}"
         
         if dpkg -l | grep -q "iptables-persistent\|netfilter-persistent"; then
-            echo -e "${GREEN}Package persistence sudah terinstall${NC}"
+            echo -e "${GREEN}Persistence package already installed${NC}"
         else
-            echo -e "${YELLOW}Menginstall iptables-persistent...${NC}"
+            echo -e "${YELLOW}Installing iptables-persistent...${NC}"
             apt update
             DEBIAN_FRONTEND=noninteractive apt install -y iptables-persistent
         fi
@@ -666,51 +666,51 @@ setup_persistence() {
         fi
         
         if systemctl list-unit-files 2>/dev/null | grep -q "netfilter-persistent.service"; then
-            echo -e "${GREEN}Menggunakan netfilter-persistent.service${NC}"
+            echo -e "${GREEN}Using netfilter-persistent.service${NC}"
             systemctl enable netfilter-persistent
             systemctl start netfilter-persistent
             systemctl status netfilter-persistent --no-pager
         elif systemctl list-unit-files 2>/dev/null | grep -q "iptables-persistent.service"; then
-            echo -e "${GREEN}Menggunakan iptables-persistent.service${NC}"
+            echo -e "${GREEN}Using iptables-persistent.service${NC}"
             systemctl enable iptables-persistent
             systemctl start iptables-persistent
             systemctl status iptables-persistent --no-pager
         else
-            echo -e "${YELLOW}Service tidak ditemukan, tapi aturan sudah disimpan${NC}"
+            echo -e "${YELLOW}Service not found, but rules have been saved${NC}"
         fi
         
     elif [ -f /etc/redhat-release ]; then
-        echo -e "${GREEN}Mendeteksi sistem RHEL/CentOS/Fedora${NC}"
+        echo -e "${GREEN}Detected RHEL/CentOS/Fedora system${NC}"
         if ! rpm -q iptables-services &> /dev/null; then
-            echo -e "${YELLOW}Menginstall iptables-services...${NC}"
+            echo -e "${YELLOW}Installing iptables-services...${NC}"
             yum install -y iptables-services
         else
-            echo -e "${GREEN}iptables-services sudah terinstall${NC}"
+            echo -e "${GREEN}iptables-services already installed${NC}"
         fi
         systemctl enable iptables
         systemctl start iptables
         service iptables save
         
     else
-        echo -e "${RED}Sistem tidak didukung untuk setup otomatis${NC}"
-        echo -e "${YELLOW}Silakan install secara manual:${NC}"
+        echo -e "${RED}System not supported for automatic setup${NC}"
+        echo -e "${YELLOW}Please install manually:${NC}"
         echo "  Debian/Ubuntu: apt install iptables-persistent"
         echo "  RHEL/CentOS: yum install iptables-services"
         return 1
     fi
     
-    echo -e "${GREEN}Persistence berhasil di-setup!${NC}"
-    echo -e "${GREEN}Aturan saat ini telah disimpan dan akan tetap aktif setelah reboot${NC}"
+    echo -e "${GREEN}Persistence setup successfully!${NC}"
+    echo -e "${GREEN}Current rules have been saved and will remain active after reboot${NC}"
 }
 
 check_persistence() {
     echo -e "${GREEN}========================================${NC}"
-    echo -e "${GREEN}    CEK METODE PERSISTENCE             ${NC}"
+    echo -e "${GREEN}    CHECK PERSISTENCE METHOD           ${NC}"
     echo -e "${GREEN}========================================${NC}"
     
     detect_persistence_method
     
-    echo -e "\n${YELLOW}Metode yang terdeteksi: ${NC}$PERSISTENCE_METHOD"
+    echo -e "\n${YELLOW}Detected method: ${NC}$PERSISTENCE_METHOD"
     
     case "$PERSISTENCE_METHOD" in
         "netfilter-persistent")
@@ -722,13 +722,13 @@ check_persistence() {
                 echo "  IPv4 Rules exist: Yes"
                 echo "  IPv4 Rules size: $(du -h /etc/iptables/rules.v4 | cut -f1)"
             else
-                echo "  ${RED}IPv4 Rules file tidak ditemukan!${NC}"
+                echo "  ${RED}IPv4 Rules file not found!${NC}"
             fi
             if [ -f /etc/iptables/rules.v6 ]; then
                 echo "  IPv6 Rules exist: Yes"
                 echo "  IPv6 Rules size: $(du -h /etc/iptables/rules.v6 | cut -f1)"
             else
-                echo "  ${YELLOW}IPv6 Rules file tidak ditemukan${NC}"
+                echo "  ${YELLOW}IPv6 Rules file not found${NC}"
             fi
             ;;
         "iptables-persistent")
@@ -756,27 +756,27 @@ check_persistence() {
             if [ -f /etc/iptables/rules.v4 ]; then
                 echo "  IPv4 Rules file: /etc/iptables/rules.v4 (exists)"
             else
-                echo "  ${RED}Tidak ada file rules IPv4 ditemukan!${NC}"
+                echo "  ${RED}No IPv4 rules file found!${NC}"
             fi
             if [ -f /etc/iptables/rules.v6 ]; then
                 echo "  IPv6 Rules file: /etc/iptables/rules.v6 (exists)"
             fi
             ;;
         "none")
-            echo -e "${RED}Tidak ada metode persistence terdeteksi!${NC}"
-            echo -e "${YELLOW}Aturan akan hilang setelah reboot.${NC}"
-            echo -e "${YELLOW}Jalankan: ipc setup-persistence${NC}"
+            echo -e "${RED}No persistence method detected!${NC}"
+            echo -e "${YELLOW}Rules will be lost after reboot.${NC}"
+            echo -e "${YELLOW}Run: ipc setup-persistence${NC}"
             ;;
     esac
 }
 
 if [ "$EUID" -ne 0 ]; then 
-    echo -e "${RED}Error: Script harus dijalankan sebagai root (sudo)${NC}"
+    echo -e "${RED}Error: Script must be run as root (sudo)${NC}"
     exit 1
 fi
 
 if ! command -v iptables &> /dev/null; then
-    echo -e "${RED}Error: iptables tidak ditemukan. Install dengan: apt install iptables atau yum install iptables${NC}"
+    echo -e "${RED}Error: iptables not found. Install with: apt install iptables or yum install iptables${NC}"
     exit 1
 fi
 
@@ -787,7 +787,7 @@ case "$1" in
         ;;
     enable)
         if [ -z "$2" ]; then
-            echo -e "${RED}Error: Port harus ditentukan${NC}"
+            echo -e "${RED}Error: Port must be specified${NC}"
             show_help
             exit 1
         fi
@@ -799,7 +799,7 @@ case "$1" in
         ;;
     disable)
         if [ -z "$2" ]; then
-            echo -e "${RED}Error: Port harus ditentukan${NC}"
+            echo -e "${RED}Error: Port must be specified${NC}"
             show_help
             exit 1
         fi
@@ -836,7 +836,7 @@ case "$1" in
         echo "Firewall Management Tool"
         ;;
     *)
-        echo -e "${RED}Error: Command tidak dikenal: $1${NC}"
+        echo -e "${RED}Error: Unknown command: $1${NC}"
         echo ""
         show_help
         exit 1

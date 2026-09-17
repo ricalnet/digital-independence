@@ -58,6 +58,7 @@ echo "Step 11: Setting up dipen wrapper function..."
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DIPEN_PATH="${SCRIPT_DIR}/dipen.sh"
+IPC_PATH="${SCRIPT_DIR}/ipc"
 
 MARKER_BEGIN="# >>> dipen wrapper >>>"
 MARKER_END="# <<< dipen wrapper <<<"
@@ -157,6 +158,26 @@ if [ -f "$DIPEN_PATH" ]; then
 else
     echo "⚠️  dipen.sh not found at: $DIPEN_PATH"
     echo "   Skipping dipen wrapper setup"
+fi
+
+# 12. Install ipc to /usr/local/bin (with confirmation)
+echo ""
+echo "Step 12: Installing ipc (Iptables Controller) to /usr/local/bin..."
+if [ -f "$IPC_PATH" ]; then
+    read -p "Do you want to install 'ipc' to /usr/local/bin/ipc? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "Installing ipc to /usr/local/bin/ipc..."
+        sudo cp "$IPC_PATH" /usr/local/bin/ipc
+        sudo chmod 755 /usr/local/bin/ipc
+        echo "✅ ipc installed successfully at /usr/local/bin/ipc"
+        echo "   Verify with: ipc version"
+    else
+        echo "⏭️  Skipped ipc installation"
+    fi
+else
+    echo "⚠️  ipc not found at: $IPC_PATH"
+    echo "   Skipping ipc installation"
 fi
 
 echo ""
