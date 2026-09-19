@@ -20,17 +20,17 @@ route:
 receivers:
   - name: 'default'
     webhook_configs:
-      - url: 'http://ntfy-server:80/alertmanager'
+      - url: 'http://ntfy-alertmanager:8080'
         send_resolved: true
 
   - name: 'critical'
     webhook_configs:
-      - url: 'http://ntfy-server:80/critical-alerts'
+      - url: 'http://ntfy-alertmanager:8080'
         send_resolved: true
 
   - name: 'warning'
     webhook_configs:
-      - url: 'http://ntfy-server:80/warning-alerts'
+      - url: 'http://ntfy-alertmanager:8080'
         send_resolved: true
 
 inhibit_rules:

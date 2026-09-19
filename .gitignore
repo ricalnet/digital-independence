@@ -88,6 +88,7 @@ monitoring/.env
 monitoring/grafana/provisioning/alerting
 monitoring/grafana/provisioning/plugins
 monitoring/grafana/provisioning/dashboards/json/.gitkeep
+monitoring/ntfy-alertmanager/config
 
 # MQTT Broker
 mqtt-broker/.env

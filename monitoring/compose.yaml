@@ -299,6 +299,41 @@ services:
         max-file: "3"
         compress: "true"
 
+  ntfy-alertmanager:
+    image: xenrox/ntfy-alertmanager:latest
+    container_name: ntfy-alertmanager
+    restart: unless-stopped
+    volumes:
+      - ./ntfy-alertmanager/config:/etc/ntfy-alertmanager/config:ro
+    networks:
+      - monitoring
+    depends_on:
+      - alertmanager
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    mem_limit: 64m
+    mem_reservation: 16m
+    memswap_limit: 64m
+    cpus: 0.1
+    pids_limit: 50
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+
 networks:
   monitoring:
     name: monitoring_network

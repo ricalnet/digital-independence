@@ -1,0 +1,12 @@
+# Copy this file to the name "config" with the command "cp config.example config"
+
+http-address :8080
+
+ntfy {
+  topic "http://ntfy-server:80/alertmanager"
+  token "your-ntfy-secret-token"
+}
+
+alertmanager {
+  url "http://alertmanager:9093"
+}
