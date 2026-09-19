@@ -63,9 +63,6 @@ Filosofi Inti:
 | Vaultwarden | `vaultwarden/` | 8000 | Pengelola kata sandi ringan kompatibel Bitwarden |
 | Authentik | `authentik/` | 9000, 9443 | Manajemen identitas dan akses lengkap (SSO) |
 
-> [!WARNING]
-> Wazuh belum diuji di Podman semenjak migrasi dari Docker. Konfigurasi Wazuh sebelumnya telah diuji dan berjalan dengan baik di Docker, namun belum diverifikasi ulang setelah migrasi ke Podman. Gunakan dengan hati-hati dan laporkan jika menemukan masalah.
-
 ### 🛡️ Privasi & Anonimitas
 
 | Layanan | Direktori | Port | Tujuan |

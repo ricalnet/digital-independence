@@ -58,13 +58,10 @@ Core Philosophy:
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Wazuh | `wazuh/` | 443 | Security monitoring and threat detection |
+| Wazuh | `wazuh/` | 8443 | Security monitoring and threat detection |
 | Pi-hole | `pi-hole/` | 53, 8080 | Network-wide ad blocking and DNS filtering |
 | Vaultwarden | `vaultwarden/` | 8000 | Lightweight Bitwarden-compatible password manager |
 | Authentik | `authentik/` | 9000, 9443 | Full identity and access management (SSO) |
-
-> [!WARNING]
-> Wazuh has not been tested on Podman since the migration from Docker. The previous Wazuh configuration was tested and worked well on Docker, but has not been re-verified after migrating to Podman. Use with caution and report any issues.
 
 ### 🛡️ Privacy & Anonymity
 

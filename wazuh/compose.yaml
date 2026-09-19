@@ -10,8 +10,8 @@ services:
         soft: -1
         hard: -1
       nofile:
-        soft: 655360
-        hard: 655360
+        soft: 65536
+        hard: 524288
 
     ports:
       - "${MANAGER_PORT_1514:-127.0.0.1:1514:1514}"
@@ -30,14 +30,20 @@ services:
       - API_USERNAME=${API_USERNAME:-wazuh-wui}
       - API_PASSWORD=${API_PASSWORD}
 
-    deploy:
-      resources:
-        limits:
-          cpus: "${MANAGER_CPU_LIMIT:-1.5}"
-          memory: ${MANAGER_MEMORY_LIMIT:-2G}
-        reservations:
-          cpus: "${MANAGER_CPU_RESERVATION:-0.5}"
-          memory: ${MANAGER_MEMORY_RESERVATION:-1G}
+    mem_limit: ${MANAGER_MEMORY_LIMIT:-1G}
+    mem_reservation: ${MANAGER_MEMORY_RESERVATION:-512M}
+    cpus: ${MANAGER_CPU_LIMIT:-1.0}
+    pids_limit: 500
+    mem_swappiness: 10
+    oom_score_adj: -100
+
+    security_opt:
+      - no-new-privileges=false
+
+    read_only: false
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=256M
+      - /run:rw,exec,nosuid,size=128M
 
     volumes:
       - wazuh_api_configuration:/var/ossec/api/configuration
@@ -58,11 +64,16 @@ services:
 
     networks:
       - wazuh-network
+
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "20m"
+        max-file: "5"
+        compress: "true"
+
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
 
   wazuh.indexer:
     image: wazuh/wazuh-indexer:${WAZUH_VERSION:-4.14.7}
@@ -74,7 +85,7 @@ services:
       - "${INDEXER_PORT_9200:-127.0.0.1:9200:9200}"
 
     environment:
-      - "OPENSEARCH_JAVA_OPTS=-Xms${INDEXER_HEAP_SIZE:-512m} -Xmx${INDEXER_MAX_HEAP:-768m}"
+      - "OPENSEARCH_JAVA_OPTS=-Xms${INDEXER_HEAP_SIZE:-384m} -Xmx${INDEXER_MAX_HEAP:-512m}"
 
     ulimits:
       memlock:
@@ -84,14 +95,20 @@ services:
         soft: 65536
         hard: 65536
 
-    deploy:
-      resources:
-        limits:
-          cpus: "${INDEXER_CPU_LIMIT:-0.8}"
-          memory: ${INDEXER_MEMORY_LIMIT:-1G}
-        reservations:
-          cpus: "${INDEXER_CPU_RESERVATION:-0.3}"
-          memory: ${INDEXER_MEMORY_RESERVATION:-512M}
+    mem_limit: ${INDEXER_MEMORY_LIMIT:-768M}
+    mem_reservation: ${INDEXER_MEMORY_RESERVATION:-384M}
+    cpus: ${INDEXER_CPU_LIMIT:-0.6}
+    pids_limit: 300
+    mem_swappiness: 10
+    oom_score_adj: -500
+
+    security_opt:
+      - no-new-privileges=false
+
+    read_only: false
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128M
+      - /run:rw,exec,nosuid,size=64M
 
     volumes:
       - wazuh-indexer-data:/var/lib/wazuh-indexer
@@ -104,23 +121,24 @@ services:
       - ./config/wazuh_indexer/internal_users.yml:/usr/share/wazuh-indexer/config/opensearch-security/internal_users.yml:ro
 
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          'curl -fks https://localhost:9200/_plugins/_security/health | grep -q ''"status":"UP"''',
-        ]
+      test: ["CMD-SHELL", "curl -fks https://localhost:9200/_plugins/_security/health | grep -q '\"status\":\"UP\"'"]
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 60s
+      start_period: 90s
 
     networks:
       - wazuh-network
+
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "20m"
+        max-file: "5"
+        compress: "true"
+
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
 
   wazuh.dashboard:
     image: wazuh/wazuh-dashboard:${WAZUH_VERSION:-4.14.7}
@@ -140,14 +158,20 @@ services:
       - API_USERNAME=${API_USERNAME:-wazuh-wui}
       - API_PASSWORD=${API_PASSWORD}
 
-    deploy:
-      resources:
-        limits:
-          cpus: "${DASHBOARD_CPU_LIMIT:-0.5}"
-          memory: ${DASHBOARD_MEMORY_LIMIT:-768M}
-        reservations:
-          cpus: "${DASHBOARD_CPU_RESERVATION:-0.2}"
-          memory: ${DASHBOARD_MEMORY_RESERVATION:-256M}
+    mem_limit: ${DASHBOARD_MEMORY_LIMIT:-512M}
+    mem_reservation: ${DASHBOARD_MEMORY_RESERVATION:-192M}
+    cpus: ${DASHBOARD_CPU_LIMIT:-0.4}
+    pids_limit: 200
+    mem_swappiness: 10
+    oom_score_adj: -200
+
+    security_opt:
+      - no-new-privileges=false
+
+    read_only: false
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128M
+      - /run:rw,exec,nosuid,size=64M
 
     volumes:
       - ./config/wazuh_indexer_ssl_certs/wazuh.dashboard.pem:/usr/share/wazuh-dashboard/certs/wazuh-dashboard.pem:ro
@@ -159,20 +183,11 @@ services:
       - wazuh-dashboard-custom:/usr/share/wazuh-dashboard/plugins/wazuh/public/assets/custom
 
     healthcheck:
-      test:
-        [
-          "CMD",
-          "curl",
-          "-k",
-          "-s",
-          "-o",
-          "/dev/null",
-          "https://localhost:5601/login",
-        ]
+      test: ["CMD", "curl", "-k", "-s", "-o", "/dev/null", "https://localhost:5601/login"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 60s
 
     depends_on:
       - wazuh.indexer
@@ -180,11 +195,16 @@ services:
 
     networks:
       - wazuh-network
+
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "20m"
+        max-file: "5"
+        compress: "true"
+
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
 
 volumes:
   wazuh_api_configuration:
