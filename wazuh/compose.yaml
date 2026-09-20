@@ -1,6 +1,6 @@
 services:
   wazuh.manager:
-    image: wazuh/wazuh-manager:${WAZUH_VERSION:-4.14.7}
+    image: docker.io/wazuh/wazuh-manager:${WAZUH_VERSION:-4.14.7}
     hostname: wazuh.manager
     container_name: wazuh.manager
     restart: always
@@ -76,7 +76,7 @@ services:
     stop_signal: SIGTERM
 
   wazuh.indexer:
-    image: wazuh/wazuh-indexer:${WAZUH_VERSION:-4.14.7}
+    image: docker.io/wazuh/wazuh-indexer:${WAZUH_VERSION:-4.14.7}
     hostname: wazuh.indexer
     container_name: wazuh.indexer
     restart: always
@@ -141,7 +141,7 @@ services:
     stop_signal: SIGTERM
 
   wazuh.dashboard:
-    image: wazuh/wazuh-dashboard:${WAZUH_VERSION:-4.14.7}
+    image: docker.io/wazuh/wazuh-dashboard:${WAZUH_VERSION:-4.14.7}
     hostname: wazuh.dashboard
     container_name: wazuh.dashboard
     restart: always
