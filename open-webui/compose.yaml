@@ -32,7 +32,7 @@ services:
       - ENABLE_PASSWORD_AUTH=${ENABLE_PASSWORD_AUTH:-true}
       - OAUTH_SCOPES=${OAUTH_SCOPES:-openid email profile}
       - ENABLE_OAUTH_ROLE_MANAGEMENT=${ENABLE_OAUTH_ROLE_MANAGEMENT:-false}
-      - CORS_ALLOW_ORIGIN=${CORS_ALLOW_ORIGIN:-https://${DOMAIN:-localhost}}
+      - CORS_ALLOW_ORIGIN=${CORS_ALLOW_ORIGIN}
       - CORS_ALLOW_CREDENTIALS=${CORS_ALLOW_CREDENTIALS:-true}
       - SESSION_COOKIE_SAMESITE=${SESSION_COOKIE_SAMESITE:-lax}
       - SESSION_COOKIE_HTTPONLY=${SESSION_COOKIE_HTTPONLY:-true}
@@ -80,6 +80,8 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+      # ollama:
+      #   condition: service_healthy
 
   redis:
     container_name: redis
@@ -105,7 +107,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
-    mem_limit: 256m    
+    mem_limit: 256m
     mem_reservation: 64m
     memswap_limit: 256m
     cpus: 0.3
@@ -133,41 +135,58 @@ services:
     stop_grace_period: 30s
     stop_signal: SIGTERM
 
-  # Ollama
   # ollama:
-  #   image: ollama/ollama:latest
+  #   image: ${OLLAMA_IMAGE:-docker.io/ollama/ollama:latest}
   #   container_name: ollama
   #   restart: unless-stopped
   #   ports:
-  #     - "127.0.0.1:11434:11434"
+  #     - "${OLLAMA_BIND_ADDRESS:-127.0.0.1}:${OLLAMA_PORT:-11434}:11434"
   #   volumes:
   #     - ollama_data:/root/.ollama
   #   environment:
-  #     - OLLAMA_HOST=0.0.0.0
-  #     - OLLAMA_KEEP_ALIVE=5m
-  #     - OLLAMA_NUM_PARALLEL=1
-  #     - OLLAMA_MAX_LOADED_MODELS=1
-  #     - OLLAMA_NUM_THREADS=4
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         memory: 8G
-  #         cpus: '4'
-  #       reservations:
-  #         memory: 4G
+  #     - OLLAMA_HOST=${OLLAMA_HOST:-0.0.0.0}
+  #     - OLLAMA_KEEP_ALIVE=${OLLAMA_KEEP_ALIVE:-5m}
+  #     - OLLAMA_NUM_PARALLEL=${OLLAMA_NUM_PARALLEL:-1}
+  #     - OLLAMA_MAX_LOADED_MODELS=${OLLAMA_MAX_LOADED_MODELS:-1}
+  #     - OLLAMA_NUM_THREADS=${OLLAMA_NUM_THREADS:-4}
+  #     - OLLAMA_MAX_QUEUE=${OLLAMA_MAX_QUEUE:-64}
+  #     - OLLAMA_LOAD_TIMEOUT=${OLLAMA_LOAD_TIMEOUT:-5m}
+  #     - OLLAMA_FLASH_ATTENTION=${OLLAMA_FLASH_ATTENTION:-false}
+  #     - OLLAMA_KV_CACHE_TYPE=${OLLAMA_KV_CACHE_TYPE:-f16}
+  #     - OLLAMA_DEBUG=${OLLAMA_DEBUG:-false}
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "ollama list || exit 1"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 60s
+  #   mem_limit: ${OLLAMA_MEM_LIMIT:-4g}
+  #   mem_reservation: ${OLLAMA_MEM_RESERVATION:-2g}
+  #   memswap_limit: ${OLLAMA_MEMSWAP_LIMIT:-4g}
+  #   cpus: ${OLLAMA_CPUS:-2.0}
+  #   pids_limit: 300
+  #   oom_score_adj: -200
   #   security_opt:
-  #     - no-new-privileges:true
+  #     - no-new-privileges=true
   #   cap_drop:
   #     - ALL
   #   cap_add:
   #     - NET_BIND_SERVICE
+  #     - CHOWN
+  #     - DAC_OVERRIDE
+  #     - SETGID
+  #     - SETUID
+  #     - FOWNER
   #   logging:
   #     driver: "json-file"
   #     options:
-  #       max-size: "10m"
+  #       max-size: "20m"
   #       max-file: "3"
+  #       compress: "true"
   #   networks:
   #     - openwebui-network
+  #   stop_grace_period: 60s
+  #   stop_signal: SIGTERM
 
 volumes:
   openwebui-data:
