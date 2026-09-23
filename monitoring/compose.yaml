@@ -114,6 +114,8 @@ services:
       - "${GRAFANA_BIND_ADDRESS:-127.0.0.1}:${GRAFANA_PORT:-3000}:3000"
     networks:
       - monitoring
+      # comment if you're not using Wazuh
+      - wazuh-network
     depends_on:
       prometheus:
         condition: service_healthy
@@ -338,6 +340,10 @@ networks:
   monitoring:
     name: monitoring_network
     driver: bridge
+  # comment if you're not using Wazuh
+  wazuh-network:
+    external: true
+    name: wazuh-network
 
 volumes:
   prometheus_data:
