@@ -29,9 +29,16 @@ sudo loginctl enable-linger $USER
 echo "Step 5: Checking linger status..."
 loginctl show-user $USER | grep Linger
 
-# 6. Install podman-compose
-echo "Step 6: Installing podman-compose..."
-sudo apt install -y podman-compose
+# 6. Install podman-compose via venv + pip
+echo "Step 6: Installing podman-compose via Python venv..."
+VENV_DIR="$HOME/.local/share/podman-compose-venv"
+python3 -m venv "$VENV_DIR"
+source "$VENV_DIR/bin/activate"
+pip install --upgrade pip
+pip install podman-compose
+deactivate
+sudo ln -sf "$VENV_DIR/bin/podman-compose" /usr/local/bin/podman-compose
+echo "✅ podman-compose installed at /usr/local/bin/podman-compose"
 
 # 7. Check podman-compose version
 echo "Step 7: Checking podman-compose version..."
