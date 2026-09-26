@@ -6,11 +6,11 @@ services:
       - "${LIBRETRANSLATE_BIND_ADDRESS:-127.0.0.1}:${LIBRETRANSLATE_PORT:-5001}:5000"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5000/health || exit 1"]
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/languages', timeout=5)\" || exit 1"]
       interval: 30s
-      timeout: 30s
+      timeout: 10s
       retries: 5
-      start_period: 90s
+      start_period: 120s
     tty: true
     environment:
       - LT_LOAD_ONLY=${LT_LOAD_ONLY:-en,id,ja,zh,es,fr,de}
@@ -29,9 +29,9 @@ services:
       - LT_FRONTEND_LANGUAGE_TARGET=${LT_FRONTEND_LANGUAGE_TARGET:-id}
     volumes:
       - libretranslate_models:/home/libretranslate/.local:rw
-    mem_limit: 896m
-    mem_reservation: 256m
-    memswap_limit: 1g
+    mem_limit: ${MEM_LIMIT:-896m}
+    mem_reservation: ${MEM_RESERVATION:-256m}
+    memswap_limit: ${MEMSWAP_LIMIT:-1g}
     cpus: 0.8
     pids_limit: 200
     oom_score_adj: -100
