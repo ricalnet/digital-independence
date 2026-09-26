@@ -35,11 +35,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 15s
-    mem_limit: 192m
-    mem_reservation: 64m
-    memswap_limit: 192m
-    cpus: 0.2
-    pids_limit: 100
+    mem_limit: ${MEM_LIMIT:-192m}
+    mem_reservation: ${MEM_RESERVATION:-64m}
+    memswap_limit: ${MEMSWAP_LIMIT:-192m}
+    cpus: ${CPUS:-0.2}
+    pids_limit: ${PIDS_LIMIT:-100}
     logging:
       driver: "json-file"
       options:

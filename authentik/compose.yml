@@ -139,11 +139,11 @@ services:
         condition: service_healthy
     networks:
       - authentik
-    mem_limit: 1g
-    mem_reservation: 256m
-    memswap_limit: 1.2g
-    cpus: 1.0
-    pids_limit: 500
+    mem_limit: ${SERVER_MEM_LIMIT:-1g}
+    mem_reservation: ${SERVER_MEM_RESERVATION:-256m}
+    memswap_limit: ${SERVER_MEMSWAP_LIMIT:-1.2g}
+    cpus: ${SERVER_CPUS:-1.0}
+    pids_limit: ${SERVER_PIDS_LIMIT:-500}
     oom_score_adj: 0
     security_opt:
       - no-new-privileges=true
@@ -196,11 +196,11 @@ services:
         condition: service_healthy
     networks:
       - authentik
-    mem_limit: 768m
-    mem_reservation: 192m
-    memswap_limit: 896m
-    cpus: 0.8
-    pids_limit: 300
+    mem_limit: ${WORKER_MEM_LIMIT:-768m}
+    mem_reservation: ${WORKER_MEM_RESERVATION:-192m}
+    memswap_limit: ${WORKER_MEMSWAP_LIMIT:-896m}
+    cpus: ${WORKER_CPUS:-0.8}
+    pids_limit: ${WORKER_PIDS_LIMIT:-300}
     oom_score_adj: -100
     security_opt:
       - no-new-privileges=true

@@ -17,14 +17,14 @@ services:
       timeout: 10s
       retries: 3
       start_period: 20s
-    mem_limit: 192m
-    mem_reservation: 64m
-    memswap_limit: 192m
-    cpus: 0.3
-    pids_limit: 100
-    oom_score_adj: -100
-    cpu_period: 100000
-    cpu_quota: 30000
+    mem_limit: ${MEM_LIMIT:-192m}
+    mem_reservation: ${MEM_RESERVATION:-64m}
+    memswap_limit: ${MEMSWAP_LIMIT:-192m}
+    cpus: ${CPUS:-0.3}
+    pids_limit: ${PIDS_LIMIT:-100}
+    oom_score_adj: ${OOM_SCORE_ADJ:-100}
+    cpu_period: ${CPU_PERIOD:-100000}
+    cpu_quota: ${CPU_QUOTA:-30000}
     security_opt:
       - no-new-privileges=true
     cap_drop:

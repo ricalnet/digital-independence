@@ -36,11 +36,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-    mem_limit: 2g
-    mem_reservation: 512m
-    memswap_limit: 2.5g
-    cpus: 1.5
-    pids_limit: 500
+    mem_limit: ${MEM_LIMIT:-2g}
+    mem_reservation: ${MEM_RESERVATION:-512m}
+    memswap_limit: ${MEMSWAP_LIMIT:-2.5g}
+    cpus: ${CPUS:-1.5}
+    pids_limit: ${PIDS_LIMIT:-500}
     security_opt:
       - no-new-privileges=true
     cap_drop:

@@ -22,9 +22,9 @@ services:
       timeout: 10s
       retries: 3
       start_period: 120s
-    mem_limit: 2g
-    mem_reservation: 512m
-    memswap_limit: 2.5g
+    mem_limit: ${SERVER_MEM_LIMIT:-2g}
+    mem_reservation: ${SERVER_MEM_RESERVATION:-512m}
+    memswap_limit: ${SERVER_MEMSWAP_LIMIT:-2.5g}
     cpus: 1.5
     pids_limit: 500
     oom_score_adj: -100
@@ -83,9 +83,9 @@ services:
       timeout: 10s
       retries: 3
       start_period: 300s
-    mem_limit: 3g
-    mem_reservation: 768m
-    memswap_limit: 3.5g
+    mem_limit: ${ML_MEM_LIMIT:-3g}
+    mem_reservation: ${ML_MEM_RESERVATION:-768m}
+    memswap_limit: ${ML_MEMSWAP_LIMIT:-3.5g}
     cpus: 1.5
     pids_limit: 300
     oom_score_adj: -50

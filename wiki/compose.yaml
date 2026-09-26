@@ -22,11 +22,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-    mem_limit: 320m
-    mem_reservation: 96m
-    memswap_limit: 384m
-    cpus: 0.4
-    pids_limit: 200
+    mem_limit: ${MEM_LIMIT:-320m}
+    mem_reservation: ${MEM_RESERVATION:-96m}
+    memswap_limit: ${MEMSWAP_LIMIT:-384m}
+    cpus: ${CPUS:-0.4}
+    pids_limit: ${PIDS_LIMIT:-200}
     security_opt:
       - no-new-privileges=true
     cap_drop:

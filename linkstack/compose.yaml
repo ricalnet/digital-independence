@@ -19,11 +19,11 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    mem_limit: 384m
-    mem_reservation: 96m
-    memswap_limit: 448m
-    cpus: 0.5
-    pids_limit: 200
+    mem_limit: ${MEM_LIMIT:-384m}
+    mem_reservation: ${MEM_RESERVATION:-96m}
+    memswap_limit: ${MEMSWAP_LIMIT:-448m}
+    cpus: ${CPUS:-0.5}
+    pids_limit: ${PIDS_LIMIT:-200}
     security_opt:
       - no-new-privileges=true
     cap_drop:

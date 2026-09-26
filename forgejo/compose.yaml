@@ -45,11 +45,11 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
-    mem_limit: 512m
-    mem_reservation: 192m
-    memswap_limit: 640m
-    cpus: 0.5
-    pids_limit: 300
+    mem_limit: ${MEM_LIMIT:-512m}
+    mem_reservation: ${MEM_RESERVATION:-192m}
+    memswap_limit: ${MEMSWAP_LIMIT:-640m}
+    cpus: ${CPUS:-0.5}
+    pids_limit: ${PIDS_LIMIT:-300}
     oom_score_adj: -100
     security_opt:
       - no-new-privileges=true

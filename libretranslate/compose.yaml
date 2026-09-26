@@ -32,8 +32,8 @@ services:
     mem_limit: ${MEM_LIMIT:-896m}
     mem_reservation: ${MEM_RESERVATION:-256m}
     memswap_limit: ${MEMSWAP_LIMIT:-1g}
-    cpus: 0.8
-    pids_limit: 200
+    cpus: ${CPUS:-0.8}
+    pids_limit: ${PIDS_LIMIT:-200}
     oom_score_adj: -100
     security_opt:
       - no-new-privileges=true

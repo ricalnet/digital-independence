@@ -10,11 +10,11 @@ services:
       - mosquitto_config:/mosquitto/config:rw
       - mosquitto_data:/mosquitto/data:rw
       - mosquitto_log:/mosquitto/log:rw
-    mem_limit: 96m
-    mem_reservation: 32m
-    memswap_limit: 96m
-    cpus: 0.2
-    pids_limit: 100
+    mem_limit: ${MEM_LIMIT:-96m}
+    mem_reservation: ${MEM_RESERVATION:-32m}
+    memswap_limit: ${MEMSWAP_LIMIT:-96m}
+    cpus: ${CPUS:-0.2}
+    pids_limit: ${PIDS_LIMIT:-100}
     security_opt:
       - no-new-privileges=true
     cap_drop:

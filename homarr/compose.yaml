@@ -39,11 +39,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-    mem_limit: 640m
-    mem_reservation: 192m
-    memswap_limit: 768m
-    cpus: 0.5
-    pids_limit: 200
+    mem_limit: ${MEM_LIMIT:-640m}
+    mem_reservation: ${MEM_RESERVATION:-192m}
+    memswap_limit: ${MEMSWAP_LIMIT:-768m}
+    cpus: ${CPUS:-0.5}
+    pids_limit: ${PIDS_LIMIT:-200}
     oom_score_adj: -100
     tmpfs:
       - /tmp:rw,noexec,nosuid,size=128M
