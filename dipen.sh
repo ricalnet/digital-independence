@@ -103,6 +103,7 @@ ${BOLD}ACTIONS:${NC}
     pull                Pull latest images
     logs                Show logs (last 50 lines)
     ps                  Show status
+    stats               Show memory usage (sorted)
     prune               Clean unused resources
     recycle             Pull → Down → Up
     update              Pull → Up
@@ -128,6 +129,8 @@ ${BOLD}EXAMPLES:${NC}
     dipen pull nextcloud
     dipen logs nextcloud
     dipen ps nextcloud
+    dipen stats
+    dipen stats nextcloud
     dipen prune nextcloud
     dipen update nextcloud
     dipen fresh nextcloud
@@ -378,6 +381,70 @@ get_status() {
     fi
 }
 
+stats() {
+    local services=("$@")
+    
+    echo "${BOLD}${CYAN}══════════════════════════════════════════════════════════════════════════════════════════${NC}"
+    echo "${BOLD}${CYAN}                    PODMAN CONTAINER STATS (CPU · MEMORY · SWAP)                          ${NC}"
+    echo "${BOLD}${CYAN}══════════════════════════════════════════════════════════════════════════════════════════${NC}"
+    echo
+    
+    if [[ ${#services[@]} -eq 0 ]]; then
+        podman stats --no-stream \
+            --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}\t{{.BlockIO}}\t{{.PIDS}}" \
+            | awk 'NR==1 || NR>1' \
+            | sort -h -k3
+    else
+        local expanded_stats=()
+        for s in "${services[@]}"; do
+            for item in $(expand "$s"); do
+                local exists=false
+                for e in "${expanded_stats[@]}"; do
+                    [[ "$e" == "$item" ]] && exists=true && break
+                done
+                [[ "$exists" == false ]] && expanded_stats+=("$item")
+            done
+        done
+        
+        if [[ ${#expanded_stats[@]} -eq 0 ]]; then
+            echo "${RED}Error:${NC} No valid services found"
+            return 1
+        fi
+        
+        local container_names=()
+        for s in "${expanded_stats[@]}"; do
+            local pattern="${CONTAINER_PATTERNS[$s]:-$s}"
+            if [[ "$pattern" == *"*"* ]]; then
+                while IFS= read -r name; do
+                    [[ -n "$name" ]] && container_names+=("$name")
+                done < <(podman ps --format "{{.Names}}" 2>/dev/null | grep "$pattern")
+            else
+                while IFS= read -r name; do
+                    [[ -n "$name" ]] && container_names+=("$name")
+                done < <(podman ps --filter "name=$pattern" --format "{{.Names}}" 2>/dev/null)
+            fi
+        done
+        
+        if [[ ${#container_names[@]} -eq 0 ]]; then
+            echo "${YELLOW}⚠${NC} No running containers found for: ${expanded_stats[*]}"
+            return 0
+        fi
+        
+        local stats_cmd="podman stats --no-stream --format \"table {{.Name}}\\t{{.CPUPerc}}\\t{{.MemUsage}}\\t{{.MemPerc}}\\t{{.BlockIO}}\\t{{.PIDS}}\""
+        for name in "${container_names[@]}"; do
+            stats_cmd+=" \"$name\""
+        done
+        stats_cmd+=" | sort -h -k3"
+        
+        eval "$stats_cmd"
+    fi
+    
+    echo
+    echo "${BOLD}${CYAN}──────────────────────────────────────────────────────────────────────────────────────────${NC}"
+    echo "${YELLOW}Info:${NC} Sorted by memory usage (column 3)  •  ${CYAN}CPU%${NC} · ${CYAN}MemUsage${NC} · ${CYAN}Mem%${NC} · ${CYAN}BlockIO${NC} · ${CYAN}PIDs${NC}"
+    echo
+}
+
 run() {
     local name=$1 path=$2 action=$3
     local compose=$(compose_file "$path")
@@ -445,7 +512,7 @@ main() {
             dry-run)  dry_run=true; shift ;;
             check-version)
                 action="$1"; shift ;;
-            up|down|restart|pull|logs|ps|prune|recycle|update|fresh|env|cd)
+            up|down|restart|pull|logs|ps|stats|prune|recycle|update|fresh|env|cd)
                 action="$1"; shift ;;
             volume)
                 if [[ "$action" == "cd" ]]; then
@@ -476,6 +543,12 @@ main() {
     if [[ "$action" == "cd-volume" ]]; then
         cd_to_volume
         exit 0
+    fi
+
+    if [[ "$action" == "stats" ]]; then
+        check || exit 1
+        stats "${services[@]}"
+        exit $?
     fi
 
     if [[ "$action" == "cd" ]]; then
