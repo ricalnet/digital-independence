@@ -1,0 +1,30 @@
+services:
+  slink:
+    image: ${SLINK_IMAGE:-docker.io/anirdev/slink:latest}
+    container_name: ${SLINK_CONTAINER_NAME:-slink}
+    restart: unless-stopped
+    networks:
+      - slink-net
+    env_file:
+      - .env
+    volumes:
+      - slink_data:/app/var/data
+      - slink_images:/app/slink/images
+    ports:
+      - '${SLINK_PORT:-2290}:${PORT:-3000}'
+    mem_limit: ${SLINK_MEM_LIMIT:-512m}
+    mem_reservation: ${SLINK_MEM_RESERVATION:-128m}
+    memswap_limit: ${SLINK_MEMSWAP_LIMIT:-768m}
+    cpus: ${SLINK_CPUS:-0.5}
+    pids_limit: ${PIDS_LIMIT:-1024}
+
+networks:
+  slink-net:
+    driver: bridge
+    internal: true
+
+volumes:
+  slink_data:
+    name: slink_data
+  slink_images:
+    name: slink_images
