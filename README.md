@@ -6,29 +6,29 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Podman](https://img.shields.io/badge/Podman-5+-2496ED?logo=podman&logoColor=white)](https://podman.io/)
-[![Rootless](https://img.shields.io/badge/Rootless-✅_Supported-8A2BE2?logo=podman&logoColor=white)](https://podman.io/docs/rootless)
+[![Rootless](https://img.shields.io/badge/Rootless-Supported-8A2BE2?logo=podman&logoColor=white)](https://podman.io/docs/rootless)
 [![Architecture](https://img.shields.io/badge/Architecture-amd64_|_arm64-4EAA25?logo=linux&logoColor=white)](https://hub.docker.com/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/ricalnet/digital-independence/graphs/commit-activity)
 [![Backup](https://img.shields.io/badge/Backup-ChaCha20--Poly1305-8A2BE2?logo=openssl&logoColor=white)](https://github.com/ricalnet/digital-independence#-chantik-encrypted-backup--restore)
 [![Firewall](https://img.shields.io/badge/Firewall-IPC_(Iptables)-FF6B6B?logo=linux&logoColor=white)](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller)
-[![Hardening](https://img.shields.io/badge/Hardening-✅_Active-success?logo=shield&logoColor=white)](#-hardening--resource-limits)
+[![Hardening](https://img.shields.io/badge/Hardening-Active-success?logo=shield&logoColor=white)](#-hardening--resource-limits)
 
 </div>
 
-## 📌 What is Dipen?
+## What is Dipen?
 
 Dipen is a self-hosting solution that provides `podman-compose` configurations for 25+ popular open-source services. It eliminates dependency on third-party cloud services by giving you full control over your data and infrastructure.
 
 Core Philosophy:
-- 🔒 Total Data Ownership — Your data stays on your hardware, forever
-- 💰 No Recurring Costs — Pay once for hardware, free forever
-- 🔄 Complete Freedom — Swap, modify, or replace any service anytime
-- 🎯 Hands-On Learning — Build real DevOps skills through direct experience
-- 🚀 Ready to Deploy — Clone, install, and run
-- 🔥 Integrated Security — Built-in firewall with IPC (Iptables Controller)
-- 🛡️ Default Hardening — All services are hardened with resource limits
+- Your data stays on your hardware, forever
+- Pay once for hardware, free forever
+- Swap, modify, or replace any service anytime
+- Build real DevOps skills through direct experience
+- Clone, install, and run
+- Built-in firewall with IPC (Iptables Controller)
+- All services are hardened with resource limits
 
-## 🆚 Comparison with Similar Projects
+## Comparison with Similar Projects
 
 | Aspect | Dipen | YunoHost | Cloudron | Umbrel | Coolify |
 |-------|-----------|----------|----------|--------|---------|
@@ -45,16 +45,16 @@ Core Philosophy:
 > [!TIP]
 > Want instant usability? Use YunoHost/Cloudron. Want full control + built-in security + learning DevOps? Use Dipen.
 
-## 🏗️ Architecture Support
+## Architecture Support
 
 | Architecture | Platform | Status |
 |------------|----------|--------|
-| `linux/amd64` | Intel/AMD, x86_64 | ✅ Supported |
-| `linux/arm64` | Raspberry Pi 4/5, Apple M1/M2/M3, AWS Graviton | ✅ Supported |
+| `linux/amd64` | Intel/AMD, x86_64 | Supported |
+| `linux/arm64` | Raspberry Pi 4/5, Apple M1/M2/M3, AWS Graviton | Supported |
 
-## 📦 Available Services (25+ Services)
+## Available Services (25+ Services)
 
-### 🔐 Security & Authentication
+### Security & Authentication
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
@@ -63,13 +63,13 @@ Core Philosophy:
 | Vaultwarden | `vaultwarden/` | 8000 | Lightweight Bitwarden-compatible password manager |
 | Authentik | `authentik/` | 9000, 9443 | Full identity and access management (SSO) |
 
-### 🛡️ Privacy & Anonymity
+### Privacy & Anonymity
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
 | obfs4 Bridge | `obfs4-bridge/` | 8443, 9443 | obfs4 Tor bridge to help access Tor on censored networks |
 
-### 🤖 AI & Machine Learning
+### AI & Machine Learning
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
@@ -78,7 +78,7 @@ Core Philosophy:
 > [!TIP]
 > Configure Open WebUI with `OLLAMA_BASE_URL` in `.env`
 
-### 🖥️ Management & Monitoring
+### Management & Monitoring
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
@@ -88,7 +88,7 @@ Core Philosophy:
 | Uptime Kuma | `uptime-kuma/` | 9442 | Self-hosted uptime monitoring |
 | Portainer | `portainer/` | 9444 | Container management UI for Podman/Docker |
 
-### 💬 Communication (Matrix Ecosystem)
+### Communication (Matrix Ecosystem)
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
@@ -96,14 +96,14 @@ Core Philosophy:
 | Element Web | `element-web/` | 8009 | Web client for Matrix |
 | Mautrix Bridges | `synapse/mautrix/` | - | Telegram & WhatsApp bridges (single compose.yaml) |
 
-### 🌐 Search & Translation
+### Search & Translation
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
 | LibreTranslate | `libretranslate/` | 5001 | Open-source machine translation |
 | SearXNG | `searxng/` | 8888 | Privacy-respecting metasearch engine |
 
-### 📁 Media & Content Management
+### Media & Content Management
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
@@ -111,21 +111,22 @@ Core Philosophy:
 | Navidrome | `navidrome/` | 4533 | Music streaming server (Subsonic-compatible) |
 | Nextcloud | `nextcloud/` | 5000 | Complete productivity suite (files, calendar, contacts) |
 | Jellyfin | `jellyfin/` | 8096, 8920 | Full media server (Plex alternative) |
+| Slink | `slink/` | 2290 | Self-hosted image hosting and sharing |
 
-### 🔗 Link Management
+### Link Management
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
 | YOURLS | `yourls/` | 8001 | URL shortener with analytics |
 | LinkStack | `linkstack/` | 8003 | Link sharing and bookmark manager |
 
-### 📚 Knowledge Management
+### Knowledge Management
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
 | MediaWiki | `wiki/` | 8002 | Wikipedia-style wiki engine |
 
-### 🐘 Social Media
+### Social Media
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
@@ -137,18 +138,19 @@ Core Philosophy:
 > [!IMPORTANT]
 > Mastodon requires `.env` (Podman) and `.env.production` (Mastodon configuration)
 
-### 🦊 Code & Repository Management
+### Code & Repository Management
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
 | Forgejo | `forgejo/` | 3002 | Self-hosted Git service (Gitea alternative) |
 
-### 📡 IoT & Messaging
+### IoT & Messaging
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
 | Mosquitto | `mqtt-broker/` | 1883, 9001 | MQTT broker for IoT and messaging |
-### 📈 Monitoring & Observability
+
+### Monitoring & Observability
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
@@ -168,40 +170,40 @@ Core Philosophy:
 > `podman-exporter` requires access to the Podman socket. Make sure `PODMAN_SOCKET_PATH` in `.env` matches your Podman socket path (default: `/run/user/1000/podman/podman.sock`). For rootless users, the socket is usually located at `$XDG_RUNTIME_DIR/podman/podman.sock`.
 
 Important Notes:
-- 🔧 Use `dipen env <service>` to automatically create and edit `.env` files
-- 🏷️ Services use the `latest` tag by default — pin versions for stability if needed
-- 🌐 Services bind to `127.0.0.1` (localhost) by default for security
-- 🛡️ All services are hardened with resource limits, security opt, and cap drop
-- 📖 Complete deployment and customization guides are available in the [Official Wiki](https://git.ricalnet.my.id/rical/digital-independence/wiki)
+- Use `dipen env <service>` to automatically create and edit `.env` files
+- Services use the `latest` tag by default — pin versions for stability if needed
+- Services bind to `127.0.0.1` (localhost) by default for security
+- All services are hardened with resource limits, security opt, and cap drop
+- Complete deployment and customization guides are available in the [Official Wiki](https://git.ricalnet.my.id/rical/digital-independence/wiki)
 
-## 🔥 IPC: Iptables Port Controller
+## IPC: Iptables Port Controller
 
 IPC is the built-in firewall management tool for controlling network access to your self-hosted services.
 
 ### Security Philosophy
 
-IPC enforces a **default-deny** policy for incoming traffic:
-- 🚫 **INPUT DROP** — All incoming connections are denied by default
-- ✅ **OUTPUT ACCEPT** — Outgoing connections are allowed (server can access the internet)
-- 🚫 **FORWARD DROP** — Routing between interfaces is disabled
+IPC enforces a default-deny policy for incoming traffic:
+- INPUT DROP — All incoming connections are denied by default
+- OUTPUT ACCEPT — Outgoing connections are allowed (server can access the internet)
+- FORWARD DROP — Routing between interfaces is disabled
 
 ### Key Features
 
 | Feature | Description |
 |-------|-----------|
-| 🔌 Port Management | Easily enable/disable ports |
-| 🌐 Dual-stack | Full IPv4 and IPv6 support |
-| 📦 Persistence | Rules persist after reboot |
-| 🔄 Auto-restore | Rules are restored on boot |
-| 📊 Status Monitoring | View active rules |
-| 🧹 Reset | Return to default policy |
+| Port Management | Easily enable/disable ports |
+| Dual-stack | Full IPv4 and IPv6 support |
+| Persistence | Rules persist after reboot |
+| Auto-restore | Rules are restored on boot |
+| Status Monitoring | View active rules |
+| Reset | Return to default policy |
 
-### 📖 Complete Documentation
+### Complete Documentation
 
 For detailed guides on firewall configuration, deployment examples, and troubleshooting:
-- 📚 [Wiki: Iptables Port Controller](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall)
+- [Wiki: Iptables Port Controller](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall)
 
-## 📋 Prerequisites
+## Prerequisites
 
 | Requirement | Minimum Version | Notes |
 |-------------|---------------|--------|
@@ -212,7 +214,7 @@ For detailed guides on firewall configuration, deployment examples, and troubles
 | Memory | 4GB+ | Depends on running services |
 | Storage | 50GB+ | Based on services and data volumes |
 
-## 🚀 Quick Start (4 Steps)
+## Quick Start (4 Steps)
 
 ### Step 1: Clone the Repository
 ```bash
@@ -252,7 +254,7 @@ sudo ipc enable 22     # SSH
 sudo ipc enable 5353   # DNS
 ```
 
-## ⚙️ dipen: Service Orchestration
+## dipen: Service Orchestration
 
 `dipen` is the main command-line tool for managing all services.
 
@@ -280,7 +282,7 @@ dipen cd volume nextcloud # Change + filter Nextcloud volumes
 ```
 
 <details>
-<summary>📘 Full dipen Help</summary>
+<summary>Full dipen Help</summary>
 
 ```
 dipen v1.1.1 - Podman Orchestration Tool for Digital Independence
@@ -298,9 +300,9 @@ ACTIONS:
     logs                Show logs (last 50 lines)
     ps                  Show status
     prune               Clean unused resources
-    recycle             Pull → Down → Up
-    update              Pull → Up
-    fresh               Down → Up
+    recycle             Pull -> Down -> Up
+    update              Pull -> Up
+    fresh               Down -> Up
     check-version       Check latest stable image versions
     cd <service>        Change directory to service directory
     cd volume           Change directory to podman volume directory
@@ -337,9 +339,9 @@ EXAMPLES:
 ```
 </details>
 
-## 🌐 Exposing Services Externally
+## Exposing Services Externally
 
-### 🔥 Integrated Firewall (IPC)
+### Integrated Firewall (IPC)
 Use IPC to manage ports exposed to the public:
 ```bash
 # Show firewall status
@@ -349,19 +351,19 @@ sudo ipc status
 sudo ipc enable 443   # HTTPS
 ```
 
-### 🧅 Tor Hidden Services
+### Tor Hidden Services
 Provides anonymous access through the Tor network.
-- 📖 [Tor Implementation Guide](https://docs.ricalnet.my.id/posts/panduan-implementasi-hidden-service-tor/)
+- [Tor Implementation Guide](https://docs.ricalnet.my.id/posts/panduan-implementasi-hidden-service-tor/)
 
-### 🛡️ obfs4 Bridge (Tor Bridge)
-Run a private **obfs4 bridge** to help Tor users in regions with strict network censorship. This bridge makes your Tor traffic look like random traffic, making it harder to block by firewalls or DPI (Deep Packet Inspection).
+### obfs4 Bridge (Tor Bridge)
+Run a private obfs4 bridge to help Tor users in regions with strict network censorship. This bridge makes your Tor traffic look like random traffic, making it harder to block by firewalls or DPI (Deep Packet Inspection).
 
 Features:
-- 🔐 Runs on rootless Podman — no root privileges needed
-- 🌐 Uses ports 8443 (OR) and 9443 (PT) to be safe on rootless Podman
-- 📦 Integrated with IPC to open ports automatically
-- 🔄 Auto-restart via `podman-compose` (`restart: unless-stopped`)
-- 📝 Saves installation logs and bridge line to `logs/obfs4_installation.log`
+- Runs on rootless Podman — no root privileges needed
+- Uses ports 8443 (OR) and 9443 (PT) to be safe on rootless Podman
+- Integrated with IPC to open ports automatically
+- Auto-restart via `podman-compose` (`restart: unless-stopped`)
+- Saves installation logs and bridge line to `logs/obfs4_installation.log`
 
 Automated installation:
 ```bash
@@ -383,8 +385,8 @@ obfs4 111.122.133.144:9443 9F394AE597C053CC566FB204F0FB7F3D078FDDC1 cert=dZhB1rJ
 ```
 
 How to use in Tor Browser:
-1. Open Tor Browser → Settings → Connection → Bridges
-2. Select "Use a bridge" → "Provide a bridge I know"
+1. Open Tor Browser -> Settings -> Connection -> Bridges
+2. Select "Use a bridge" -> "Provide a bridge I know"
 3. Paste the bridge line above
 4. Click Connect
 
@@ -399,31 +401,31 @@ sudo ipc enable 9443 both tcp   # PT Port (obfs4)
 >
 > A newly started bridge takes several hours–24 hours to be registered in the Tor Project's BridgeDB. For personal use, the bridge line can be used directly via "Provide a bridge I know".
 
-### ☁️ Cloudflare Tunnel
+### Cloudflare Tunnel
 Access services without opening firewall ports.
-- 📖 [Cloudflare Tunnel Guide](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
+- [Cloudflare Tunnel Guide](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
 
-## 💾 Chantik: Encrypted Backup & Restore
+## Chantik: Encrypted Backup & Restore
 
 [Chantik](https://git.ricalnet.my.id/rical/chantik) is a ChaCha20-Authenticated Backup Protection tool built specifically for dipen.
 
-### ✨ Key Features
+### Key Features
 
 | Feature | Description |
 |-------|-----------|
-| 🔐 Authenticated Encryption | ChaCha20-Poly1305 (primary) with AES-256-CBC fallback |
-| 🔑 Strong Key Derivation | PBKDF2 with configurable iterations (default: 600,000) |
-| 🔗 Deduplication | Fixed nonce support for deterministic encryption |
-| 🗜️ Compression | Gzip with configurable level (1-9) |
-| 🐳 Docker Support | Seamless Docker volume backup and restore |
-| 🔄 Incremental Backup | Storage-efficient and faster backups |
-| 📊 Smart Retention | Daily, weekly, and monthly retention policies |
-| 🔔 Real-time Notifications | Instant alerts via ntfy.sh |
-| ✅ Integrity Verification | SHA256 checksum verification for every backup |
-| 🔒 Security | Configurable permissions and process locking |
-| 📝 Comprehensive Logging | Detailed logs for auditing and troubleshooting |
+| Authenticated Encryption | ChaCha20-Poly1305 (primary) with AES-256-CBC fallback |
+| Strong Key Derivation | PBKDF2 with configurable iterations (default: 600,000) |
+| Deduplication | Fixed nonce support for deterministic encryption |
+| Compression | Gzip with configurable level (1-9) |
+| Docker Support | Seamless Docker volume backup and restore |
+| Incremental Backup | Storage-efficient and faster backups |
+| Smart Retention | Daily, weekly, and monthly retention policies |
+| Real-time Notifications | Instant alerts via ntfy.sh |
+| Integrity Verification | SHA256 checksum verification for every backup |
+| Security | Configurable permissions and process locking |
+| Comprehensive Logging | Detailed logs for auditing and troubleshooting |
 
-## 🤖 Automation (Cron Jobs)
+## Automation (Cron Jobs)
 
 > [!WARNING]
 > All cron jobs run in **rootless** mode. Never use `sudo` with podman commands in cron.
@@ -434,10 +436,10 @@ Access services without opening firewall ports.
 |--------|----------|--------|
 | `*/5 * * * *` | `podman exec -u www-data nextcloud_app php -f /var/www/html/cron.php` | NextCloud background tasks |
 | `0 1 * * *` | `podman exec pihole pihole -g && podman exec pihole pihole -f` | Pi-hole gravity update |
-| `0 6 * * 0` | `/path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.sh` | Weekly service updates |
-| `0 8 1 * *` | `/path/to/digital-independence/automation-scripts/monthly-recycle/monthly_recycle.sh` | Monthly service recycle |
-| `0 11 * * 0` | `/path/to/digital-independence/dipen.sh prune all` | Weekly container cleanup |
-| `0 2 * * *` | `/path/to/digital-independence/chantik backup` | Daily encrypted backup |
+| `0 6 * * 0` | `/path/to/digital-independence/dipen.sh update <service1> <service2> <service3>` | Weekly service updates |
+| `0 8 1 * *` | `/path/to/digital-independence/dipen.sh recycle <service1> <service2> <service3>` | Monthly service recycle |
+| `0 11 * * 0` | `/path/to/digital-independence/dipen.sh prune <service1> <service2> <service3>` | Weekly container cleanup |
+| `0 2 * * *` | `/path/to/chantik/chantik.sh` | Daily encrypted backup |
 
 ### System Cron Jobs (`sudo crontab -e`)
 
@@ -453,9 +455,9 @@ Access services without opening firewall ports.
 crontab -e
 
 # Add the following lines
-# ──────────────────────────────────────────────────────────────
+# --------------------------------------------------------------
 # Digital Independence Automation
-# ──────────────────────────────────────────────────────────────
+# --------------------------------------------------------------
 
 # NextCloud Cron - every 5 minutes (background tasks)
 */5 * * * * podman exec -u www-data nextcloud_app php -f /var/www/html/cron.php
@@ -475,9 +477,9 @@ crontab -e
 # Monthly recycle - 1st of the month at 8 AM
 0 8 1 * * /path/to/digital-independence/automation-scripts/monthly-recycle/monthly_recycle.sh
 
-# ──────────────────────────────────────────────────────────────
+# --------------------------------------------------------------
 # System Cron (sudo crontab -e)
-# ──────────────────────────────────────────────────────────────
+# --------------------------------------------------------------
 
 # Weekly system cleanup - Sunday at 2 AM
 0 2 * * 0 /path/to/digital-independence/automation-scripts/cleanup-system/cleanup_system.sh
@@ -489,15 +491,15 @@ crontab -e
 > [!TIP]
 > Replace `/path/to/digital-independence/` with your actual installation path.
 
-## 🔒 Security Guide
+## Security Guide
 
 ### Initial Setup
-- 🔑 Change all default passwords in `.env` files (use `dipen env <service>`)
-- 🔒 Use strong and unique secrets for each service
-- 🌐 Bind to `127.0.0.1` (localhost) unless external access is needed
-- 📁 Set `chmod 600 .env` for all environment files
-- 🔥 Configure the firewall with IPC — only open necessary ports
-- 🛡️ Verify hardening with `podman inspect <container>`
+- Change all default passwords in `.env` files (use `dipen env <service>`)
+- Use strong and unique secrets for each service
+- Bind to `127.0.0.1` (localhost) unless external access is needed
+- Set `chmod 600 .env` for all environment files
+- Configure the firewall with IPC — only open necessary ports
+- Verify hardening with `podman inspect <container>`
 
 ### Firewall Best Practices
 
@@ -522,21 +524,21 @@ sudo ipc persist
 ```
 
 ### Ongoing Maintenance
-- 📦 Data is stored in local directories or Podman volumes (persistent)
-- ⬆️ Run `dipen pull` or `dipen update` regularly for security patches
-- 🔍 Monitor logs with `dipen logs [service]` for anomalies
-- 📊 Enable health checks using Uptime Kuma
-- 💾 Regular backups with `chantik backup`
-- 🔥 Audit firewall rules periodically with `ipc status`
-- 🛡️ Do not share obfs4 bridge lines publicly — private bridges are safer and more stable
-- 🔐 Audit resource limits periodically with `podman stats`
+- Data is stored in local directories or Podman volumes (persistent)
+- Run `dipen pull` or `dipen update` regularly for security patches
+- Monitor logs with `dipen logs [service]` for anomalies
+- Enable health checks using Uptime Kuma
+- Regular backups with `chantik backup`
+- Audit firewall rules periodically with `ipc status`
+- Do not share obfs4 bridge lines publicly — private bridges are safer and more stable
+- Audit resource limits periodically with `podman stats`
 
-## 📜 License
+## License
 
 ### Repository
 MIT License – see the [LICENSE](LICENSE) file for details.
 
-## 📚 Resources
+## Resources
 
 | Resource | Link |
 |-------------|--------|

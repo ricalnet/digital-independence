@@ -126,6 +126,9 @@ searxng/templates/templates/
 searxng/templates/limiter.toml
 searxng/.env
 
+# Slink
+slink/.env
+
 # Synapse
 synapse/synapse-data/
 synapse/.env

@@ -80,6 +80,6 @@ networks:
     name: ntfy_network
     driver: bridge
     internal: true
-  monitoring:       # ← tambahkan ini
+  monitoring:
     external: true
     name: monitoring_network
