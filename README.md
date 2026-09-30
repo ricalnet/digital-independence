@@ -10,7 +10,7 @@
 [![Architecture](https://img.shields.io/badge/Architecture-amd64_|_arm64-4EAA25?logo=linux&logoColor=white)](https://hub.docker.com/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/ricalnet/digital-independence/graphs/commit-activity)
 [![Backup](https://img.shields.io/badge/Backup-ChaCha20--Poly1305-8A2BE2?logo=openssl&logoColor=white)](https://github.com/ricalnet/digital-independence#-chantik-encrypted-backup--restore)
-[![Firewall](https://img.shields.io/badge/Firewall-IPC_(Iptables)-FF6B6B?logo=linux&logoColor=white)](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller)
+[![Firewall](https://img.shields.io/badge/Firewall-IPC_(Iptables)-FF6B6B?logo=linux&logoColor=white)](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki/Iptables-Port-Controller)
 [![Hardening](https://img.shields.io/badge/Hardening-Active-success?logo=shield&logoColor=white)](#-hardening--resource-limits)
 
 </div>
@@ -174,7 +174,7 @@ Important Notes:
 - Services use the `latest` tag by default — pin versions for stability if needed
 - Services bind to `127.0.0.1` (localhost) by default for security
 - All services are hardened with resource limits, security opt, and cap drop
-- Complete deployment and customization guides are available in the [Official Wiki](https://git.ricalnet.my.id/rical/digital-independence/wiki)
+- Complete deployment and customization guides are available in the [Official Wiki](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki)
 
 ## IPC: Iptables Port Controller
 
@@ -201,7 +201,7 @@ IPC enforces a default-deny policy for incoming traffic:
 ### Complete Documentation
 
 For detailed guides on firewall configuration, deployment examples, and troubleshooting:
-- [Wiki: Iptables Port Controller](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall)
+- [Wiki: Iptables Port Controller](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall)
 
 ## Prerequisites
 
@@ -218,7 +218,7 @@ For detailed guides on firewall configuration, deployment examples, and troubles
 
 ### Step 1: Clone the Repository
 ```bash
-git clone https://git.ricalnet.my.id/rical/digital-independence.git
+git clone https://git.ricalnet.my.id/RICALNET/digital-independence.git
 cd digital-independence
 ```
 
@@ -228,7 +228,7 @@ cd digital-independence
 ```
 
 > [!TIP]
-> For detailed instructions on registry configuration, environment setup, and service-specific customization, please refer to the [Deployment Wiki](https://git.ricalnet.my.id/rical/digital-independence/wiki/Mulai-Cepat).
+> For detailed instructions on registry configuration, environment setup, and service-specific customization, please refer to the [Deployment Wiki](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki/Mulai-Cepat).
 
 ### Step 3: Configure & Start Services
 ```bash
@@ -286,7 +286,7 @@ dipen cd volume nextcloud # Change + filter Nextcloud volumes
 
 ```
 dipen v1.1.1 - Podman Orchestration Tool for Digital Independence
-Issues: https://git.ricalnet.my.id/rical/digital-independence/issues 
+Issues: https://git.ricalnet.my.id/RICALNET/digital-independence/issues 
 
 USAGE:
     dipen [ACTION] [SERVICE...] [OPTIONS]
@@ -466,7 +466,7 @@ crontab -e
 0 1 * * * podman exec pihole pihole -g && podman exec pihole pihole -f
 
 # Daily backup - at 2 AM
-0 2 * * * /path/to/digital-independence/chantik backup
+0 2 * * * /path/to/chantik/chantik.sh backup
 
 # Weekly container updates - Sunday at 6 AM
 0 6 * * 0 /path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.sh
@@ -542,6 +542,6 @@ MIT License – see the [LICENSE](LICENSE) file for details.
 
 | Resource | Link |
 |-------------|--------|
-| Official Wiki | [Digital Independence Wiki](https://git.ricalnet.my.id/rical/digital-independence/wiki) |
-| IPC Documentation | [Iptables Port Controller](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall) |
-| Chantik | [Encrypted Backup Tool](https://git.ricalnet.my.id/rical/digital-independence/wiki/Chantik+%E2%80%94+ChaCha20-Authenticated+Backup+Protection.-) |
+| Official Wiki | [Digital Independence Wiki](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki) |
+| IPC Documentation | [Iptables Port Controller](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall) |
+| Chantik | [Encrypted Backup Tool](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki/Chantik+%E2%80%94+ChaCha20-Authenticated+Backup+Protection.-) |

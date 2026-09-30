@@ -10,7 +10,7 @@
 [![Arsitektur](https://img.shields.io/badge/Arsitektur-amd64_|_arm64-4EAA25?logo=linux&logoColor=putih)](https://hub.docker.com/)
 [![Pemeliharaan](https://img.shields.io/badge/Dipelihara%3F-ya-hijau.svg)](https://github.com/ricalnet/digital-independence/graphs/commit-activity)
 [![Cadangan](https://img.shields.io/badge/Cadangan-ChaCha20--Poly1305-8A2BE2?logo=openssl&logoColor=putih)](https://github.com/ricalnet/digital-independence#-chantik-encrypted-backup--restore)
-[![Firewall](https://img.shields.io/badge/Firewall-IPC_(Iptables)-FF6B6B?logo=linux&logoColor=putih)](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller)
+[![Firewall](https://img.shields.io/badge/Firewall-IPC_(Iptables)-FF6B6B?logo=linux&logoColor=putih)](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki/Iptables-Port-Controller)
 [![Hardening](https://img.shields.io/badge/Hardening-Aktif-success?logo=shield&logoColor=putih)](#-hardening--resource-limits)
 
 </div>
@@ -174,7 +174,7 @@ Catatan Penting:
 - Layanan menggunakan tag `latest` secara default — sematkan versi untuk stabilitas jika diperlukan
 - Layanan terikat ke `127.0.0.1` (localhost) secara default untuk keamanan
 - Semua layanan sudah di-hardening dengan resource limits, security opt, dan cap drop
-- Panduan deployment dan penyesuaian lengkap tersedia di [Wiki Resmi](https://git.ricalnet.my.id/rical/digital-independence/wiki)
+- Panduan deployment dan penyesuaian lengkap tersedia di [Wiki Resmi](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki)
 
 ## IPC: Iptables Port Controller
 
@@ -201,7 +201,7 @@ IPC menerapkan kebijakan default-deny untuk lalu lintas masuk:
 ### Dokumentasi Lengkap
 
 Untuk panduan mendetail tentang konfigurasi firewall, contoh deployment, dan troubleshooting:
-- [Wiki: Iptables Port Controller](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall)
+- [Wiki: Iptables Port Controller](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall)
 
 ## Prasyarat
 
@@ -218,7 +218,7 @@ Untuk panduan mendetail tentang konfigurasi firewall, contoh deployment, dan tro
 
 ### Langkah 1: Clone Repositori
 ```bash
-git clone https://git.ricalnet.my.id/rical/digital-independence.git
+git clone https://git.ricalnet.my.id/RICALNET/digital-independence.git
 cd digital-independence
 ```
 
@@ -228,7 +228,7 @@ cd digital-independence
 ```
 
 > [!TIP]
-> Untuk petunjuk detail tentang konfigurasi registri, pengaturan environment, dan penyesuaian khusus layanan, silakan merujuk ke [Wiki Deployment](https://git.ricalnet.my.id/rical/digital-independence/wiki/Mulai-Cepat).
+> Untuk petunjuk detail tentang konfigurasi registri, pengaturan environment, dan penyesuaian khusus layanan, silakan merujuk ke [Wiki Deployment](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki/Mulai-Cepat).
 
 ### Langkah 3: Konfigurasi & Mulai Layanan
 ```bash
@@ -286,7 +286,7 @@ dipen cd volume nextcloud # Pindah + filter volume Nextcloud
 
 ```
 dipen v1.1.1 - Podman Orchestration Tool for Digital Independence
-Issues: https://git.ricalnet.my.id/rical/digital-independence/issues 
+Issues: https://git.ricalnet.my.id/RICALNET/digital-independence/issues 
 
 USAGE:
     dipen [ACTION] [SERVICE...] [OPTIONS]
@@ -466,7 +466,7 @@ crontab -e
 0 1 * * * podman exec pihole pihole -g && podman exec pihole pihole -f
 
 # Pencadangan harian - jam 2 pagi
-0 2 * * * /path/to/digital-independence/chantik backup
+0 2 * * * /path/to/chantik/chantik.sh backup
 
 # Pembaruan container mingguan - Minggu jam 6 pagi
 0 6 * * 0 /path/to/digital-independence/automation-scripts/weekly-updates/weekly_updates.sh
@@ -542,6 +542,6 @@ Lisensi MIT – lihat file [LICENSE](LICENSE) untuk detail.
 
 | Sumber Daya | Tautan |
 |-------------|--------|
-| Wiki Resmi | [Digital Independence Wiki](https://git.ricalnet.my.id/rical/digital-independence/wiki) |
-| Dokumentasi IPC | [Iptables Port Controller](https://git.ricalnet.my.id/rical/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall) |
-| Chantik | [Encrypted Backup Tool](https://git.ricalnet.my.id/rical/digital-independence/wiki/Chantik+%E2%80%94+ChaCha20-Authenticated+Backup+Protection.-) |
+| Wiki Resmi | [Digital Independence Wiki](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki) |
+| Dokumentasi IPC | [Iptables Port Controller](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki/Iptables-Port-Controller-%E2%80%94-Firewall) |
+| Chantik | [Encrypted Backup Tool](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki/Chantik+%E2%80%94+ChaCha20-Authenticated+Backup+Protection.-) |
