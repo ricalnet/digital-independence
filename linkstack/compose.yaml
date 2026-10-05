@@ -72,11 +72,11 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
-    mem_limit: 384m
-    mem_reservation: 96m
-    memswap_limit: 448m
-    cpus: 0.4
-    pids_limit: 150
+    mem_limit: ${MYSQL_MEM_LIMIT:-512m}
+    mem_reservation: ${MYSQL_MEM_RESERVATION:-256m}
+    memswap_limit: ${MYSQL_MEMSWAP_LIMIT:-768m}
+    cpus: ${MYSQL_CPUS:-0.4}
+    pids_limit: ${MYSQL_PIDS_LIMIT:-150}
     security_opt:
       - no-new-privileges=true
     cap_drop:
