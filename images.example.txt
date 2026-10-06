@@ -1,0 +1,2 @@
+ghcr.io/element-hq/synapse:<version>        synapse
+ghcr.io/dani-garcia/vaultwarden:<version>   vaultwarden

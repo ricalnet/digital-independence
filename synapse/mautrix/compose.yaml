@@ -56,7 +56,7 @@ services:
 
   mautrix-telegram:
     container_name: mautrix-telegram
-    image: ${MAUTRIX_TELEGRAM_IMAGE:-dock.mau.dev/mautrix/telegram:latest}
+    image: ${MAUTRIX_TELEGRAM_IMAGE:-git.ricalnet.my.id/rical/mautrix-telegram:stable}
     restart: unless-stopped
     depends_on:
       postgres:
@@ -105,7 +105,7 @@ services:
 
   mautrix-whatsapp:
     container_name: mautrix-whatsapp
-    image: ${MAUTRIX_WHATSAPP_IMAGE:-dock.mau.dev/mautrix/whatsapp:latest}
+    image: ${MAUTRIX_WHATSAPP_IMAGE:-git.ricalnet.my.id/rical/mautrix-whatsapp:stable}
     restart: unless-stopped
     depends_on:
       postgres:

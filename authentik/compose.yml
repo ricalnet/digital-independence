@@ -107,7 +107,7 @@ services:
     stop_signal: SIGTERM
 
   server:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server:latest}
+    image: ${AUTHENTIK_IMAGE:-git.ricalnet.my.id/rical/authentik-server:stable}
     container_name: authentik_server
     restart: unless-stopped
     command: server
@@ -171,7 +171,7 @@ services:
     stop_signal: SIGTERM
 
   worker:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server:latest}
+    image: ${AUTHENTIK_IMAGE:-git.ricalnet.my.id/rical/authentik-server:stable}
     container_name: authentik_worker
     restart: unless-stopped
     command: worker

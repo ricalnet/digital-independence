@@ -29,6 +29,7 @@ automation-scripts/weekly-updates/weekly_updates.conf
 automation-scripts/monitorctl.sh
 automation-scripts/setup-services.sh
 automation-scripts/logs/
+images.txt
 
 # ============================
 # Scripts

@@ -1,6 +1,6 @@
 services:
   uptime-kuma:
-    image: ${UPTIME_KUMA_IMAGE:-docker.io/louislam/uptime-kuma:latest}
+    image: ${UPTIME_KUMA_IMAGE:-git.ricalnet.my.id/rical/uptime-kuma:stable}
     container_name: uptime-kuma
     restart: unless-stopped
     ports:

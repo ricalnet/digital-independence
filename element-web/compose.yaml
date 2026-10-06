@@ -1,6 +1,6 @@
 services:
   element-web:
-    image: ${ELEMENT_WEB_IMAGE:-docker.io/vectorim/element-web:latest}
+    image: ${ELEMENT_WEB_IMAGE:-git.ricalnet.my.id/rical/element-web:stable}
     container_name: element-web
     restart: unless-stopped
     ports:

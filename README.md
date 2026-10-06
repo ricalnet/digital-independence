@@ -172,6 +172,7 @@ Core Philosophy:
 Important Notes:
 - Use `dipen env <service>` to automatically create and edit `.env` files
 - Services use the `latest` tag by default — pin versions for stability if needed
+- Images tagged `stable` are tested on `arm64`. For `amd64`, use the official images at the versions reported by `dipen check-version`
 - Services bind to `127.0.0.1` (localhost) by default for security
 - All services are hardened with resource limits, security opt, and cap drop
 - Complete deployment and customization guides are available in the [Official Wiki](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki)

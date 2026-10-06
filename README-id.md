@@ -172,6 +172,7 @@ Filosofi Inti:
 Catatan Penting:
 - Gunakan `dipen env <layanan>` untuk membuat dan mengedit file `.env` secara otomatis
 - Layanan menggunakan tag `latest` secara default — sematkan versi untuk stabilitas jika diperlukan
+- Image bertag `stable` telah diuji pada arsitektur `arm64`. Untuk `amd64`, gunakan image resmi sesuai versi yang ditampilkan oleh `dipen check-version`
 - Layanan terikat ke `127.0.0.1` (localhost) secara default untuk keamanan
 - Semua layanan sudah di-hardening dengan resource limits, security opt, dan cap drop
 - Panduan deployment dan penyesuaian lengkap tersedia di [Wiki Resmi](https://git.ricalnet.my.id/RICALNET/digital-independence/wiki)

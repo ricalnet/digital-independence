@@ -1,6 +1,6 @@
 services:
   vaultwarden:
-    image: ${VAULTWARDEN_IMAGE:-ghcr.io/dani-garcia/vaultwarden:latest}
+    image: ${VAULTWARDEN_IMAGE:-git.ricalnet.my.id/rical/vaultwarden:stable}
     container_name: vaultwarden
     restart: unless-stopped
     env_file:

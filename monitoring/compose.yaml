@@ -2,7 +2,7 @@ name: monitoring
 
 services:
   prometheus:
-    image: ${PROMETHEUS_IMAGE:-docker.io/prom/prometheus:latest}
+    image: ${PROMETHEUS_IMAGE:-git.ricalnet.my.id/rical/prometheus:stable}
     container_name: prometheus
     restart: unless-stopped
     command:
@@ -61,7 +61,7 @@ services:
     stop_signal: SIGTERM
 
   grafana:
-    image: ${GRAFANA_IMAGE:-docker.io/grafana/grafana-oss:latest}
+    image: ${GRAFANA_IMAGE:-git.ricalnet.my.id/rical/grafana-oss:stable}
     container_name: grafana
     restart: unless-stopped
     environment:
@@ -157,7 +157,7 @@ services:
     stop_signal: SIGTERM
 
   node-exporter:
-    image: ${NODE_EXPORTER_IMAGE:-docker.io/prom/node-exporter:latest}
+    image: ${NODE_EXPORTER_IMAGE:-git.ricalnet.my.id/rical/node-exporter:stable}
     container_name: node-exporter
     restart: unless-stopped
     command:
@@ -206,7 +206,7 @@ services:
         compress: "true"
 
   podman-exporter:
-    image: ${PODMAN_EXPORTER_IMAGE:-quay.io/navidys/prometheus-podman-exporter:latest}
+    image: ${PODMAN_EXPORTER_IMAGE:-git.ricalnet.my.id/rical/prometheus-podman-exporter:stable}
     container_name: podman-exporter
     restart: unless-stopped
     user: "0:0"
@@ -252,7 +252,7 @@ services:
         compress: "true"
 
   alertmanager:
-    image: ${ALERTMANAGER_IMAGE:-docker.io/prom/alertmanager:latest}
+    image: ${ALERTMANAGER_IMAGE:-git.ricalnet.my.id/rical/alertmanager:stable}
     container_name: alertmanager
     restart: unless-stopped
     command:
@@ -302,7 +302,7 @@ services:
         compress: "true"
 
   ntfy-alertmanager:
-    image: xenrox/ntfy-alertmanager:latest
+    image: ${NTFY_ALERTMANAGER_IMAGE:-xenrox/ntfy-alertmanager:latest}
     container_name: ntfy-alertmanager
     restart: unless-stopped
     volumes:

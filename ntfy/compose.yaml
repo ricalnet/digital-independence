@@ -1,6 +1,6 @@
 services:
   ntfy:
-    image: ${NTFY_IMAGE:-docker.io/binwiederhier/ntfy:latest}
+    image: ${NTFY_IMAGE:-git.ricalnet.my.id/rical/ntfy:stable}
     container_name: ntfy-server
     command: serve
     env_file:

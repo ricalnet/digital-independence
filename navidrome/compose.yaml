@@ -1,6 +1,6 @@
 services:
   navidrome:
-    image: ${NAVIDROME_IMAGE:-docker.io/deluan/navidrome:latest}
+    image: ${NAVIDROME_IMAGE:-git.ricalnet.my.id/rical/navidrome:stable}
     container_name: navidrome
     ports:
       - "${NAVIDROME_BIND_ADDRESS:-127.0.0.1}:${NAVIDROME_PORT:-4533}:4533"

@@ -1,7 +1,7 @@
 services:
   homarr:
     container_name: homarr
-    image: ${HOMARR_IMAGE:-ghcr.io/homarr-labs/homarr:latest}
+    image: ${HOMARR_IMAGE:-git.ricalnet.my.id/rical/homarr:stable}
     restart: unless-stopped
     security_opt:
       - no-new-privileges=true
