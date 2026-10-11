@@ -46,6 +46,9 @@ chantik.conf
 # Authentik
 authentik/.env
 
+# Caddy
+caddy/Caddyfile
+
 # Dashdot
 dashdot/.env
 

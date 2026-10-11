@@ -58,10 +58,10 @@ Core Philosophy:
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Wazuh | `wazuh/` | 8443 | Security monitoring and threat detection |
-| Pi-hole | `pi-hole/` | 53, 8080 | Network-wide ad blocking and DNS filtering |
-| Vaultwarden | `vaultwarden/` | 8000 | Lightweight Bitwarden-compatible password manager |
-| Authentik | `authentik/` | 9000, 9443 | Full identity and access management (SSO) |
+| Wazuh | `wazuh/` | 9521 | Security monitoring and threat detection |
+| Pi-hole | `pi-hole/` | 53, 9514 | Network-wide ad blocking and DNS filtering |
+| Vaultwarden | `vaultwarden/` | 9520 | Lightweight Bitwarden-compatible password manager |
+| Authentik | `authentik/` | 9500, 9443 | Full identity and access management (SSO) |
 
 ### Privacy & Anonymity
 
@@ -73,7 +73,7 @@ Core Philosophy:
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Open WebUI | `open-webui/` | 3000 | Chat interface for Ollama LLM |
+| Open WebUI | `open-webui/` | 9513 | Chat interface for Ollama LLM |
 
 > [!TIP]
 > Configure Open WebUI with `OLLAMA_BASE_URL` in `.env`
@@ -82,49 +82,50 @@ Core Philosophy:
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Dashdot | `dashdot/` | 3001 | Modern server dashboard with system metrics |
-| Homarr | `homarr/` | 7575 | Clean and customizable homepage dashboard |
-| ntfy | `ntfy/` | 8010 | Simple pub/sub notification service |
-| Uptime Kuma | `uptime-kuma/` | 9442 | Self-hosted uptime monitoring |
-| Portainer | `portainer/` | 9444 | Container management UI for Podman/Docker |
+| Caddy | `caddy/` | 8100 | Reverse proxy and web server |
+| Dashdot | `dashdot/` | 9501 | Modern server dashboard with system metrics |
+| Homarr | `homarr/` | 9505 | Clean and customizable homepage dashboard |
+| ntfy | `ntfy/` | 9512 | Simple pub/sub notification service |
+| Uptime Kuma | `uptime-kuma/` | 9519 | Self-hosted uptime monitoring |
+| Portainer | `portainer/` | 9515 | Container management UI for Podman/Docker |
 
 ### Communication (Matrix Ecosystem)
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Synapse | `synapse/` | 8008, 8448 | Matrix homeserver for decentralized chat |
-| Element Web | `element-web/` | 8009 | Web client for Matrix |
+| Synapse | `synapse/` | 9518, 8448 | Matrix homeserver for decentralized chat |
+| Element Web | `element-web/` | 9502 | Web client for Matrix |
 | Mautrix Bridges | `synapse/mautrix/` | - | Telegram & WhatsApp bridges (single compose.yaml) |
 
 ### Search & Translation
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| LibreTranslate | `libretranslate/` | 5001 | Open-source machine translation |
-| SearXNG | `searxng/` | 8888 | Privacy-respecting metasearch engine |
+| LibreTranslate | `libretranslate/` | 9508 | Open-source machine translation |
+| SearXNG | `searxng/` | 9516 | Privacy-respecting metasearch engine |
 
 ### Media & Content Management
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Immich | `immich/` | 2283 | Google Photos alternative (self-hosted) |
-| Navidrome | `navidrome/` | 4533 | Music streaming server (Subsonic-compatible) |
-| Nextcloud | `nextcloud/` | 5000 | Complete productivity suite (files, calendar, contacts) |
-| Jellyfin | `jellyfin/` | 8096, 8920 | Full media server (Plex alternative) |
-| Slink | `slink/` | 2290 | Self-hosted image hosting and sharing |
+| Immich | `immich/` | 9506 | Google Photos alternative (self-hosted) |
+| Navidrome | `navidrome/` | 9510 | Music streaming server (Subsonic-compatible) |
+| Nextcloud | `nextcloud/` | 9511 | Complete productivity suite (files, calendar, contacts) |
+| Jellyfin | `jellyfin/` | 9507, 8920 | Full media server (Plex alternative) |
+| Slink | `slink/` | 9517 | Self-hosted image hosting and sharing |
 
 ### Link Management
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| YOURLS | `yourls/` | 8001 | URL shortener with analytics |
-| LinkStack | `linkstack/` | 8003 | Link sharing and bookmark manager |
+| YOURLS | `yourls/` | 9523 | URL shortener with analytics |
+| LinkStack | `linkstack/` | 9509 | Link sharing and bookmark manager |
 
 ### Knowledge Management
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| MediaWiki | `wiki/` | 8002 | Wikipedia-style wiki engine |
+| MediaWiki | `wiki/` | 9522 | Wikipedia-style wiki engine |
 
 ### Social Media
 
@@ -142,7 +143,7 @@ Core Philosophy:
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Forgejo | `forgejo/` | 3002 | Self-hosted Git service (Gitea alternative) |
+| Forgejo | `forgejo/` | 9503 | Self-hosted Git service (Gitea alternative) |
 
 ### IoT & Messaging
 
@@ -154,11 +155,11 @@ Core Philosophy:
 
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
-| Prometheus | `monitoring/` | 9090 | Metric collection and time-series storage |
-| Grafana | `monitoring/` | 3000 | Metric visualization and dashboards |
+| Prometheus | `monitoring/` | 8500 | Metric collection and time-series storage |
+| Grafana | `monitoring/` | 8501 | Metric visualization and dashboards |
 | Node Exporter | `monitoring/` | 9100 | Host system metrics (CPU, memory, disk, network) |
 | Podman Exporter | `monitoring/` | 9882 | Podman container metrics |
-| Alertmanager | `monitoring/` | 9093 | Alert management and routing |
+| Alertmanager | `monitoring/` | 8504 | Alert management and routing |
 
 > [!NOTE]
 > The monitoring stack consists of 5 containers in a single `compose.yaml` in the `monitoring/` directory. All services bind to `127.0.0.1` by default and are hardened with resource limits, `no-new-privileges`, and `cap_drop: ALL`.

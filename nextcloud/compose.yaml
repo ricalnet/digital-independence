@@ -188,7 +188,7 @@ services:
     container_name: nextcloud_web
     restart: unless-stopped
     ports:
-      - "${NEXTCLOUD_BIND_ADDRESS:-127.0.0.1}:${NEXTCLOUD_PORT:-5000}:80"
+      - "${NEXTCLOUD_BIND_ADDRESS:-127.0.0.1}:${NEXTCLOUD_PORT:-9511}:80"
     volumes:
       - nextcloud_data:/var/www/html:ro
       # comment this part if you do not use external storage

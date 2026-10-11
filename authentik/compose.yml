@@ -126,7 +126,7 @@ services:
       AUTHENTIK_TASK__CELERYD_PREFETCH_MULTIPLIER: "1"
       AUTHENTIK_TASK__CELERYD_MAX_TASKS_PER_CHILD: "1000"
     ports:
-      - "127.0.0.1:${COMPOSE_PORT_HTTP:-9000}:9000"
+      - "127.0.0.1:${COMPOSE_PORT_HTTP:-9500}:9000"
       - "127.0.0.1:${COMPOSE_PORT_HTTPS:-9443}:9443"
     volumes:
       - media:/media

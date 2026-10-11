@@ -7,9 +7,9 @@ services:
       mysql:
         condition: service_healthy
     ports:
-      - "${YOURLS_BIND_ADDRESS:-127.0.0.1}:${YOURLS_PORT:-8001}:8080"
+      - "${YOURLS_BIND_ADDRESS:-127.0.0.1}:${YOURLS_PORT:-9523}:8080"
     environment:
-      - YOURLS_SITE=${YOURLS_SITE:-https://localhost:8001}
+      - YOURLS_SITE=${YOURLS_SITE:-https://localhost:9523}
       - YOURLS_USER=${YOURLS_USER:-admin}
       - YOURLS_PASS=${YOURLS_PASS}
       - YOURLS_DB_HOST=mysql

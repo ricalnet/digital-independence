@@ -32,7 +32,7 @@ services:
       - DATABASE_URL=${DATABASE_URL:-}
       - DOCKER_SOCKET_PATHS=/var/run/podman.sock
     ports:
-      - "${HOMARR_BIND_ADDRESS:-127.0.0.1}:${HOMARR_PORT:-7575}:7575"
+      - "${HOMARR_BIND_ADDRESS:-127.0.0.1}:${HOMARR_PORT:-9505}:7575"
     healthcheck:
       test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:7575/api/health/live', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\""]
       interval: 30s

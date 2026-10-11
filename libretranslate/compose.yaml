@@ -3,7 +3,7 @@ services:
     container_name: libretranslate
     image: ${LIBRETRANSLATE_IMAGE:-git.ricalnet.my.id/rical/libretranslate:stable}
     ports:
-      - "${LIBRETRANSLATE_BIND_ADDRESS:-127.0.0.1}:${LIBRETRANSLATE_PORT:-5001}:5000"
+      - "${LIBRETRANSLATE_BIND_ADDRESS:-127.0.0.1}:${LIBRETRANSLATE_PORT:-9508}:5000"
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/languages', timeout=5)\" || exit 1"]

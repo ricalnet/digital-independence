@@ -20,7 +20,7 @@ services:
       - ./prometheus/rules:/etc/prometheus/rules:ro
       - prometheus_data:/prometheus
     ports:
-      - "${PROMETHEUS_BIND_ADDRESS:-127.0.0.1}:${PROMETHEUS_PORT:-9090}:9090"
+      - "${PROMETHEUS_BIND_ADDRESS:-127.0.0.1}:${PROMETHEUS_PORT:-8500}:9090"
     networks:
       - monitoring
     healthcheck:
@@ -74,7 +74,7 @@ services:
       GF_AUTH_ANONYMOUS_ORG_ROLE: ${GRAFANA_ANONYMOUS_ORG_ROLE:-Viewer}
       GF_AUTH_BASIC_ENABLED: ${GRAFANA_BASIC_ENABLED:-true}
       GF_AUTH_DISABLE_LOGIN_FORM: ${GRAFANA_DISABLE_LOGIN_FORM:-false}
-      GF_SERVER_ROOT_URL: ${GRAFANA_ROOT_URL:-http://localhost:3000}
+      GF_SERVER_ROOT_URL: ${GRAFANA_ROOT_URL:-http://localhost:8501}
       GF_SERVER_DOMAIN: ${GRAFANA_DOMAIN:-localhost}
       GF_SERVER_PROTOCOL: ${GRAFANA_PROTOCOL:-http}
       GF_SERVER_HTTP_PORT: 3000
@@ -111,7 +111,7 @@ services:
       - grafana_logs:/var/log/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
     ports:
-      - "${GRAFANA_BIND_ADDRESS:-127.0.0.1}:${GRAFANA_PORT:-3000}:3000"
+      - "${GRAFANA_BIND_ADDRESS:-127.0.0.1}:${GRAFANA_PORT:-8501}:3000"
     networks:
       - monitoring
       # comment if you're not using Wazuh
@@ -173,7 +173,7 @@ services:
       - /:/host/root:ro,rslave
       - /run/udev:/run/udev:ro
     ports:
-      - "${NODE_EXPORTER_BIND_ADDRESS:-127.0.0.1}:${NODE_EXPORTER_PORT:-9100}:9100"
+      - "${NODE_EXPORTER_BIND_ADDRESS:-127.0.0.1}:${NODE_EXPORTER_PORT:-8502}:9100"
     networks:
       - monitoring
     healthcheck:
@@ -222,7 +222,7 @@ services:
     tmpfs:
       - /home/exporter:rw,noexec,nosuid,size=64M,mode=1777
     ports:
-      - "${PODMAN_EXPORTER_BIND_ADDRESS:-127.0.0.1}:${PODMAN_EXPORTER_PORT:-9882}:9882"
+      - "${PODMAN_EXPORTER_BIND_ADDRESS:-127.0.0.1}:${PODMAN_EXPORTER_PORT:-8503}:9882"
     networks:
       - monitoring
     healthcheck:
@@ -258,13 +258,13 @@ services:
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
       - '--storage.path=/alertmanager'
-      - '--web.external-url=${ALERTMANAGER_EXTERNAL_URL:-http://localhost:9093}'
+      - '--web.external-url=${ALERTMANAGER_EXTERNAL_URL:-http://localhost:8504}'
       - '--log.level=${ALERTMANAGER_LOG_LEVEL:-info}'
     volumes:
       - ./alertmanager:/etc/alertmanager:ro
       - alertmanager_data:/alertmanager
     ports:
-      - "${ALERTMANAGER_BIND_ADDRESS:-127.0.0.1}:${ALERTMANAGER_PORT:-9093}:9093"
+      - "${ALERTMANAGER_BIND_ADDRESS:-127.0.0.1}:${ALERTMANAGER_PORT:-8504}:9093"
     networks:
       - monitoring
     healthcheck:

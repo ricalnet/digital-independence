@@ -58,10 +58,10 @@ Filosofi Inti:
 
 | Layanan | Direktori | Port | Tujuan |
 |---------|-----------|------|--------|
-| Wazuh | `wazuh/` | 443 | Pemantauan keamanan dan deteksi ancaman |
-| Pi-hole | `pi-hole/` | 53, 8080 | Pemblokiran iklan seluruh jaringan dan penyaringan DNS |
-| Vaultwarden | `vaultwarden/` | 8000 | Pengelola kata sandi ringan kompatibel Bitwarden |
-| Authentik | `authentik/` | 9000, 9443 | Manajemen identitas dan akses lengkap (SSO) |
+| Wazuh | `wazuh/` | 9521 | Pemantauan keamanan dan deteksi ancaman |
+| Pi-hole | `pi-hole/` | 53, 9514 | Pemblokiran iklan seluruh jaringan dan penyaringan DNS |
+| Vaultwarden | `vaultwarden/` | 9520 | Pengelola kata sandi ringan kompatibel Bitwarden |
+| Authentik | `authentik/` | 9500, 9443 | Manajemen identitas dan akses lengkap (SSO) |
 
 ### Privasi & Anonimitas
 
@@ -73,7 +73,7 @@ Filosofi Inti:
 
 | Layanan | Direktori | Port | Tujuan |
 |---------|-----------|------|--------|
-| Open WebUI | `open-webui/` | 3000 | Antarmuka obrolan untuk LLM Ollama |
+| Open WebUI | `open-webui/` | 9513 | Antarmuka obrolan untuk LLM Ollama |
 
 > [!TIP]
 > Konfigurasikan Open WebUI dengan `OLLAMA_BASE_URL` di `.env`
@@ -82,49 +82,50 @@ Filosofi Inti:
 
 | Layanan | Direktori | Port | Tujuan |
 |---------|-----------|------|--------|
-| Dashdot | `dashdot/` | 3001 | Dasbor server modern dengan metrik sistem |
-| Homarr | `homarr/` | 7575 | Dasbor beranda yang bersih dan dapat disesuaikan |
-| ntfy | `ntfy/` | 8010 | Layanan notifikasi pub/sub sederhana |
-| Uptime Kuma | `uptime-kuma/` | 9442 | Pemantauan uptime self-hosted |
-| Portainer | `portainer/` | 9444 | UI manajemen container untuk Podman/Docker |
+| Caddy | `caddy/` | 8100 | Reverse proxy dan web server |
+| Dashdot | `dashdot/` | 9501 | Dasbor server modern dengan metrik sistem |
+| Homarr | `homarr/` | 9505 | Dasbor beranda yang bersih dan dapat disesuaikan |
+| ntfy | `ntfy/` | 9512 | Layanan notifikasi pub/sub sederhana |
+| Uptime Kuma | `uptime-kuma/` | 9519 | Pemantauan uptime self-hosted |
+| Portainer | `portainer/` | 9515 | UI manajemen container untuk Podman/Docker |
 
 ### Komunikasi (Ekosistem Matrix)
 
 | Layanan | Direktori | Port | Tujuan |
 |---------|-----------|------|--------|
-| Synapse | `synapse/` | 8008, 8448 | Homeserver Matrix untuk obrolan terdesentralisasi |
-| Element Web | `element-web/` | 8009 | Klien web untuk Matrix |
+| Synapse | `synapse/` | 9518, 8448 | Homeserver Matrix untuk obrolan terdesentralisasi |
+| Element Web | `element-web/` | 9502 | Klien web untuk Matrix |
 | Jembatan Mautrix | `synapse/mautrix/` | - | Jembatan Telegram & WhatsApp (compose.yaml tunggal) |
 
 ### Pencarian & Penerjemahan
 
 | Layanan | Direktori | Port | Tujuan |
 |---------|-----------|------|--------|
-| LibreTranslate | `libretranslate/` | 5001 | Penerjemahan mesin open-source |
-| SearXNG | `searxng/` | 8888 | Mesin pencari metasearch yang menghormati privasi |
+| LibreTranslate | `libretranslate/` | 9508 | Penerjemahan mesin open-source |
+| SearXNG | `searxng/` | 9516 | Mesin pencari metasearch yang menghormati privasi |
 
 ### Manajemen Media & Konten
 
 | Layanan | Direktori | Port | Tujuan |
 |---------|-----------|------|--------|
-| Immich | `immich/` | 2283 | Alternatif Google Photos (self-hosted) |
-| Navidrome | `navidrome/` | 4533 | Server streaming musik (kompatibel Subsonic) |
-| Nextcloud | `nextcloud/` | 5000 | Suite produktivitas lengkap (file, kalender, kontak) |
-| Jellyfin | `jellyfin/` | 8096, 8920 | Server media lengkap (alternatif Plex) |
-| Slink | `slink/` | 2290 | Hosting dan berbagi gambar self-hosted |
+| Immich | `immich/` | 9506 | Alternatif Google Photos (self-hosted) |
+| Navidrome | `navidrome/` | 9510 | Server streaming musik (kompatibel Subsonic) |
+| Nextcloud | `nextcloud/` | 9511 | Suite produktivitas lengkap (file, kalender, kontak) |
+| Jellyfin | `jellyfin/` | 9507, 8920 | Server media lengkap (alternatif Plex) |
+| Slink | `slink/` | 9517 | Hosting dan berbagi gambar self-hosted |
 
 ### Manajemen Tautan
 
 | Layanan | Direktori | Port | Tujuan |
 |---------|-----------|------|--------|
-| YOURLS | `yourls/` | 8001 | Pengecil URL dengan analitik |
-| LinkStack | `linkstack/` | 8003 | Manajer berbagi tautan dan bookmark |
+| YOURLS | `yourls/` | 9523 | Pengecil URL dengan analitik |
+| LinkStack | `linkstack/` | 9509 | Manajer berbagi tautan dan bookmark |
 
 ### Manajemen Pengetahuan
 
 | Layanan | Direktori | Port | Tujuan |
 |---------|-----------|------|--------|
-| MediaWiki | `wiki/` | 8002 | Mesin wiki gaya Wikipedia |
+| MediaWiki | `wiki/` | 9522 | Mesin wiki gaya Wikipedia |
 
 ### Media Sosial
 
@@ -142,7 +143,7 @@ Filosofi Inti:
 
 | Layanan | Direktori | Port | Tujuan |
 |---------|-----------|------|--------|
-| Forgejo | `forgejo/` | 3002 | Layanan Git self-hosted (alternatif Gitea) |
+| Forgejo | `forgejo/` | 9503 | Layanan Git self-hosted (alternatif Gitea) |
 
 ### IoT & Messaging
 
@@ -154,11 +155,11 @@ Filosofi Inti:
 
 | Layanan | Direktori | Port | Tujuan |
 |---------|-----------|------|--------|
-| Prometheus | `monitoring/` | 9090 | Pengumpulan metrik dan penyimpanan time-series |
-| Grafana | `monitoring/` | 3000 | Visualisasi dan dasbor metrik |
+| Prometheus | `monitoring/` | 8500 | Pengumpulan metrik dan penyimpanan time-series |
+| Grafana | `monitoring/` | 8501 | Visualisasi dan dasbor metrik |
 | Node Exporter | `monitoring/` | 9100 | Metrik sistem host (CPU, memori, disk, jaringan) |
 | Podman Exporter | `monitoring/` | 9882 | Metrik container Podman |
-| Alertmanager | `monitoring/` | 9093 | Manajemen dan routing alert |
+| Alertmanager | `monitoring/` | 8504 | Manajemen dan routing alert |
 
 > [!NOTE]
 > Stack monitoring terdiri dari 5 container dalam satu `compose.yaml` di direktori `monitoring/`. Semua layanan terikat ke `127.0.0.1` secara default dan sudah di-hardening dengan resource limits, `no-new-privileges`, dan `cap_drop: ALL`.

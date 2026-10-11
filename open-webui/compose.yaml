@@ -4,7 +4,7 @@ services:
     container_name: open-webui
     restart: unless-stopped
     ports:
-      - "${OPENWEBUI_BIND_ADDRESS:-127.0.0.1}:${OPENWEBUI_PORT:-3000}:8080"
+      - "${OPENWEBUI_BIND_ADDRESS:-127.0.0.1}:${OPENWEBUI_PORT:-9513}:8080"
     volumes:
       - openwebui-data:/app/backend/data
       - openwebui-static:/app/backend/open_webui/static

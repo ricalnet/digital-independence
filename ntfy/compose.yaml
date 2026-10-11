@@ -6,7 +6,7 @@ services:
     env_file:
       - .env
     ports:
-      - "${NTFY_BIND_ADDRESS:-127.0.0.1}:${NTFY_PORT:-8010}:80"
+      - "${NTFY_BIND_ADDRESS:-127.0.0.1}:${NTFY_PORT:-9512}:80"
     restart: unless-stopped
     networks:
       - ntfy-network
@@ -44,7 +44,7 @@ services:
       - TZ=${TZ:-UTC}
       - NTFY_CACHE_FILE=/var/lib/ntfy/cache.db
       - NTFY_AUTH_FILE=/var/lib/ntfy/auth.db
-      - NTFY_BASE_URL=${NTFY_BASE_URL:-http://localhost:8010}
+      - NTFY_BASE_URL=${NTFY_BASE_URL:-http://localhost:9512}
       - NTFY_BEHIND_PROXY=${NTFY_BEHIND_PROXY:-true}
       - NTFY_LOG_LEVEL=${NTFY_LOG_LEVEL:-info}
       - NTFY_ENABLE_LOGIN=${NTFY_ENABLE_LOGIN:-true}

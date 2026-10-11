@@ -11,7 +11,7 @@ services:
       - slink_data:/app/var/data
       - slink_images:/app/slink/images
     ports:
-      - '${SLINK_PORT:-2290}:${PORT:-3000}'
+      - '${SLINK_PORT:-9517}:${PORT:-3000}'
     mem_limit: ${SLINK_MEM_LIMIT:-512m}
     mem_reservation: ${SLINK_MEM_RESERVATION:-128m}
     memswap_limit: ${SLINK_MEMSWAP_LIMIT:-768m}

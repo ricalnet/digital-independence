@@ -21,6 +21,7 @@ fi
 
 declare -A SERVICES=(
     ["authentik"]="authentik"
+    ["caddy"]="caddy"
     ["dashdot"]="dashdot"
     ["element-web"]="element-web"
     ["forgejo"]="forgejo"

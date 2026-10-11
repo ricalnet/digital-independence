@@ -21,7 +21,7 @@ USAGE:
 
 ARGS:
     <target-registry>   Target registry with namespace.
-                        Example: 127.0.0.1:3002/rical
+                        Example: 127.0.0.1:9503/rical
                                  git.ricalnet.my.id/rical
     <list-file>         File listing images, one per line:
                             <source-image> <target-name> [target-tag]
@@ -34,11 +34,11 @@ ENV:
     SKIP_LOGIN=false    Skip initial 'podman login'.
 
 EXAMPLES:
-    ./mirror.sh 127.0.0.1:3002/rical images.txt
+    ./mirror.sh 127.0.0.1:9503/rical images.txt
     ./mirror.sh git.ricalnet.my.id/rical images.txt
     TLS_VERIFY=true ./mirror.sh registry.example.com/myteam images.txt
-    CLEANUP=false   ./mirror.sh 127.0.0.1:3002/rical images.txt
-    TAG=v1.0        ./mirror.sh 127.0.0.1:3002/rical images.txt
+    CLEANUP=false   ./mirror.sh 127.0.0.1:9503/rical images.txt
+    TAG=v1.0        ./mirror.sh 127.0.0.1:9503/rical images.txt
 EOF
 }
 

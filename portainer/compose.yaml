@@ -7,7 +7,7 @@ services:
       - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro
       - portainer_data:/data
     ports:
-      - "${PORTAINER_BIND_ADDRESS:-127.0.0.1}:${PORTAINER_PORT:-9444}:9000"
+      - "${PORTAINER_BIND_ADDRESS:-127.0.0.1}:${PORTAINER_PORT:-9515}:9000"
     environment:
       - TZ=${TZ:-UTC}
       - PORTAINER_LOGS_LEVEL=${PORTAINER_LOGS_LEVEL:-info}

@@ -4,7 +4,7 @@ services:
     image: docker.io/mediawiki:latest
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8002:80"
+      - "127.0.0.1:9522:80"
     environment:
       - MEDIAWIKI_DB_HOST=db
       - MEDIAWIKI_DB_USER=mediawiki

@@ -4,7 +4,7 @@ services:
     container_name: element-web
     restart: unless-stopped
     ports:
-      - "${ELEMENT_WEB_BIND_ADDRESS:-127.0.0.1}:${ELEMENT_WEB_PORT:-8009}:80"
+      - "${ELEMENT_WEB_BIND_ADDRESS:-127.0.0.1}:${ELEMENT_WEB_PORT:-9502}:80"
     volumes:
       - ./config/element-web-config.json:/app/config.json:ro
       - ./modules:/modules:ro
