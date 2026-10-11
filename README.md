@@ -405,7 +405,32 @@ sudo ipc enable 9443 both tcp   # PT Port (obfs4)
 
 ### Cloudflare Tunnel
 Access services without opening firewall ports.
+
 - [Cloudflare Tunnel Guide](https://docs.ricalnet.my.id/posts/panduan-lengkap-mengonfigurasi-cloudflare-tunnel-untuk-ekspos-layanan-lokal/)
+
+> [!NOTE]
+>
+> If you run Cloudflare Tunnel in front of Caddy as a reverse proxy, point all subdomains to a single Caddy port (e.g. `8100`) and let Caddy handle routing based on the `Host` header. Do not create one ingress entry per service — that duplicates configuration and makes maintenance harder.
+>
+> Use the following ingress pattern in your Cloudflare Tunnel `config.yml`:
+>
+> ```yaml
+> ingress:
+>   # SSH — kept direct, not routed through Caddy
+>   - hostname: ssh.domain.com
+>     service: ssh://localhost:22
+>
+>   # All subdomains → Caddy (port 8100)
+>   - hostname: "*.domain.com"
+>     service: http://localhost:8100
+>
+>   # Root domain → Caddy
+>   - hostname: domain.com
+>     service: http://localhost:8100
+>
+>   # Fallback
+>   - service: http_status:404
+> ```
 
 ## Chantik: Encrypted Backup & Restore
 

@@ -18,6 +18,7 @@ http://example.com {
 # AUTHENTIK
 # ============================================================
 http://authentik.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9500 {
         header_up X-Forwarded-Proto https
         header_up X-Forwarded-Host {host}
@@ -28,6 +29,7 @@ http://authentik.example.com {
 # DASHDOT
 # ============================================================
 http://dashdot.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9501
 }
 
@@ -35,6 +37,7 @@ http://dashdot.example.com {
 # ELEMENT WEB
 # ============================================================
 http://element.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9502
 }
 
@@ -42,6 +45,7 @@ http://element.example.com {
 # FORGEJO
 # ============================================================
 http://forgejo.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9503
 }
 
@@ -60,6 +64,7 @@ http://globaleaks.example.com {
 # HOMARR
 # ============================================================
 http://homarr.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9505
 }
 
@@ -67,6 +72,7 @@ http://homarr.example.com {
 # IMMICH
 # ============================================================
 http://immich.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9506
 }
 
@@ -74,6 +80,7 @@ http://immich.example.com {
 # JELLYFIN
 # ============================================================
 http://jellyfin.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9507
 }
 
@@ -81,6 +88,7 @@ http://jellyfin.example.com {
 # LIBRETRANSLATE
 # ============================================================
 http://libretranslate.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9508
 }
 
@@ -88,6 +96,7 @@ http://libretranslate.example.com {
 # LINKSTACK
 # ============================================================
 http://linkstack.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9509
 }
 
@@ -95,6 +104,7 @@ http://linkstack.example.com {
 # NAVIDROME
 # ============================================================
 http://navidrome.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9510
 }
 
@@ -102,6 +112,7 @@ http://navidrome.example.com {
 # NEXTCLOUD
 # ============================================================
 http://nextcloud.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9511
 }
 
@@ -109,6 +120,7 @@ http://nextcloud.example.com {
 # NTFY
 # ============================================================
 http://ntfy.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9512
 }
 
@@ -116,6 +128,7 @@ http://ntfy.example.com {
 # OPEN WEBUI
 # ============================================================
 http://openwebui.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9513
 }
 
@@ -123,6 +136,7 @@ http://openwebui.example.com {
 # PI-HOLE
 # ============================================================
 http://pi-hole.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9514
 }
 
@@ -130,6 +144,7 @@ http://pi-hole.example.com {
 # PORTAINER
 # ============================================================
 http://portainer.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9515
 }
 
@@ -137,6 +152,7 @@ http://portainer.example.com {
 # SEARXNG
 # ============================================================
 http://searxng.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9516
 }
 
@@ -144,6 +160,7 @@ http://searxng.example.com {
 # SLINK
 # ============================================================
 http://slink.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9517
 }
 
@@ -151,6 +168,7 @@ http://slink.example.com {
 # SYNAPSE
 # ============================================================
 http://synapse.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9518
 }
 
@@ -158,6 +176,7 @@ http://synapse.example.com {
 # UPTIME KUMA
 # ============================================================
 http://uptime-kuma.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9519
 }
 
@@ -165,6 +184,7 @@ http://uptime-kuma.example.com {
 # VAULTWARDEN
 # ============================================================
 http://vaultwarden.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9520
 }
 
@@ -172,6 +192,7 @@ http://vaultwarden.example.com {
 # WAZUH
 # ============================================================
 http://wazuh.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy https://127.0.0.1:9521 {
         transport http {
             tls_insecure_skip_verify
@@ -183,6 +204,7 @@ http://wazuh.example.com {
 # WIKI (MediaWiki)
 # ============================================================
 http://mediawiki.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9522
 }
 
@@ -190,6 +212,7 @@ http://mediawiki.example.com {
 # YOURLS
 # ============================================================
 http://yourls.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:9523
 }
 
@@ -197,6 +220,7 @@ http://yourls.example.com {
 # MASTODON
 # ============================================================
 http://mastodon.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     handle_path /api/v1/streaming/* {
         reverse_proxy 127.0.0.1:4000
     }
@@ -207,6 +231,7 @@ http://mastodon.example.com {
 # MONITORING
 # ============================================================
 http://grafana.example.com {
+    header Onion-Location http://abcdefghijkl12345.onion{path}
     reverse_proxy 127.0.0.1:8501
 }
 
