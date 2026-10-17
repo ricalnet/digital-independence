@@ -24,7 +24,10 @@ federation_verify_certificates: true
 # Restrict federation to specific domains
 # Empty = allow federation with all servers
 # To restrict: list domain names, e.g., ["matrix.org", "your-partner.com"]
-federation_domain_whitelist: []
+federation_domain_whitelist:
+  - example.com
+  - your-partner.com
+  - matrix.org
 
 # Disable profile lookup over federation
 # Recommended: true for privacy
@@ -189,17 +192,8 @@ thumbnail_sizes:
   - width: 320
     height: 240
     method: scale
-  - width: 640
-    height: 480
-    method: scale
   - width: 800
     height: 600
-    method: scale
-  - width: 1280
-    height: 720
-    method: scale
-  - width: 1920
-    height: 1080
     method: scale
 
 # Maximum image pixels (width × height)
@@ -468,13 +462,13 @@ federation_rr_transactions_per_room_per_second: 100
 #   < 4GB: 10K
 #   4-8GB: 25K-50K
 #   > 8GB: 100K
-event_cache_size: 100K
+event_cache_size: 50K
 
 caches:
   # Global cache size multiplier
   # 1.0 = default, 1.5 = 50% more cache, etc.
   # Recommended: 1.5 (good balance of performance and memory)
-  global_factor: 1.5
+  global_factor: 1.0
 
   # Per-cache overrides
   per_cache_factors:
@@ -496,7 +490,7 @@ caches:
   cache_entry_ttl: 2h
 
   # How long to cache sync responses
-  sync_response_cache_duration: 5m
+  sync_response_cache_duration: 2m
 
 # =============================================================================
 # SEARCH & DIRECTORY
