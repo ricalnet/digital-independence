@@ -1,0 +1,46 @@
+{
+    "default_server_config": {
+        "m.homeserver": {
+            "base_url": "https://matrix.yourdomain.com"
+        }
+    },
+    "disable_custom_urls": true,
+    "enable_client_well_known_lookups": false,
+    "disable_guests": true,
+    "force_verification": true,
+    "disable_3pid_login": true,
+    "bug_report_endpoint_url": "local",
+    "integrations_ui_url": null,
+    "integrations_rest_url": null,
+    "integrations_widgets_urls": null,
+
+    "brand": "Your Brand Name",
+    "default_theme": "dark",
+    "branding": {
+        "auth_header_logo_url": "https://yourdomain.com/assets/logo.svg",
+        "welcome_background_url": "https://yourdomain.com/assets/background.jpg",
+        "logo_link_url": "https://yourdomain.com",
+        "auth_footer_links": [
+            { "text": "User Guide", "url": "https://yourdomain.com/guide" },
+            { "text": "Privacy Policy", "url": "https://yourdomain.com/privacy" }
+        ]
+    },
+
+    "user_notice": {
+        "title": "System Maintenance Announcement",
+        "description": "The system will undergo scheduled maintenance on Saturday at 10:00 PM EST. Please ensure your work is saved.",
+        "show_once": true
+    },
+
+    "setting_defaults": {
+        "UIFeature.urlPreviews": false,
+        "UIFeature.feedback": false,
+        "UIFeature.identityServer": false,
+        "UIFeature.thirdPartyId": false,
+        "UIFeature.locationSharing": false,
+        "UIFeature.allowCreatingPublicRooms": false,
+        "UIFeature.allowCreatingPublicSpaces": false,
+        "UIFeature.voip": false,
+        "UIFeature.widgets": false
+    }
+}
