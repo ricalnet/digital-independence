@@ -248,6 +248,27 @@ registration_requires_token: false
 allow_guest_access: false
 
 # =============================================================================
+# CAPTCHA
+# =============================================================================
+
+# Enable reCAPTCHA verification for registration
+# Recommended: true if enable_registration is true
+# IMPORTANT: Requires Google reCAPTCHA v2 ("I'm not a robot" Checkbox)
+enable_registration_captcha: false
+
+# Public key (Site key) for reCAPTCHA
+# Get this from https://www.google.com/recaptcha
+recaptcha_public_key: "YOUR_RECAPTCHA_PUBLIC_KEY"
+
+# Private key (Secret key) for reCAPTCHA
+# Get this from https://www.google.com/recaptcha
+recaptcha_private_key: "YOUR_RECAPTCHA_PRIVATE_KEY"
+
+# Endpoint used to verify reCAPTCHA responses
+# Recommended: https://www.recaptcha.net/recaptcha/api/siteverify
+recaptcha_siteverify_api: "https://www.recaptcha.net/recaptcha/api/siteverify"
+
+# =============================================================================
 # BRIDGES
 # =============================================================================
 # Application service configuration files for bridges
