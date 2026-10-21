@@ -1,0 +1,52 @@
+services:
+  technitium:
+    container_name: technitium
+    hostname: technitium
+    image: git.ricalnet.my.id/rical/uncensored-dns-server:stable
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:9524:5380/tcp"
+      - "127.0.0.1:9053:8053/tcp"
+      - "127.0.0.1:5353:53/udp"
+      - "127.0.0.1:5353:53/tcp"
+    environment:
+      TZ: ${TZ:-Asia/Jakarta}
+      DNS_SERVER_DOMAIN: technitium
+      DNS_SERVER_OPTIONAL_PROTOCOL_DNS_OVER_HTTP: "true"
+      DNS_SERVER_OPTIONAL_PROTOCOL_DNS_OVER_HTTP_PORT: "8053"
+      DNS_SERVER_OPTIONAL_PROTOCOL_DNS_OVER_HTTPS: "false"
+      DNS_SERVER_RECURSION: "AllowOnlyForPrivateNetworks"
+      DNS_SERVER_LOG_FOLDER_PATH: /var/log/technitium/dns
+    volumes:
+      - config:/etc/dns
+      - logs:/var/log/technitium/dns
+    security_opt:
+      - no-new-privileges=true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    sysctls:
+      - net.ipv4.ip_local_port_range=1024 65535
+    healthcheck:
+      test: ["CMD", "dig", "+short", "+norecurse", "+retry=0", "@127.0.0.1", "cloudflare.com"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    mem_limit: ${TECHNITIUM_MEM_LIMIT:-384m}
+    mem_reservation: ${TECHNITIUM_MEM_RESERVATION:-128m}
+    memswap_limit: ${TECHNITIUM_MEMSWAP_LIMIT:-384m}
+    cpus: ${TECHNITIUM_CPUS:-0.5}
+    pids_limit: 100
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  config:
+    name: technitium_config
+  logs:
+    name: technitium_logs

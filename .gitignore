@@ -145,6 +145,9 @@ synapse/mautrix/mautrix-telegram-data/
 synapse/mautrix/mautrix-whatsapp-data/
 synapse/mautrix/.env
 
+# Technitium
+technitium/.env
+
 # Uptime Kuma
 uptime-kuma/.env
 

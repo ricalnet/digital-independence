@@ -68,6 +68,7 @@ Filosofi Inti:
 | Layanan | Direktori | Port | Tujuan |
 |---------|-----------|------|--------|
 | obfs4 Bridge | `obfs4-bridge/` | 8443, 9443 | Tor bridge obfs4 untuk membantu akses Tor di jaringan tersensor |
+| Technitium | `technitium/` | 9053, 9524, 5353 | DNS server dengan DoH privat, tanpa sensor, dan rekursi terbatas |
 
 ### AI & Pembelajaran Mesin
 

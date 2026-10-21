@@ -68,6 +68,7 @@ Core Philosophy:
 | Service | Directory | Port | Purpose |
 |---------|-----------|------|--------|
 | obfs4 Bridge | `obfs4-bridge/` | 8443, 9443 | obfs4 Tor bridge to help access Tor on censored networks |
+| Technitium | `technitium/` | 9053, 9524, 5353 | DNS server with private DoH, uncensored, and restricted recursion |
 
 ### AI & Machine Learning
 
