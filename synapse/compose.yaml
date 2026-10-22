@@ -1,6 +1,6 @@
 services:
   synapse:
-    image: ${SYNAPSE_IMAGE:-git.ricalnet.my.id/rical/synapse:stable}
+    image: ${SYNAPSE_IMAGE:-ghcr.io/element-hq/synapse:latest}
     container_name: synapse
     restart: unless-stopped
     depends_on:

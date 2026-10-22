@@ -1,6 +1,6 @@
 services:
   element-web:
-    image: ${ELEMENT_WEB_IMAGE:-git.ricalnet.my.id/rical/element-web:stable}
+    image: ${ELEMENT_WEB_IMAGE:-ghcr.io/element-hq/element-web:latest}
     container_name: element-web
     restart: unless-stopped
     ports:

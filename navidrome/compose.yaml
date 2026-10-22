@@ -1,6 +1,6 @@
 services:
   navidrome:
-    image: ${NAVIDROME_IMAGE:-git.ricalnet.my.id/rical/navidrome:stable}
+    image: ${NAVIDROME_IMAGE:-ghcr.io/navidrome/navidrome:latest}
     container_name: navidrome
     ports:
       - "${NAVIDROME_BIND_ADDRESS:-127.0.0.1}:${NAVIDROME_PORT:-9510}:4533"

@@ -2,10 +2,10 @@
 
 set -euo pipefail
 
-TAG="${TAG:-stable}"              # Default target tag
-TLS_VERIFY="${TLS_VERIFY:-false}" # TLS verification for target registry
-CLEANUP="${CLEANUP:-true}"        # Remove source images after push
-SKIP_LOGIN="${SKIP_LOGIN:-false}" # Skip initial podman login
+TAG="${TAG:-stable}"
+TLS_VERIFY="${TLS_VERIFY:-false}"
+CLEANUP="${CLEANUP:-true}"
+SKIP_LOGIN="${SKIP_LOGIN:-false}"
 
 G='\033[0;32m'; Y='\033[1;33m'; R='\033[0;31m'; N='\033[0m'
 log()  { echo -e "${G}[+]${N} $*"; }
@@ -23,12 +23,31 @@ ARGS:
     <target-registry>   Target registry with namespace.
                         Example: 127.0.0.1:9503/rical
                                  git.ricalnet.my.id/rical
-    <list-file>         File listing images, one per line:
-                            <source-image> <target-name> [target-tag]
-                        Lines starting with '#' and blank lines are ignored.
+    <list-file>         File listing images, one per line.
+
+LIST FORMAT:
+    # Lines starting with '#' and blank lines are ignored.
+
+    # 1) Simple: use default TAG (from env) for target
+    <source-image> <target-name>
+
+    # 2) Custom target tag (3rd column)
+    <source-image> <target-name> <target-tag>
+
+    # 3) Inline tag with ':' on source and/or target
+    <source-image>:<src-tag> <target-name>:<dst-tag>
+
+    # 4) Explicit '=' separator (same as #2, alternative syntax)
+    <source-image> <target-name>=<target-tag>
+
+    EXAMPLES:
+        nginx:1.25            rical/nginx
+        nginx:1.25            rical/nginx            1.25-alpine
+        nginx:1.25-alpine     rical/nginx:1.25
+        redis:7.2             rical/redis=7.2-bookworm
 
 ENV:
-    TAG=stable          Default target tag.
+    TAG=stable          Default target tag (fallback when not specified).
     TLS_VERIFY=false    Enable TLS verification.
     CLEANUP=true        Remove source images after push.
     SKIP_LOGIN=false    Skip initial 'podman login'.
@@ -61,6 +80,37 @@ if [[ ! -f "$LIST" ]]; then
     exit 1
 fi
 
+parse_line() {
+    local line="$1"
+
+    line="${line%%#*}"
+    line="$(echo "$line" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+    [[ -z "$line" ]] && return 0
+
+    line="$(echo "$line" | tr -s '[:space:]' ' ')"
+    read -r -a parts <<< "$line"
+
+    local src="${parts[0]:-}"
+    local dst="${parts[1]:-}"
+    local tag="${parts[2]:-}"
+
+    [[ -z "$src" || -z "$dst" ]] && { err "Invalid line (need src & dst): $line"; return 0; }
+
+    if [[ "$dst" == *=* ]]; then
+        tag="${dst#*=}"
+        dst="${dst%%=*}"
+    fi
+
+    if [[ "$dst" == *:* ]]; then
+        tag="${dst##*:}"
+        dst="${dst%%:*}"
+    fi
+
+    [[ -z "$tag" ]] && tag="$TAG"
+
+    echo "$src $dst $tag"
+}
+
 if [[ "$SKIP_LOGIN" == "true" ]]; then
     warn "Skipping login (SKIP_LOGIN=true)"
 else
@@ -74,10 +124,12 @@ fi
 ok=0
 fail=0
 
-while read -r src dst tag; do
-    [[ -z "${src:-}" || "$src" == \#* ]] && continue
+while IFS= read -r raw || [[ -n "$raw" ]]; do
+    parsed="$(parse_line "$raw")"
+    [[ -z "$parsed" ]] && continue
+    read -r src dst tag <<< "$parsed"
 
-    target="${REGISTRY}/${dst}:${tag:-$TAG}"
+    target="${REGISTRY}/${dst}:${tag}"
 
     echo
     log "Processing: $src  ->  $target"

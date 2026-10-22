@@ -1,2 +1,7 @@
-ghcr.io/element-hq/synapse:<version>        synapse
-ghcr.io/dani-garcia/vaultwarden:<version>   vaultwarden
+# Comment
+# ghcr.io/element-hq/synapse:v1.163.0                 synapse:stable
+# ghcr.io/dani-garcia/vaultwarden:1.37.4              vaultwarden:stable
+
+# Example
+ghcr.io/element-hq/synapse:v1.163.0                 synapse:stable
+ghcr.io/dani-garcia/vaultwarden:1.37.4              vaultwarden:stable

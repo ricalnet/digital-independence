@@ -1,6 +1,6 @@
 services:
   wazuh.manager:
-    image: ${WAZUH_MANAGER_IMAGE:-git.ricalnet.my.id/rical/wazuh-manager:stable}
+    image: ${WAZUH_MANAGER_IMAGE:-docker.io/wazuh/wazuh-manager:4.14.9}
     hostname: wazuh.manager
     container_name: wazuh.manager
     restart: always
@@ -76,7 +76,7 @@ services:
     stop_signal: SIGTERM
 
   wazuh.indexer:
-    image: ${WAZUH_INDEXER_IMAGE:-git.ricalnet.my.id/rical/wazuh-indexer:stable}
+    image: ${WAZUH_INDEXER_IMAGE:-docker.io/wazuh/wazuh-indexer:4.14.9}
     hostname: wazuh.indexer
     container_name: wazuh.indexer
     restart: always
@@ -141,7 +141,7 @@ services:
     stop_signal: SIGTERM
 
   wazuh.dashboard:
-    image: ${WAZUH_DASHBOARD_IMAGE:-git.ricalnet.my.id/rical/wazuh-dashboard:stable}
+    image: ${WAZUH_DASHBOARD_IMAGE:-docker.io/wazuh/wazuh-dashboard:4.14.9}
     hostname: wazuh.dashboard
     container_name: wazuh.dashboard
     restart: always

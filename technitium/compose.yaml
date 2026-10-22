@@ -2,7 +2,7 @@ services:
   technitium:
     container_name: technitium
     hostname: technitium
-    image: git.ricalnet.my.id/rical/uncensored-dns-server:stable
+    image: ${TECHNITIUM_DNS_IMAGE:-docker.io/technitium/dns-server:latest}
     restart: unless-stopped
     ports:
       - "127.0.0.1:9524:5380/tcp"

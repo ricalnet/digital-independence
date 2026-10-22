@@ -1,6 +1,6 @@
 services:
   db:
-    image: ${NEXTCLOUD_DB_IMAGE:-mariadb:11.8-ubi9}
+    image: ${NEXTCLOUD_DB_IMAGE:-docker.io/mariadb:11.8-ubi9}
     container_name: nextcloud_db
     restart: unless-stopped
     command: >
@@ -57,7 +57,7 @@ services:
     stop_grace_period: 60s
 
   redis:
-    image: ${NEXTCLOUD_REDIS_IMAGE:-redis:alpine}
+    image: ${NEXTCLOUD_REDIS_IMAGE:-docker.io/redis:alpine}
     container_name: nextcloud_redis
     restart: unless-stopped
     command: >
@@ -111,7 +111,7 @@ services:
     stop_signal: SIGTERM
 
   app:
-    image: ${NEXTCLOUD_APP_IMAGE:-nextcloud:stable-fpm}
+    image: ${NEXTCLOUD_APP_IMAGE:-docker.io/nextcloud:stable-fpm}
     container_name: nextcloud_app
     restart: unless-stopped
     volumes:
@@ -184,7 +184,7 @@ services:
     stop_grace_period: 60s
 
   web:
-    image: ${NEXTCLOUD_WEB_IMAGE:-nginx:alpine}
+    image: ${NEXTCLOUD_WEB_IMAGE:-docker.io/nginx:alpine}
     container_name: nextcloud_web
     restart: unless-stopped
     ports:
