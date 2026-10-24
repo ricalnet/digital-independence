@@ -17,7 +17,7 @@
 
 ## Apa itu Dipen?
 
-Dipen adalah solusi self-hosting yang menyediakan konfigurasi `podman-compose` untuk 25+ layanan open-source populer. Ini menghilangkan ketergantungan pada layanan cloud pihak ketiga dengan memberi Anda kendali penuh atas data dan infrastruktur Anda.
+Dipen adalah solusi self-hosting yang menyediakan konfigurasi `podman-compose` untuk 30+ layanan open-source populer. Ini menghilangkan ketergantungan pada layanan cloud pihak ketiga dengan memberi Anda kendali penuh atas data dan infrastruktur Anda.
 
 Filosofi Inti:
 - Data Anda tetap di perangkat keras Anda, selamanya
@@ -38,7 +38,7 @@ Filosofi Inti:
 | Firewall bawaan (default-deny) | ✅ IPC (Iptables) | ⚠️ Manual | ⚠️ Terbatas | ⚠️ Terbatas | ⚠️ Manual |
 | Backup terenkripsi ChaCha20 | ✅ Chantik | ⚠️ Umum | ✅ (fitur berbayar) | ⚠️ Umum | ⚠️ Umum |
 | Lisensi | MIT | Open source | Proprietary (Freemium) | Open source | Open source |
-| Layanan | 25+ terkurasi | 500+ | 100+ | 120+ | Tak terbatas |
+| Layanan | 30+ terkurasi | 500+ | 100+ | 120+ | Tak terbatas |
 | Kesulitan | Menengah | Rendah | Rendah | Sangat rendah | Menengah–Tinggi |
 | Cocok untuk | Pengguna CLI yang ingin kontrol penuh | Pemula yang ingin serba instan | Tim kecil yang ingin produk jadi | Pengguna non-teknis | Developer yang deploy aplikasi sendiri |
 
@@ -52,7 +52,7 @@ Filosofi Inti:
 | `linux/amd64` | Intel/AMD, x86_64 | Didukung |
 | `linux/arm64` | Raspberry Pi 4/5, Apple M1/M2/M3, AWS Graviton | Didukung |
 
-## Layanan Tersedia (25+ Layanan)
+## Layanan Tersedia (30+ Layanan)
 
 ### Keamanan & Autentikasi
 

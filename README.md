@@ -17,7 +17,7 @@
 
 ## What is Dipen?
 
-Dipen is a self-hosting solution that provides `podman-compose` configurations for 25+ popular open-source services. It eliminates dependency on third-party cloud services by giving you full control over your data and infrastructure.
+Dipen is a self-hosting solution that provides `podman-compose` configurations for 30+ popular open-source services. It eliminates dependency on third-party cloud services by giving you full control over your data and infrastructure.
 
 Core Philosophy:
 - Your data stays on your hardware, forever
@@ -38,7 +38,7 @@ Core Philosophy:
 | Built-in firewall (default-deny) | ✅ IPC (Iptables) | ⚠️ Manual | ⚠️ Limited | ⚠️ Limited | ⚠️ Manual |
 | ChaCha20 encrypted backup | ✅ Chantik | ⚠️ Generic | ✅ (paid feature) | ⚠️ Generic | ⚠️ Generic |
 | License | MIT | Open source | Proprietary (Freemium) | Open source | Open source |
-| Services | 25+ curated | 500+ | 100+ | 120+ | Unlimited |
+| Services 30+ curated | 500+ | 100+ | 120+ | Unlimited |
 | Difficulty | Intermediate | Low | Low | Very low | Intermediate–High |
 | Best for | CLI users who want full control | Beginners who want instant everything | Small teams who want a finished product | Non-technical users | Developers deploying their own apps |
 
@@ -52,7 +52,7 @@ Core Philosophy:
 | `linux/amd64` | Intel/AMD, x86_64 | Supported |
 | `linux/arm64` | Raspberry Pi 4/5, Apple M1/M2/M3, AWS Graviton | Supported |
 
-## Available Services (25+ Services)
+## Available Services (30+ Services)
 
 ### Security & Authentication
 
