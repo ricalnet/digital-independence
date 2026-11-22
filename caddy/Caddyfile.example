@@ -1,264 +1,253 @@
 {
-    auto_https off
-    http_port 8100
-    log {
-        output stdout
-        format console
-    }
+	auto_https off
+	http_port 8100
+	admin off
+
+	servers {
+		trusted_proxies static private_ranges
+		client_ip_headers Cf-Connecting-IP X-Forwarded-For
+	}
+
+	log {
+		output stdout
+		format console
+	}
 }
 
 # ============================================================
-# ROOT DOMAIN
+# SNIPPET: LOOPBACK BINDING + SECURITY HEADERS
 # ============================================================
-http://example.com {
-    reverse_proxy 127.0.0.1:80
+(common) {
+	bind 127.0.0.1
+	header {
+		-Server
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=(), interest-cohort=()"
+		Strict-Transport-Security "max-age=15552000"
+	}
 }
 
 # ============================================================
-# AUTHENTIK
+# SNIPPET: STANDARD PROXY (NO ONION)
+# args[0] = backend address
+# ============================================================
+(proxy) {
+	import common
+	reverse_proxy {args[0]} {
+		flush_interval -1
+		header_up X-Forwarded-Proto "https"
+		header_up X-Real-IP "{client_ip}"
+	}
+}
+
+# ============================================================
+# SNIPPET: SECURE PROXY + UNIQUE ONION LOCATION
+# args[0] = backend address, args[1] = onion address
+# ============================================================
+(secure_proxy) {
+	import common
+	header Onion-Location "http://{args[1]}{path}"
+	reverse_proxy {args[0]} {
+		flush_interval -1
+		header_up X-Forwarded-Proto "https"
+		header_up X-Real-IP "{client_ip}"
+	}
+}
+
+# ============================================================
+# HEALTHCHECK / UNKNOWN HOST FALLBACK
+# ============================================================
+http://127.0.0.1:8100 {
+	bind 127.0.0.1
+	respond /health 200
+	respond 404
+}
+
+# ============================================================
+# SERVICES WITHOUT ONION LOCATION
+# ============================================================
+http://app.example.com {
+	import proxy 127.0.0.1:8000
+}
+
+# ============================================================
+# SERVICES WITH UNIQUE ONION LOCATION
 # ============================================================
 http://authentik.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9500 {
-        header_up X-Forwarded-Proto https
-        header_up X-Forwarded-Host {host}
-    }
+	import secure_proxy 127.0.0.1:9500 service-onion-address.onion
 }
 
-# ============================================================
-# DASHDOT
-# ============================================================
 http://dashdot.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9501
+	import secure_proxy 127.0.0.1:9501 service-onion-address.onion
 }
 
-# ============================================================
-# ELEMENT WEB
-# ============================================================
-http://element.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9502
+http://element-web.example.com {
+	import secure_proxy 127.0.0.1:9502 service-onion-address.onion
 }
 
-# ============================================================
-# FORGEJO
-# ============================================================
 http://forgejo.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9503
+	import secure_proxy 127.0.0.1:9503 service-onion-address.onion
+}
+
+http://homarr.example.com {
+	import secure_proxy 127.0.0.1:9505 service-onion-address.onion
+}
+
+http://immich.example.com {
+	import secure_proxy 127.0.0.1:9506 service-onion-address.onion
+}
+
+http://jellyfin.example.com {
+	import secure_proxy 127.0.0.1:9507 service-onion-address.onion
+}
+
+http://libretranslate.example.com {
+	import secure_proxy 127.0.0.1:9508 service-onion-address.onion
+}
+
+http://navidrome.example.com {
+	import secure_proxy 127.0.0.1:9510 service-onion-address.onion
+}
+
+http://nextcloud.example.com {
+	import secure_proxy 127.0.0.1:9511 service-onion-address.onion
+}
+
+http://ntfy.example.com {
+	import secure_proxy 127.0.0.1:9512 service-onion-address.onion
+}
+
+http://openwebui.example.com {
+	import secure_proxy 127.0.0.1:9513 service-onion-address.onion
+}
+
+http://pi-hole.example.com {
+	import secure_proxy 127.0.0.1:9514 service-onion-address.onion
+}
+
+http://portainer.example.com {
+	import secure_proxy 127.0.0.1:9515 service-onion-address.onion
+}
+
+http://searxng.example.com {
+	import secure_proxy 127.0.0.1:9516 service-onion-address.onion
+}
+
+http://slink.example.com {
+	import secure_proxy 127.0.0.1:9517 service-onion-address.onion
+}
+
+http://synapse.example.com {
+	import secure_proxy 127.0.0.1:9518 service-onion-address.onion
+}
+
+http://uptime-kuma.example.com {
+	import secure_proxy 127.0.0.1:9519 service-onion-address.onion
+}
+
+http://vaultwarden.example.com {
+	import secure_proxy 127.0.0.1:9520 service-onion-address.onion
+}
+
+http://mediawiki.example.com {
+	import secure_proxy 127.0.0.1:9522 service-onion-address.onion
+}
+
+http://yourls.example.com {
+	import secure_proxy 127.0.0.1:9523 service-onion-address.onion
+}
+
+http://grafana.example.com {
+	import secure_proxy 127.0.0.1:8501 service-onion-address.onion
 }
 
 # ============================================================
-# GLOBALEAKS
+# GLOBALEAKS — Self-signed HTTPS backend (loopback)
 # ============================================================
 http://globaleaks.example.com {
-    reverse_proxy https://127.0.0.1:9504 {
-        transport http {
-            tls_insecure_skip_verify
-        }
-    }
+	bind 127.0.0.1
+	header {
+		-Server
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		Permissions-Policy "geolocation=(), camera=(), microphone=(), payment=(), usb=(), interest-cohort=()"
+		Strict-Transport-Security "max-age=15552000"
+	}
+	reverse_proxy https://127.0.0.1:4443 {
+		flush_interval -1
+		transport http {
+			tls_insecure_skip_verify
+			dial_timeout 10s
+		}
+		header_up X-Forwarded-Proto "https"
+		header_up -X-Real-IP
+		header_up -X-Forwarded-For
+		header_up -Cf-Connecting-Ip
+		header_up -Cf-Ipcountry
+	}
 }
 
 # ============================================================
-# HOMARR
-# ============================================================
-http://homarr.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9505
-}
-
-# ============================================================
-# IMMICH
-# ============================================================
-http://immich.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9506
-}
-
-# ============================================================
-# JELLYFIN
-# ============================================================
-http://jellyfin.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9507
-}
-
-# ============================================================
-# LIBRETRANSLATE
-# ============================================================
-http://libretranslate.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9508
-}
-
-# ============================================================
-# LINKSTACK
-# ============================================================
-http://linkstack.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9509
-}
-
-# ============================================================
-# NAVIDROME
-# ============================================================
-http://navidrome.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9510
-}
-
-# ============================================================
-# NEXTCLOUD
-# ============================================================
-http://nextcloud.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9511
-}
-
-# ============================================================
-# NTFY
-# ============================================================
-http://ntfy.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9512
-}
-
-# ============================================================
-# OPEN WEBUI
-# ============================================================
-http://openwebui.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9513
-}
-
-# ============================================================
-# PI-HOLE
-# ============================================================
-http://pi-hole.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9514
-}
-
-# ============================================================
-# PORTAINER
-# ============================================================
-http://portainer.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9515
-}
-
-# ============================================================
-# SEARXNG
-# ============================================================
-http://searxng.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9516
-}
-
-# ============================================================
-# SLINK
-# ============================================================
-http://slink.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9517
-}
-
-# ============================================================
-# SYNAPSE
-# ============================================================
-http://synapse.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9518
-}
-
-# ============================================================
-# UPTIME KUMA
-# ============================================================
-http://uptime-kuma.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9519
-}
-
-# ============================================================
-# VAULTWARDEN
-# ============================================================
-http://vaultwarden.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9520
-}
-
-# ============================================================
-# WAZUH
+# WAZUH DASHBOARD — Self-signed HTTPS backend (loopback)
 # ============================================================
 http://wazuh.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy https://127.0.0.1:9521 {
-        transport http {
-            tls_insecure_skip_verify
-        }
-    }
+	import common
+	header Onion-Location "http://service-onion-address.onion{path}"
+	reverse_proxy https://127.0.0.1:9521 {
+		flush_interval -1
+		transport http {
+			tls_insecure_skip_verify
+			dial_timeout 10s
+		}
+		header_up X-Forwarded-Proto "https"
+		header_up X-Real-IP "{client_ip}"
+	}
 }
 
 # ============================================================
-# WIKI (MediaWiki)
+# TECHNITIUM: DoH + WEB UI
 # ============================================================
-http://mediawiki.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9522
+http://technitium.example.com {
+	import common
+	handle /dns-query* {
+		reverse_proxy 127.0.0.1:9053 {
+			header_up Host "{host}"
+			header_up X-Forwarded-Proto "https"
+			header_up -X-Real-IP
+			header_up -X-Forwarded-For
+			header_up -Cf-Connecting-Ip
+		}
+	}
+	handle {
+		reverse_proxy 127.0.0.1:9524 {
+			header_up Host "{host}"
+			header_up X-Forwarded-Proto "https"
+			header_up X-Real-IP "{client_ip}"
+		}
+	}
 }
 
 # ============================================================
-# YOURLS
-# ============================================================
-http://yourls.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:9523
-}
-
-# ============================================================
-# TECHNITIUM DNS & DoH
-# ============================================================
-http://technitium.yourdomain.com {
-    handle /dns-query* {
-        reverse_proxy 127.0.0.1:9053 {
-            header_up Host {host}
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-Proto https
-        }
-    }
-
-    handle {
-        reverse_proxy 127.0.0.1:9524 {
-            header_up Host {host}
-            header_up X-Forwarded-Proto https
-        }
-    }
-}
-
-# ============================================================
-# MASTODON
+# MASTODON + STREAMING API
 # ============================================================
 http://mastodon.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    handle_path /api/v1/streaming/* {
-        reverse_proxy 127.0.0.1:4000
-    }
-    reverse_proxy 127.0.0.1:4001
+	import common
+	header Onion-Location "http://service-onion-address.onion{path}"
+	handle /api/v1/streaming/* {
+		reverse_proxy 127.0.0.1:4000 {
+			flush_interval -1
+			header_up X-Forwarded-Proto "https"
+			header_up X-Real-IP "{client_ip}"
+		}
+	}
+	handle {
+		reverse_proxy 127.0.0.1:4001 {
+			flush_interval -1
+			header_up X-Forwarded-Proto "https"
+			header_up X-Real-IP "{client_ip}"
+		}
+	}
 }
-
-# ============================================================
-# MONITORING
-# ============================================================
-http://grafana.example.com {
-    header Onion-Location http://abcdefghijkl12345.onion{path}
-    reverse_proxy 127.0.0.1:8501
-}
-
-# Prometheus & Alertmanager
-# http://prometheus.example.com {
-#     reverse_proxy 127.0.0.1:8500
-# }
-# http://alertmanager.example.com {
-#     reverse_proxy 127.0.0.1:8504
-# }
