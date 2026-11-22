@@ -24,10 +24,7 @@ federation_verify_certificates: true
 # Restrict federation to specific domains
 # Empty = allow federation with all servers
 # To restrict: list domain names, e.g., ["matrix.org", "your-partner.com"]
-federation_domain_whitelist:
-  - example.com
-  - your-partner.com
-  - matrix.org
+federation_domain_whitelist: []
 
 # Disable profile lookup over federation
 # Recommended: true for privacy
@@ -69,31 +66,29 @@ federation:
 
 # Uncomment and adjust as needed:
 # ip_range_blacklist:
-#   - 127.0.0.0/8          # Localhost
-#   - ::1/128              # Localhost IPv6
-#   - fe80::/10            # Link-local
-#   - 2001:db8::/32        # Documentation
-#   - 10.0.0.0/8           # Private network
-#   - 172.16.0.0/12        # Private network
-#   - 192.168.0.0/16       # Private network
-#   - 100.64.0.0/10        # CGNAT
-#   - 169.254.0.0/16       # Link-local
-#   - 224.0.0.0/4          # Multicast
-#   - 240.0.0.0/4          # Reserved
-#   - ff00::/8             # Multicast IPv6
-#   - fc00::/7             # Unique Local IPv6
-#   - 192.0.2.0/24         # Documentation
-#   - 198.51.100.0/24      # Documentation
-#   - 203.0.113.0/24       # Documentation
-#   - 198.18.0.0/15        # Benchmarking
-#   - 0.0.0.0/8            # Invalid/unroutable
-#   - 192.88.99.0/24       # 6to4 relay
+#   - '127.0.0.0/8'          # Localhost IPv4
+#   - '::1/128'               # Localhost IPv6
+#   - 'fe80::/10'             # Link-local IPv6
+#   - '10.0.0.0/8'            # Private network (Class A)
+#   - '172.16.0.0/12'         # Private network (Class B)
+#   - '192.168.0.0/16'        # Private network (Class C)
+#   - '100.64.0.0/10'         # Carrier-grade NAT (CGNAT)
+#   - '169.254.0.0/16'        # Link-local IPv4
+#   - '192.0.2.0/24'          # Documentation (TEST-NET-1)
+#   - '198.51.100.0/24'       # Documentation (TEST-NET-2)
+#   - '203.0.113.0/24'        # Documentation (TEST-NET-3)
+#   - '198.18.0.0/15'         # Benchmarking
+#   - '0.0.0.0/8'             # Invalid/unroutable
+#   - '192.88.99.0/24'        # 6to4 relay
+#   - '224.0.0.0/4'           # Multicast
+#   - '240.0.0.0/4'           # Reserved
+#   - 'ff00::/8'              # Multicast IPv6
+#   - 'fc00::/7'              # Unique Local IPv6
+#   - '2001:db8::/32'         # Documentation IPv6
 
 # Whitelist specific IPs even if they're in blacklist
 # Example: If you have internal services, add them here
-# ip_range_whitelist:
-#   - 192.168.1.100/32    # Your internal service
-#   - 10.0.0.5/32         # Another internal service
+ip_range_whitelist: []
 
 # =============================================================================
 # PRESENCE
@@ -160,10 +155,10 @@ media_store_path: /data/media_store
 
 # Maximum upload size per file
 # Recommended: 100M (adjust based on your needs)
-max_upload_size: 100M
+max_upload_size: 50M
 
 # Maximum pending media uploads per user
-max_pending_media_uploads: 20
+max_pending_media_uploads: 10
 
 # Time after which unused media is considered for cleanup
 unused_expiration_time: 48h
@@ -175,7 +170,6 @@ allowed_avatar_mimetypes:
   - image/jpeg
   - image/gif
   - image/webp
-  - image/svg+xml
 
 # Dynamic thumbnail generation
 dynamic_thumbnails: true
@@ -201,8 +195,8 @@ thumbnail_sizes:
 max_image_pixels: 32M
 
 # Remote media download rate limiting
-remote_media_download_burst_count: 1000
-remote_media_download_per_second: 5M # 5 MB/s
+remote_media_download_burst_count: 500
+remote_media_download_per_second: 2M # 2 MB/s
 
 # Disable URL preview
 # Recommended: false for privacy and security
@@ -215,15 +209,7 @@ media_retention:
   local_media_lifetime: 90d
 
   # How long to keep remote media
-  remote_media_lifetime: 90d
-
-# oEmbed settings (for URL previews)
-oembed:
-  disable_default_providers: false
-  additional_providers: []
-
-# Prevent media downloads from specific domains
-prevent_media_downloads_from: []
+  remote_media_lifetime: 14d
 
 # =============================================================================
 # REGISTRATION
@@ -320,16 +306,12 @@ retention:
       longest_max_lifetime: 90d
       interval: 48h
 
-    # For messages with max_lifetime > 90d, check every 72h
-    - shortest_max_lifetime: 90d
-      interval: 72h
-
 # How long to keep redactions
 # Recommended: sync with media_retention
 redaction_retention_period: 90d
 
 # How long to keep user IP addresses
-user_ips_max_age: 90d
+user_ips_max_age: 30d
 
 # How long to keep forgotten rooms
 forgotten_room_retention_period: 90d
@@ -358,118 +340,53 @@ enable_room_list_search: false
 
 # Rate limiting for sending messages
 rc_message:
-  per_second: 10.0
-  burst_count: 30.0
+  per_second: 5.0
+  burst_count: 15.0
 
 # Rate limiting for registration
 rc_registration:
-  per_second: 0.17
-  burst_count: 3.0
-
-# Rate limiting for registration token validation
-rc_registration_token_validity:
   per_second: 0.1
-  burst_count: 5.0
+  burst_count: 2.0
 
 # Rate limiting for login
 rc_login:
   # Per IP address
   address:
     per_second: 0.05 # 1 attempt per 20 seconds
-    burst_count: 10.0
+    burst_count: 5.0
   # Per account
   account:
     per_second: 0.05 # 1 attempt per 20 seconds
-    burst_count: 10.0
+    burst_count: 5.0
   # Failed attempts
   failed_attempts:
-    per_second: 0.17
-    burst_count: 5.0
-
-# Rate limiting for admin redactions
-rc_admin_redaction:
-  per_second: 1.0
-  burst_count: 20.0
+    per_second: 0.1
+    burst_count: 3.0
 
 # Rate limiting for room joins
 rc_joins:
   # Local joins
   local:
     per_second: 0.2
-    burst_count: 20.0
+    burst_count: 10.0
   # Remote joins (federation)
   remote:
-    per_second: 0.02
-    burst_count: 20.0
-
-# Rate limiting for joins per room
-rc_joins_per_room:
-  per_second: 2.0
-  burst_count: 20.0
-
-# Rate limiting for 3PID validation (email/phone)
-rc_3pid_validation:
-  per_second: 0.05 # 1 per 20 seconds
-  burst_count: 10.0
+    per_second: 0.01
+    burst_count: 5.0
 
 # Rate limiting for invites
 rc_invites:
   per_room:
-    per_second: 0.5
-    burst_count: 20.0
+    per_second: 0.2
+    burst_count: 10.0
   per_user:
     per_second: 0.005
-    burst_count: 10.0
-  per_issuer:
-    per_second: 0.5
-    burst_count: 20.0
-
-# Rate limiting for third-party invites
-rc_third_party_invite:
-  per_second: 0.2
-  burst_count: 10.0
+    burst_count: 5.0
 
 # Rate limiting for media creation
 rc_media_create:
-  per_second: 20.0
-  burst_count: 100.0
-
-# Rate limiting for federation requests
-rc_federation:
-  window_size: 1000
-  sleep_limit: 15 # Start delaying after 15 requests
-  sleep_delay: 500 # Delay 500ms per request
-  reject_limit: 75 # Reject after 75 requests
-  concurrent: 10 # Max concurrent federation requests
-
-# Rate limiting for presence updates
-rc_presence:
-  per_user:
-    per_second: 0.2
-    burst_count: 2.0
-
-# Rate limiting for delayed event management
-rc_delayed_event_mgmt:
-  per_second: 2.0
-  burst_count: 10.0
-
-# Rate limiting for reports
-rc_reports:
-  per_second: 2.0
-  burst_count: 10.0
-
-# Rate limiting for room creation
-rc_room_creation:
-  per_second: 0.05
-  burst_count: 20.0
-
-# Rate limiting for user directory queries
-rc_user_directory:
-  per_second: 0.05
-  burst_count: 50.0 # Recommended: 50 (down from default 500)
-
-# Federation request/response transactions per room per second
-federation_rr_transactions_per_room_per_second: 100
+  per_second: 10.0
+  burst_count: 50.0
 
 # =============================================================================
 # CACHING
@@ -517,9 +434,6 @@ caches:
 # SEARCH & DIRECTORY
 # =============================================================================
 
-# Enable search
-enable_search: true
-
 # User directory settings
 user_directory:
   # Enable user directory
@@ -533,7 +447,7 @@ user_directory:
 
   # Exclude remote users (from other servers)
   # Recommended: false (include remote users for better UX)
-  exclude_remote_users: false
+  exclude_remote_users: true
 
   # Show locked users (disabled/deactivated)
   show_locked_users: false
@@ -548,7 +462,7 @@ default_room_version: "12"
 
 # Enable encryption by default for new rooms
 # Options: "all", "off", or "invite"
-encryption_enabled_by_default_for_room_type: all
+encryption_enabled_by_default_for_room_type: "all"
 
 # Forget rooms when user leaves
 # Recommended: true (privacy)
@@ -626,16 +540,6 @@ delete_stale_devices_after: 30d
 dummy_events_threshold: 5
 
 # =============================================================================
-# USER TYPES
-# =============================================================================
-
-user_types:
-  # Default user type (null = no default)
-  default_user_type: null
-  # Extra user types
-  extra_user_types: []
-
-# =============================================================================
 # BACKGROUND UPDATES
 # =============================================================================
 # Settings for background processes
@@ -658,7 +562,7 @@ background_updates:
   default_batch_size: 200
 
 # =============================================================================
-# OAuth/OpenID Connect (SSO)
+# SSO / JWT (TEMPLATE)
 # =============================================================================
 # Configure Single Sign-On providers
 # =============================================================================
