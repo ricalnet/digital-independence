@@ -9,13 +9,12 @@
     "disable_guests": true,
     "force_verification": true,
     "disable_3pid_login": true,
-    "bug_report_endpoint_url": "local",
-    "integrations_ui_url": null,
-    "integrations_rest_url": null,
-    "integrations_widgets_urls": null,
-
+    
     "brand": "Your Brand Name",
     "default_theme": "dark",
+    "help_url": "your-domain.com/help",
+    "help_encryption_url": "your-domain.com/help",
+    
     "branding": {
         "auth_header_logo_url": "https://yourdomain.com/assets/logo.svg",
         "welcome_background_url": "https://yourdomain.com/assets/background.jpg",
@@ -41,6 +40,13 @@
         "UIFeature.allowCreatingPublicRooms": false,
         "UIFeature.allowCreatingPublicSpaces": false,
         "UIFeature.voip": false,
-        "UIFeature.widgets": false
-    }
+        "UIFeature.widgets": false,
+        
+        "UIFeature.registration": false,
+        "UIFeature.passwordReset": false,
+        "UIFeature.deactivate": false
+    },
+
+    "default_federate": false,
+    "mobile_guide_toast": false
 }
