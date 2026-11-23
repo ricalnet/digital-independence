@@ -96,7 +96,7 @@ declare -A CONTAINER_PATTERNS=(
 help() {
     cat << EOF
 ${BOLD}dipen v${VERSION} - Podman Orchestration Tool for Digital Independence${NC}
-${BOLD}${BLUE}Issues: https://git.ricalnet.my.id/RICALNET/digital-independence/issues ${NC}
+${BOLD}${BLUE}Issues: https://git.ricalnet.my.id/Privoss/digital-independence/issues ${NC}
 
 ${BOLD}USAGE:${NC}
     dipen [ACTION] [SERVICE...] [OPTIONS]
