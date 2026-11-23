@@ -20,7 +20,7 @@ NETWORK_NAME="obfs4_bridge_external_network"
 
 log_info "Checking required files and dependencies..."
 
-for f in ipc install-podman-on-debian.sh; do
+for f in ipc install-podman.sh; do
     if [[ ! -f "$f" ]]; then
         log_error "File '$f' not found in $(pwd)."
         exit 1
@@ -65,8 +65,8 @@ log_info "ipc status:"
 sudo ipc status
 
 log_info "Installing Podman..."
-chmod +x install-podman-on-debian.sh
-./install-podman-on-debian.sh
+chmod +x install-podman.sh
+./install-podman.sh
 
 if ! command -v podman-compose >/dev/null 2>&1; then
     log_error "podman-compose is not installed."

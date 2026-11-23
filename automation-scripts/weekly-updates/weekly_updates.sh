@@ -9,7 +9,7 @@ if [ -f "$CONF_FILE" ]; then
     source "$CONF_FILE"
 else
     echo "❌ Config not found: $CONF_FILE"
-    echo "📋 Copy template: cp weekly_updates.conf.example weekly_updates.conf"
+    echo "📋 Copy template: cp weekly_updates.example.conf weekly_updates.conf"
     exit 1
 fi
 

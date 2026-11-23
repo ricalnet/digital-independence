@@ -9,7 +9,7 @@ if [ -f "$CONF_FILE" ]; then
     source "$CONF_FILE"
 else
     echo "❌ Config not found: $CONF_FILE"
-    echo "📋 Copy template: cp monthly_recycle.conf.example monthly_recycle.conf"
+    echo "📋 Copy template: cp monthly_recycle.example.conf monthly_recycle.conf"
     exit 1
 fi
 

@@ -1,9 +1,20 @@
 # Wazuh App Copyright (C) 2017, Wazuh Inc. (License GPLv2)
 services:
   wazuh.agent:
-    image: wazuh/wazuh-agent:4.14.7
-    restart: always
+    image: ${WAZUH_AGENT_IMAGE:-docker.io/wazuh/wazuh-agent:4.14.10}
+    container_name: wazuh.agent
+    restart: unless-stopped
     environment:
-      - WAZUH_MANAGER_SERVER=<WAZUH_MANAGER_IP>
+      - WAZUH_MANAGER_SERVER=${WAZUH_MANAGER_SERVER:-<WAZUH_MANAGER_IP>}
     volumes:
       - ./config/wazuh-agent-conf:/wazuh-config-mount/etc/ossec.conf
+    mem_limit: ${WAZUH_AGENT_MEM_LIMIT:-256m}
+    mem_reservation: ${WAZUH_AGENT_MEM_RESERVATION:-128m}
+    memswap_limit: ${WAZUH_AGENT_MEMSWAP_LIMIT:-256m}
+    cpus: ${WAZUH_AGENT_CPUS:-0.5}
+    pids_limit: ${WAZUH_AGENT_PIDS_LIMIT:-100}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

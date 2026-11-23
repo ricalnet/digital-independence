@@ -28,6 +28,7 @@ declare -A SERVICES=(
     ["homarr"]="homarr"
     ["immich"]="immich"
     ["jellyfin"]="jellyfin"
+    ["jenkins"]="jenkins"
     ["libretranslate"]="libretranslate"
     ["linkstack"]="linkstack"
     ["mastodon"]="mastodon"
@@ -60,6 +61,7 @@ declare -A IMAGE_REGISTRY=(
     ["homarr"]="ghcr.io/homarr-labs/homarr"
     ["immich"]="ghcr.io/immich-app/immich-server"
     ["jellyfin"]="ghcr.io/jellyfin/jellyfin"
+    ["jenkins"]="docker.io/jenkins/jenkins"
     ["libretranslate"]="docker.io/libretranslate/libretranslate"
     ["linkstack"]="docker.io/linkstackorg/linkstack"
     ["mastodon"]="ghcr.io/mastodon/mastodon"
@@ -324,7 +326,7 @@ cd_to_volume() {
 
 compose_file() {
     local path="$BASE_DIR/$1"
-    for f in "docker-compose.yml" "docker-compose.yaml" "compose.yml" "compose.yaml"; do
+    for f in "compose.yaml" "compose.yml" "docker-compose.yaml" "docker-compose.yml"; do
         [[ -f "$path/$f" ]] && echo "$path/$f" && return
     done
 }
@@ -621,14 +623,17 @@ main() {
         echo "${BLUE}▶${NC} Editing .env for ${#expanded_env[@]} services: ${CYAN}${expanded_env[*]}${NC}"
         echo
         
+        local env_total=${#expanded_env[@]}
+        local env_current=0
         local env_ok=() env_fail=()
         for s in "${expanded_env[@]}"; do
+            env_current=$((env_current + 1))
             if [[ -z "${SERVICES[$s]}" ]]; then
                 echo "${RED}Error:${NC} Unknown service: $s"
                 env_fail+=("$s")
                 continue
             fi
-            echo "${BOLD}${BLUE}[${#expanded_env[@]}/${#expanded_env[@]}]${NC} Processing $s..."
+            echo "${BOLD}${BLUE}[$env_current/$env_total]${NC} Processing $s..."
             edit_env "$s" && env_ok+=("$s") || env_fail+=("$s")
             echo
         done

@@ -13,6 +13,8 @@ services:
     cap_add:
       - NET_ADMIN
       - NET_RAW
+    security_opt:
+      - no-new-privileges=true
     mem_limit: ${DNSCRYPT_MEM_LIMIT:-192m}
     memswap_limit: ${DNSCRYPT_MEMSWAP_LIMIT:-192m}
     cpus: ${DNSCRYPT_CPUS:-0.2}
@@ -73,7 +75,7 @@ services:
       - NET_RAW
       - SYS_TIME
       - SYS_NICE
-      - CAP_SYS_RESOURCE
+      - SYS_RESOURCE
     networks:
       - pihole_network
     healthcheck:

@@ -1,6 +1,6 @@
 services:
   db:
-    restart: always
+    restart: unless-stopped
     image: ${MASTODON_DB_IMAGE:-postgres:18-alpine}
     container_name: mastodon_db
     shm_size: 256mb
@@ -17,6 +17,12 @@ services:
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_USER: ${DB_USER:-postgres}
       POSTGRES_DB: ${DB_NAME:-mastodon_production}
+    mem_limit: 1g
+    mem_reservation: 512m
+    cpus: 1.0
+    pids_limit: 200
+    security_opt:
+      - no-new-privileges=true
     deploy:
       resources:
         limits:
@@ -30,7 +36,7 @@ services:
         max-file: "3"
 
   redis:
-    restart: always
+    restart: unless-stopped
     image: ${MASTODON_REDIS_IMAGE:-redis:alpine}
     container_name: mastodon_redis
     networks:
@@ -42,6 +48,10 @@ services:
       retries: 5
     volumes:
       - redis_data:/data
+    mem_limit: 256m
+    mem_reservation: 128m
+    cpus: 0.5
+    pids_limit: 100
     deploy:
       resources:
         limits:
@@ -49,7 +59,7 @@ services:
         reservations:
           memory: 128M
     security_opt:
-      - no-new-privileges:true
+      - no-new-privileges=true
     cap_drop:
       - ALL
     cap_add:
@@ -62,7 +72,7 @@ services:
 
   web:
     image: ${MASTODON_WEB_IMAGE:-ghcr.io/mastodon/mastodon:latest}
-    restart: always
+    restart: unless-stopped
     container_name: mastodon_web
     env_file: .env.production
     command: bundle exec puma -C config/puma.rb
@@ -85,6 +95,10 @@ services:
       - redis
     volumes:
       - mastodon_system:/mastodon/public/system
+    mem_limit: 1g
+    mem_reservation: 512m
+    cpus: 1.0
+    pids_limit: 200
     deploy:
       resources:
         limits:
@@ -92,7 +106,7 @@ services:
         reservations:
           memory: 512M
     security_opt:
-      - no-new-privileges:true
+      - no-new-privileges=true
     cap_drop:
       - ALL
     logging:
@@ -103,7 +117,7 @@ services:
 
   streaming:
     image: ${MASTODON_STREAMING_IMAGE:-ghcr.io/mastodon/mastodon-streaming:latest}
-    restart: always
+    restart: unless-stopped
     container_name: mastodon_streaming
     env_file: .env.production
     command: node ./streaming/index.js
@@ -124,6 +138,10 @@ services:
     depends_on:
       - db
       - redis
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    pids_limit: 100
     deploy:
       resources:
         limits:
@@ -131,7 +149,7 @@ services:
         reservations:
           memory: 256M
     security_opt:
-      - no-new-privileges:true
+      - no-new-privileges=true
     cap_drop:
       - ALL
     logging:
@@ -142,7 +160,7 @@ services:
 
   sidekiq:
     image: ${MASTODON_SIDEKIQ_IMAGE:-ghcr.io/mastodon/mastodon:latest}
-    restart: always
+    restart: unless-stopped
     container_name: mastodon_sidekiq
     env_file: .env.production
     command: bundle exec sidekiq
@@ -159,6 +177,10 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    mem_limit: 1g
+    mem_reservation: 512m
+    cpus: 1.0
+    pids_limit: 200
     deploy:
       resources:
         limits:
@@ -166,7 +188,7 @@ services:
         reservations:
           memory: 512M
     security_opt:
-      - no-new-privileges:true
+      - no-new-privileges=true
     cap_drop:
       - ALL
     logging:

@@ -227,7 +227,7 @@ cd digital-independence
 
 ### Step 2: Install Podman and Dependencies
 ```bash
-./install-podman-on-debian.sh
+./install-podman.sh
 ```
 
 > [!TIP]

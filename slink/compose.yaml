@@ -17,6 +17,13 @@ services:
     memswap_limit: ${SLINK_MEMSWAP_LIMIT:-768m}
     cpus: ${SLINK_CPUS:-0.5}
     pids_limit: ${PIDS_LIMIT:-1024}
+    security_opt:
+      - no-new-privileges=true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
   slink-net:
